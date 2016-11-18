@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.springdatajpa;
+package org.springframework.samples.petclinic.repository.springdatajpa.ext;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.Repository;
-import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.repository.VetRepositoryExt;
+import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.repository.PetTypeRepositoryExt;
 
 /**
  * @author Vitaliy Fedoriv
  *
  */
 
-@Qualifier("VetRepositoryExt")
-public interface SpringDataVetRepositoryExt extends VetRepositoryExt, Repository<Vet, Integer> {
+@Qualifier("PetTypeRepositoryExt")
+public interface SpringDataPetTypeRepositoryExt extends PetTypeRepositoryExt, Repository<PetType, Integer>, PetTypeRepositoryExtOverride {
 
 }

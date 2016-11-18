@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.service;
+package org.springframework.samples.petclinic.service.ext;
 
 import java.util.Collection;
 

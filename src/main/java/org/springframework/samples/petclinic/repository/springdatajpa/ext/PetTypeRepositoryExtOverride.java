@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.springdatajpa;
+package org.springframework.samples.petclinic.repository.springdatajpa.ext;
 
-import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.model.PetType;
 
 /**
  * @author Vitaliy Fedoriv
  *
  */
 
-public interface VisitRepositoryExtOverride {
+public interface PetTypeRepositoryExtOverride {
 	
-	public void delete(Visit visit);
+	public void delete(PetType petType);
 
 }

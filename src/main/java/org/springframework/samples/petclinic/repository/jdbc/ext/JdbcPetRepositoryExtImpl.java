@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.jdbc;
+package org.springframework.samples.petclinic.repository.jdbc.ext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +36,9 @@ import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.OwnerRepositoryExt;
 import org.springframework.samples.petclinic.repository.PetRepositoryExt;
 import org.springframework.samples.petclinic.repository.VisitRepositoryExt;
+import org.springframework.samples.petclinic.repository.jdbc.JdbcPet;
+import org.springframework.samples.petclinic.repository.jdbc.JdbcPetRepositoryImpl;
+import org.springframework.samples.petclinic.repository.jdbc.JdbcPetRowMapper;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Repository;
 

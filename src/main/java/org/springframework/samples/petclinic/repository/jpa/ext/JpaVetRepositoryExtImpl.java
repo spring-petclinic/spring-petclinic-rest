@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.jpa;
+package org.springframework.samples.petclinic.repository.jpa.ext;
 
 import java.util.Collection;
 
@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.VetRepositoryExt;
+import org.springframework.samples.petclinic.repository.jpa.JpaVetRepositoryImpl;
 import org.springframework.stereotype.Repository;
 
 /**

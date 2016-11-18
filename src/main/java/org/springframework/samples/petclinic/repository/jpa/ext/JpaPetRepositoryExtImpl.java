@@ -14,42 +14,46 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.jpa;
+package org.springframework.samples.petclinic.repository.jpa.ext;
 
 import java.util.Collection;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.repository.OwnerRepositoryExt;
+import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.repository.PetRepositoryExt;
+import org.springframework.samples.petclinic.repository.jpa.JpaPetRepositoryImpl;
 import org.springframework.stereotype.Repository;
 
 /**
  * @author Vitaliy Fedoriv
  *
  */
-
 @Repository
-@Qualifier("OwnerRepositoryExt")
-public class JpaOwnerRepositoryExtImpl extends JpaOwnerRepositoryImpl implements OwnerRepositoryExt {
+@Qualifier("PetRepositoryExt")
+public class JpaPetRepositoryExtImpl extends JpaPetRepositoryImpl implements PetRepositoryExt {
 	
     @PersistenceContext
     private EntityManager em;
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Owner> findAll() throws DataAccessException {
-		Query query = this.em.createQuery("SELECT owner FROM Owner owner");
-        return query.getResultList();
+	public Collection<Pet> findAll() throws DataAccessException {
+		return this.em.createQuery("SELECT pet FROM Pet pet").getResultList();
 	}
 
 	@Override
-	public void delete(Owner owner) throws DataAccessException {
-		this.em.remove(this.em.contains(owner) ? owner : this.em.merge(owner));
+	public void delete(Pet pet) throws DataAccessException {
+		//this.em.remove(this.em.contains(pet) ? pet : this.em.merge(pet));
+		String petId = pet.getId().toString();
+		this.em.createQuery("DELETE FROM Visit visit WHERE pet_id=" + petId).executeUpdate();
+		this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
+		if (em.contains(pet)) {
+			em.remove(pet);
+		}
 	}
 
 }

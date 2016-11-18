@@ -14,19 +14,28 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.springdatajpa;
+package org.springframework.samples.petclinic.repository.springdatajpa.ext;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.repository.Repository;
-import org.springframework.samples.petclinic.model.Visit;
-import org.springframework.samples.petclinic.repository.VisitRepositoryExt;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.samples.petclinic.model.Pet;
 
 /**
  * @author Vitaliy Fedoriv
  *
  */
 
-@Qualifier("VisitRepositoryExt")
-public interface SpringDataVisitRepositoryExt extends VisitRepositoryExt, Repository<Visit, Integer>, VisitRepositoryExtOverride {
+public class SpringDataPetRepositoryExtImpl implements PetRepositoryExtOverride {
+	
+	@PersistenceContext
+    private EntityManager em;
+
+	@Override
+	public void delete(Pet pet) {
+		String petId = pet.getId().toString();
+		this.em.createQuery("DELETE FROM Visit visit WHERE pet_id=" + petId).executeUpdate();
+		this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
+	}
 
 }

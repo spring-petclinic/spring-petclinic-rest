@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.jdbc;
+package org.springframework.samples.petclinic.repository.jdbc.ext;
 
 import java.util.Collection;
 import java.util.HashMap;

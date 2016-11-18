@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.springdatajpa;
+package org.springframework.samples.petclinic.repository.springdatajpa.ext;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.repository.Repository;
 import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.repository.SpecialtyRepositoryExt;
+
 
 /**
  * @author Vitaliy Fedoriv
  *
  */
 
-public interface SpecialtyRepositoryExtOverride {
-	
-	public void delete(Specialty specialty);
+@Qualifier("SpecialtyRepositoryExt")
+public interface SpringDataSpecialtyRepositoryExt extends SpecialtyRepositoryExt, Repository<Specialty, Integer>, SpecialtyRepositoryExtOverride {
 
 }

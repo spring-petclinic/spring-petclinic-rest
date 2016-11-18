@@ -8,7 +8,7 @@
         <constructor-arg value="org.springframework.samples.petclinic.service.ClinicService"/>
     </bean>
     <bean id="ClinicServiceExt" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.springframework.samples.petclinic.service.ClinicServiceExt"/>
+        <constructor-arg value="org.springframework.samples.petclinic.service.ext.ClinicServiceExt"/>
     </bean>
 
 </beans>

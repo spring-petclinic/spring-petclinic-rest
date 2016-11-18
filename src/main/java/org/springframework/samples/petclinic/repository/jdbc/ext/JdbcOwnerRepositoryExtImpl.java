@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.jdbc;
+package org.springframework.samples.petclinic.repository.jdbc.ext;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,6 +33,7 @@ import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.OwnerRepositoryExt;
+import org.springframework.samples.petclinic.repository.jdbc.JdbcOwnerRepositoryImpl;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -25,7 +25,7 @@ import org.springframework.jdbc.core.RowMapper;
  * {@link RowMapper} implementation mapping data from a {@link ResultSet} to the corresponding properties
  * of the {@link JdbcPet} class.
  */
-class JdbcPetRowMapper implements RowMapper<JdbcPet> {
+public class JdbcPetRowMapper implements RowMapper<JdbcPet> {
 
     @Override
     public JdbcPet mapRow(ResultSet rs, int rownum) throws SQLException {

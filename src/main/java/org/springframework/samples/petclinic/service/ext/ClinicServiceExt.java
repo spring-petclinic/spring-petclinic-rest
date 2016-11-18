@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.service;
+package org.springframework.samples.petclinic.service.ext;
 
 import java.util.Collection;
 
@@ -25,6 +25,7 @@ import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.service.ClinicService;
 
 /**
  * Used as a facade so all (incl.extended) controllers have a single point of entry
