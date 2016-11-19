@@ -28,7 +28,7 @@ public class PetTypeRestController {
 	@Autowired
 	private ClinicServiceExt clinicService;
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Collection<PetType>> getAllPetTypes(){
 		Collection<PetType> petTypes = new ArrayList<PetType>();
 		petTypes.addAll(this.clinicService.findAllPetTypes());
@@ -48,7 +48,7 @@ public class PetTypeRestController {
 	}
 	
 	
-	@RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Void> addPetType(@RequestBody @Valid PetType petType, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
 		if(bindingResult.hasErrors() || (petType == null)){
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);

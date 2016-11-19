@@ -60,7 +60,7 @@ public class OwnerRestController {
 		return new ResponseEntity<Collection<Owner>>(owners, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Collection<Owner>> getOwners(){
 		Collection<Owner> owners = this.clinicService.findAllOwners();
 		if(owners.isEmpty()){
@@ -79,7 +79,7 @@ public class OwnerRestController {
 		return new ResponseEntity<Owner>(owner, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Void> addOwner(@RequestBody @Valid Owner owner, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
 		if(bindingResult.hasErrors() || (owner == null)){
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
