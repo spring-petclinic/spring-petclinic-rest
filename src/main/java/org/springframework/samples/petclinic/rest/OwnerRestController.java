@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.service.ext.ClinicServiceExt;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/owners")
 public class OwnerRestController {
 	
