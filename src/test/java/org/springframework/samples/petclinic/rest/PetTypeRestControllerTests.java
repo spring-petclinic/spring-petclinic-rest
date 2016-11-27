@@ -66,7 +66,9 @@ public class PetTypeRestControllerTests {
 
     @Before
     public void initPetTypes(){
-    	this.mockMvc = MockMvcBuilders.standaloneSetup(petTypeRestController).build();
+    	this.mockMvc = MockMvcBuilders.standaloneSetup(petTypeRestController)
+    			.setControllerAdvice(new ExceptionControllerAdvice())
+    			.build();
     	petTypes = new ArrayList<PetType>();
 
     	PetType petType = new PetType();

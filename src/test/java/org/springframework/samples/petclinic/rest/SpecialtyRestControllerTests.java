@@ -65,7 +65,9 @@ public class SpecialtyRestControllerTests {
 
     @Before
     public void initSpecialtys(){
-    	this.mockMvc = MockMvcBuilders.standaloneSetup(specialtyRestController).build();
+    	this.mockMvc = MockMvcBuilders.standaloneSetup(specialtyRestController)
+    			.setControllerAdvice(new ExceptionControllerAdvice())
+    			.build();
     	specialties = new ArrayList<Specialty>();
 
     	Specialty specialty = new Specialty();

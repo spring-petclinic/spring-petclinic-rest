@@ -15,8 +15,7 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +24,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Date;
+
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.samples.petclinic.rest.JacksonCustomVisitDeserializer;
+import org.springframework.samples.petclinic.rest.JacksonCustomVisitSerializer;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Simple JavaBean domain object representing a visit.
@@ -34,6 +41,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "visits")
+@JsonSerialize(using = JacksonCustomVisitSerializer.class)
+@JsonDeserialize(using = JacksonCustomVisitDeserializer.class)
 public class Visit extends BaseEntity {
 
     /**
@@ -42,6 +51,7 @@ public class Visit extends BaseEntity {
     @Column(name = "visit_date")
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy/MM/dd")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy/MM/dd")
     private Date date;
 
     /**

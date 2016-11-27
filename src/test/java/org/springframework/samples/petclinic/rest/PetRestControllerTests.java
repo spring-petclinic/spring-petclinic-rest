@@ -69,7 +69,9 @@ public class PetRestControllerTests {
 
     @Before
     public void initPets(){
-    	this.mockMvc = MockMvcBuilders.standaloneSetup(petRestController).build();
+    	this.mockMvc = MockMvcBuilders.standaloneSetup(petRestController)
+    			.setControllerAdvice(new ExceptionControllerAdvice())
+    			.build();
     	pets = new ArrayList<Pet>();
     	
     	Owner owner = new Owner();

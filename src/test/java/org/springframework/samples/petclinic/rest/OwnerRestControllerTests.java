@@ -66,7 +66,9 @@ public class OwnerRestControllerTests {
 
     @Before
     public void initOwners(){
-    	this.mockMvc = MockMvcBuilders.standaloneSetup(ownerRestController).build();
+    	this.mockMvc = MockMvcBuilders.standaloneSetup(ownerRestController)
+    			.setControllerAdvice(new ExceptionControllerAdvice())
+    			.build();
     	owners = new ArrayList<Owner>();
 
     	Owner owner = new Owner();

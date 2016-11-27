@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -70,7 +71,10 @@ public class VisitRestControllerTests {
 
     @Before
     public void initVisits(){
-    	this.mockMvc = MockMvcBuilders.standaloneSetup(visitRestController).build();
+    	this.mockMvc = MockMvcBuilders.standaloneSetup(visitRestController)
+    			.setControllerAdvice(new ExceptionControllerAdvice())
+    			.build();
+    	
     	visits = new ArrayList<Visit>();
     	
     	Owner owner = new Owner();
@@ -157,12 +161,13 @@ public class VisitRestControllerTests {
     	newVisit.setId(999);
     	ObjectMapper mapper = new ObjectMapper();
     	String newVisitAsJSON = mapper.writeValueAsString(newVisit);
+    	System.out.println("newVisitAsJSON " + newVisitAsJSON);
     	this.mockMvc.perform(post("/api/visits/")
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
     		.andExpect(status().isCreated());
     }
     
-    @Test
+    @Test(expected = IOException.class)
     public void testCreateVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
     	newVisit.setId(null);
@@ -194,7 +199,7 @@ public class VisitRestControllerTests {
             .andExpect(jsonPath("$.description").value("rabies shot test"));	
     }
     
-    @Test
+    @Test(expected = IOException.class)
     public void testUpdateVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
     	newVisit.setPet(null);

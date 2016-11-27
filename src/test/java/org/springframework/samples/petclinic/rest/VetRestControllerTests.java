@@ -66,7 +66,9 @@ public class VetRestControllerTests {
 
     @Before
     public void initVets(){
-    	this.mockMvc = MockMvcBuilders.standaloneSetup(vetRestController).build();
+    	this.mockMvc = MockMvcBuilders.standaloneSetup(vetRestController)
+    			.setControllerAdvice(new ExceptionControllerAdvice())
+    			.build();
     	vets = new ArrayList<Vet>();
     	
     	
