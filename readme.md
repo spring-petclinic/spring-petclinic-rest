@@ -1,11 +1,11 @@
-# REST version of Spring PetClinic Sample Application (spring-framework-petclinic extend ) [![Build Status](https://travis-ci.org/spring-projects/spring-petclinic.png?branch=master)](https://travis-ci.org/spring-projects/spring-petclinic/)
+# REST version of Spring PetClinic Sample Application (spring-framework-petclinic extend ) [![Build Status](https://travis-ci.org/spring-petclinic/spring-petclinic-rest.png?branch=master)](https://travis-ci.org/spring-petclinic/spring-petclinic-rest/)
 
 ## Understanding the Spring Petclinic application with a few diagrams
 <a href="https://speakerdeck.com/michaelisvy/spring-petclinic-sample-application">See the presentation here</a>
 
 ## Running petclinic locally
 ```
-	git clone https://github.com/spring-projects/spring-petclinic.git
+	git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
 	cd spring-petclinic
 	./mvnw tomcat7:run
 ```
@@ -15,7 +15,7 @@ You can then access petclinic here: http://localhost:9966/petclinic/
 <img width="1042" alt="petclinic-screenshot" src="https://cloud.githubusercontent.com/assets/838318/19727082/2aee6d6c-9b8e-11e6-81fe-e889a5ddfded.png">
 
 ## In case you find a bug/suggested improvement for Spring Petclinic
-Our issue tracker is available here: https://github.com/spring-projects/spring-petclinic/issues
+Our issue tracker is available here: https://github.com/spring-petclinic/spring-petclinic-rest/issues
 
 
 ## Database configuration
@@ -88,7 +88,7 @@ If m2e is not there, just follow the install process here: http://eclipse.org/m2
 
 1) In the command line
 ```
-git clone https://github.com/spring-projects/spring-petclinic.git
+git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
 ```
 2) Inside Eclipse
 ```
@@ -264,9 +264,9 @@ Here is a list of them:
 
 # Contributing
 
-The [issue tracker](https://github.com/spring-projects/spring-petclinic/issues) is the preferred channel for bug reports, features requests and submitting pull requests.
+The [issue tracker](https://github.com/spring-petclinic/spring-petclinic-rest/issues) is the preferred channel for bug reports, features requests and submitting pull requests.
 
-For pull requests, editor preferences are available in the [editor config](https://github.com/spring-projects/spring-petclinic/blob/master/.editorconfig) for easy use in common text editors. Read more and download plugins at <http://editorconfig.org>.
+For pull requests, editor preferences are available in the [editor config](https://github.com/spring-petclinic/spring-petclinic-rest/blob/master/.editorconfig) for easy use in common text editors. Read more and download plugins at <http://editorconfig.org>.
 
 
 
