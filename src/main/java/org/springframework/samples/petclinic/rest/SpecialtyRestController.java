@@ -44,7 +44,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 
 @RestController
-@CrossOrigin
+@CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("api/specialties")
 public class SpecialtyRestController {
 	
@@ -72,20 +72,27 @@ public class SpecialtyRestController {
 	
 	
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<Void> addSpecialty(@RequestBody @Valid Specialty specialty, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
+	public ResponseEntity<Specialty> addSpecialty(@RequestBody @Valid Specialty specialty, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
+		BindingErrorsResponse errors = new BindingErrorsResponse();
+		HttpHeaders headers = new HttpHeaders();
 		if(bindingResult.hasErrors() || (specialty == null)){
-			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			errors.addAllErrors(bindingResult);
+			headers.add("errors", errors.toJSON());
+			return new ResponseEntity<Specialty>(headers, HttpStatus.BAD_REQUEST);
 		}
 		this.clinicService.saveSpecialty(specialty);
-		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/api/specialtys/{id}").buildAndExpand(specialty.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+		return new ResponseEntity<Specialty>(specialty, headers, HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value = "/{specialtyId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Specialty> updateSpecialty(@PathVariable("specialtyId") int specialtyId, @RequestBody @Valid Specialty specialty, BindingResult bindingResult){
+		BindingErrorsResponse errors = new BindingErrorsResponse();
+		HttpHeaders headers = new HttpHeaders();
 		if(bindingResult.hasErrors() || (specialty == null)){
-			return new ResponseEntity<Specialty>(HttpStatus.BAD_REQUEST);
+			errors.addAllErrors(bindingResult);
+			headers.add("errors", errors.toJSON());
+			return new ResponseEntity<Specialty>(headers, HttpStatus.BAD_REQUEST);
 		}
 		Specialty currentSpecialty = this.clinicService.findSpecialtyById(specialtyId);
 		if(currentSpecialty == null){

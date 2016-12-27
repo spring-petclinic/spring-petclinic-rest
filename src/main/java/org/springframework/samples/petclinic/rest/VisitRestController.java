@@ -44,7 +44,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 
 @RestController
-@CrossOrigin
+@CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("api/visits")
 public class VisitRestController {
 	
@@ -72,20 +72,27 @@ public class VisitRestController {
 	
 	
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<Void> addVisit(@RequestBody @Valid Visit visit, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
+	public ResponseEntity<Visit> addVisit(@RequestBody @Valid Visit visit, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
+		BindingErrorsResponse errors = new BindingErrorsResponse();
+		HttpHeaders headers = new HttpHeaders();
 		if(bindingResult.hasErrors() || (visit == null) || (visit.getPet() == null)){
-			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			errors.addAllErrors(bindingResult);
+			headers.add("errors", errors.toJSON());
+			return new ResponseEntity<Visit>(headers, HttpStatus.BAD_REQUEST);
 		}
 		this.clinicService.saveVisit(visit);
-		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/api/visits/{id}").buildAndExpand(visit.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+		return new ResponseEntity<Visit>(visit, headers, HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value = "/{visitId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Visit> updateVisit(@PathVariable("visitId") int visitId, @RequestBody @Valid Visit visit, BindingResult bindingResult){
+		BindingErrorsResponse errors = new BindingErrorsResponse();
+		HttpHeaders headers = new HttpHeaders();
 		if(bindingResult.hasErrors() || (visit == null) || (visit.getPet() == null)){
-			return new ResponseEntity<Visit>(HttpStatus.BAD_REQUEST);
+			errors.addAllErrors(bindingResult);
+			headers.add("errors", errors.toJSON());
+			return new ResponseEntity<Visit>(headers, HttpStatus.BAD_REQUEST);
 		}
 		Visit currentVisit = this.clinicService.findVisitById(visitId);
 		if(currentVisit == null){

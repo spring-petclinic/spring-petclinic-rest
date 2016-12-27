@@ -44,7 +44,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 
 @RestController
-@CrossOrigin
+@CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("api/pets")
 public class PetRestController {
 	
@@ -75,20 +75,27 @@ public class PetRestController {
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<Void> addPet(@RequestBody @Valid Pet pet, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
+	public ResponseEntity<Pet> addPet(@RequestBody @Valid Pet pet, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
+		BindingErrorsResponse errors = new BindingErrorsResponse();
+		HttpHeaders headers = new HttpHeaders();
 		if(bindingResult.hasErrors() || (pet == null)){
-			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			errors.addAllErrors(bindingResult);
+			headers.add("errors", errors.toJSON());
+			return new ResponseEntity<Pet>(headers, HttpStatus.BAD_REQUEST);
 		}
 		this.clinicService.savePet(pet);
-		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/api/pets/{id}").buildAndExpand(pet.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+		return new ResponseEntity<Pet>(pet, headers, HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value = "/{petId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Pet> updatePet(@PathVariable("petId") int petId, @RequestBody @Valid Pet pet, BindingResult bindingResult){
+		BindingErrorsResponse errors = new BindingErrorsResponse();
+		HttpHeaders headers = new HttpHeaders();
 		if(bindingResult.hasErrors() || (pet == null)){
-			return new ResponseEntity<Pet>(HttpStatus.BAD_REQUEST);
+			errors.addAllErrors(bindingResult);
+			headers.add("errors", errors.toJSON());
+			return new ResponseEntity<Pet>(headers, HttpStatus.BAD_REQUEST);
 		}
 		Pet currentPet = this.clinicService.findPetById(petId);
 		if(currentPet == null){

@@ -43,7 +43,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 
 @RestController
-@CrossOrigin
+@CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("api/vets")
 public class VetRestController {
 	
@@ -71,20 +71,27 @@ public class VetRestController {
 	
 	
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<Void> addVet(@RequestBody @Valid Vet vet, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
+	public ResponseEntity<Vet> addVet(@RequestBody @Valid Vet vet, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
+		BindingErrorsResponse errors = new BindingErrorsResponse();
+		HttpHeaders headers = new HttpHeaders();
 		if(bindingResult.hasErrors() || (vet == null)){
-			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			errors.addAllErrors(bindingResult);
+			headers.add("errors", errors.toJSON());
+			return new ResponseEntity<Vet>(headers, HttpStatus.BAD_REQUEST);
 		}
 		this.clinicService.saveVet(vet);
-		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/api/vets/{id}").buildAndExpand(vet.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+		return new ResponseEntity<Vet>(vet, headers, HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value = "/{vetId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Vet> updateVet(@PathVariable("vetId") int vetId, @RequestBody @Valid Vet vet, BindingResult bindingResult){
+		BindingErrorsResponse errors = new BindingErrorsResponse();
+		HttpHeaders headers = new HttpHeaders();
 		if(bindingResult.hasErrors() || (vet == null)){
-			return new ResponseEntity<Vet>(HttpStatus.BAD_REQUEST);
+			errors.addAllErrors(bindingResult);
+			headers.add("errors", errors.toJSON());
+			return new ResponseEntity<Vet>(headers, HttpStatus.BAD_REQUEST);
 		}
 		Vet currentVet = this.clinicService.findVetById(vetId);
 		if(currentVet == null){
