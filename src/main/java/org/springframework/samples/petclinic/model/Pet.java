@@ -39,6 +39,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.samples.petclinic.rest.JacksonCustomPetDeserializer;
 import org.springframework.samples.petclinic.rest.JacksonCustomPetSerializer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -95,7 +96,7 @@ public class Pet extends NamedEntity {
     public void setOwner(Owner owner) {
         this.owner = owner;
     }
-
+    @JsonIgnore
     protected Set<Visit> getVisitsInternal() {
         if (this.visits == null) {
             this.visits = new HashSet<>();

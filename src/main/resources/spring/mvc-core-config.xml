@@ -29,6 +29,10 @@
         (see htmlHeader.jsp for more details) -->
     <mvc:resources mapping="/resources/**" location="/resources/"/>
     <mvc:resources mapping="/vendors/**" location="/vendors/"/>
+    
+    <!-- Enables swgger ui-->
+    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
+	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
 
     <mvc:view-controller path="/" view-name="welcome"/>
 
