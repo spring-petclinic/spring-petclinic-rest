@@ -50,7 +50,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Vitaliy Fedoriv
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-core-config.xml"})
+@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-config.xml"})
 @WebAppConfiguration
 public class PetTypeRestControllerTests {
 
@@ -75,23 +75,23 @@ public class PetTypeRestControllerTests {
     	petType.setId(1);
     	petType.setName("cat");
     	petTypes.add(petType);
-    	
+
     	petType = new PetType();
     	petType.setId(2);
     	petType.setName("dog");
     	petTypes.add(petType);
-    	
+
     	petType = new PetType();
     	petType.setId(3);
     	petType.setName("lizard");
     	petTypes.add(petType);
-    	
+
     	petType = new PetType();
     	petType.setId(4);
     	petType.setName("snake");
     	petTypes.add(petType);
     }
-    
+
     @Test
     public void testGetPetTypeSuccess() throws Exception {
     	given(this.clinicService.findPetTypeById(1)).willReturn(petTypes.get(0));
@@ -102,7 +102,7 @@ public class PetTypeRestControllerTests {
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.name").value("cat"));
     }
-    
+
     @Test
     public void testGetPetTypeNotFound() throws Exception {
     	given(this.clinicService.findPetTypeById(-1)).willReturn(null);
@@ -110,10 +110,10 @@ public class PetTypeRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testGetAllPetTypesSuccess() throws Exception {
-    	petTypes.remove(0); 
+    	petTypes.remove(0);
     	petTypes.remove(1);
     	given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
         this.mockMvc.perform(get("/api/pettypes/")
@@ -125,7 +125,7 @@ public class PetTypeRestControllerTests {
         	.andExpect(jsonPath("$.[1].id").value(4))
         	.andExpect(jsonPath("$.[1].name").value("snake"));
     }
-    
+
     @Test
     public void testGetAllPetTypesNotFound() throws Exception {
     	petTypes.clear();
@@ -134,7 +134,7 @@ public class PetTypeRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testCreatePetTypeSuccess() throws Exception {
     	PetType newPetType = petTypes.get(0);
@@ -145,7 +145,7 @@ public class PetTypeRestControllerTests {
     		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
     		.andExpect(status().isCreated());
     }
-    
+
     @Test
     public void testCreatePetTypeError() throws Exception {
     	PetType newPetType = petTypes.get(0);
@@ -157,7 +157,7 @@ public class PetTypeRestControllerTests {
         		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         		.andExpect(status().isBadRequest());
      }
-    
+
     @Test
     public void testUpdatePetTypeSuccess() throws Exception {
     	given(this.clinicService.findPetTypeById(2)).willReturn(petTypes.get(1));
@@ -169,15 +169,15 @@ public class PetTypeRestControllerTests {
     		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(content().contentType("application/json;charset=UTF-8"))
         	.andExpect(status().isNoContent());
-    	
+
     	this.mockMvc.perform(get("/api/pettypes/2")
            	.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("$.id").value(2))
-            .andExpect(jsonPath("$.name").value("dog I"));	
+            .andExpect(jsonPath("$.name").value("dog I"));
     }
-    
+
     @Test
     public void testUpdatePetTypeError() throws Exception {
     	PetType newPetType = petTypes.get(0);
@@ -188,7 +188,7 @@ public class PetTypeRestControllerTests {
     		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isBadRequest());
      }
-    
+
     @Test
     public void testDeletePetTypeSuccess() throws Exception {
     	PetType newPetType = petTypes.get(0);
@@ -199,7 +199,7 @@ public class PetTypeRestControllerTests {
     		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
     }
-    
+
     @Test
     public void testDeletePetTypeError() throws Exception {
     	PetType newPetType = petTypes.get(0);

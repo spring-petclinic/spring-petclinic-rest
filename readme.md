@@ -1,5 +1,8 @@
 # REST version of Spring PetClinic Sample Application (spring-framework-petclinic extend ) [![Build Status](https://travis-ci.org/spring-petclinic/spring-petclinic-rest.png?branch=master)](https://travis-ci.org/spring-petclinic/spring-petclinic-rest/)
 
+This backend version of the Spring Petclinic application only provides a REST API. There is no UI.
+The [spring-petclinic-angular2 project](https://github.com/spring-petclinic/spring-petclinic-angular2) is a front-end application witch consumes the REST API.
+
 ## Understanding the Spring Petclinic application with a few diagrams
 <a href="https://speakerdeck.com/michaelisvy/spring-petclinic-sample-application">See the presentation here</a>
 
@@ -15,9 +18,9 @@ You can then access petclinic here: http://localhost:9966/petclinic/
 ## Swagger REST API documentation presented here:
 http://localhost:9966/petclinic/swagger-ui.html
 
-##Screenshot JSP realization:
+## Screenshot of the Angular client
 
-<img width="1042" alt="petclinic-screenshot" src="https://cloud.githubusercontent.com/assets/838318/19727082/2aee6d6c-9b8e-11e6-81fe-e889a5ddfded.png">
+<img width="1427" alt="spring-petclinic-angular2" src="https://cloud.githubusercontent.com/assets/838318/23263243/f4509c4a-f9dd-11e6-951b-69d0ef72d8bd.png">
 
 ## In case you find a bug/suggested improvement for Spring Petclinic
 Our issue tracker is available here: https://github.com/spring-petclinic/spring-petclinic-rest/issues
@@ -103,126 +106,20 @@ File -> Import -> Maven -> Existing Maven project
 
 ## Looking for something in particular?
 
-<table>
-  <tr>
-    <th width="300px">Java Config</th><th width="300px"></th>
-  </tr>
-  <tr>
-    <td>Java Config branch</td>
-    <td>
-      Petclinic uses XML configuration by default. In case you'd like to use Java Config instead, there is a Java Config branch available <a href="https://github.com/spring-projects/spring-petclinic/tree/javaconfig">here</a>. Thanks to Antoine Rey for his contribution.     
-    </td>
-  </tr>
-  <tr>
-    <th width="300px">Inside the 'Web' layer</th><th width="300px">Files</th>
-  </tr>
-  <tr>
-    <td>Spring MVC - XML integration</td>
-    <td><a href="/src/main/resources/spring/mvc-view-config.xml">mvc-view-config.xml</a></td>
-  </tr>
-  <tr>
-    <td>Spring MVC - ContentNegotiatingViewResolver</td>
-    <td><a href="/src/main/resources/spring/mvc-view-config.xml">mvc-view-config.xml</a></td>
-  </tr>
-  <tr>
-    <td>JSP custom tags</td>
-    <td>
-      <a href="/src/main/webapp/WEB-INF/tags">WEB-INF/tags</a>
-      <a href="/src/main/webapp/WEB-INF/jsp/owners/createOrUpdateOwnerForm.jsp">createOrUpdateOwnerForm.jsp</a></td>
-  </tr>
-  <tr>
-    <td>Bower</td>
-    <td>
-      <a href="/pom.xml">bower-install maven profile declaration inside pom.xml</a> <br />
-      <a href="/bower.json">JavaScript libraries are defined by the manifest file bower.json</a> <br />
-      <a href="/.bowerrc">Bower configuration using JSON</a> <br />
-      <a href="/src/main/resources/spring/mvc-core-config.xml#L30">Resource mapping in Spring configuration</a> <br />
-      <a href="/src/main/webapp/WEB-INF/jsp/fragments/staticFiles.jsp#L12">sample usage in JSP</a></td>
-    </td>
-  </tr>
-  <tr>
-    <td>Thymeleaf branch</td>
-    <td>
-      <a href="http://www.thymeleaf.org/doc/articles/petclinic.html">See here</a></td>
-  </tr>
-  <tr>
-    <td>Branch using GemFire and Spring Data GemFire instead of ehcache (thanks Bijoy Choudhury)</td>
-    <td>
-      <a href="https://github.com/bijoych/spring-petclinic-gemfire">See here</a></td>
-  </tr>
-</table>
+| Inside the 'Web' layer | Files |
+|------------------------|-------|
+| Spring MVC and REST API configuration | [mvc-config.xml](src/main/resources/spring/mvc-config.xml)  |
 
-<table>
-  <tr>
-    <th width="300px">'Service' and 'Repository' layers</th><th width="300px">Files</th>
-  </tr>
-  <tr>
-    <td>Transactions</td>
-    <td>
-      <a href="/src/main/resources/spring/business-config.xml">business-config.xml</a>
-       <a href="/src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java">ClinicServiceImpl.java</a>
-    </td>
-  </tr>
-  <tr>
-    <td>Cache</td>
-      <td>
-      <a href="/src/main/resources/spring/tools-config.xml">tools-config.xml</a>
-       <a href="/src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java">ClinicServiceImpl.java</a>
-    </td>
-  </tr>
-  <tr>
-    <td>Bean Profiles</td>
-      <td>
-      <a href="/src/main/resources/spring/business-config.xml">business-config.xml</a>
-       <a href="/src/test/java/org/springframework/samples/petclinic/service/ClinicServiceJdbcTests.java">ClinicServiceJdbcTests.java</a>
-       <a href="/src/main/java/org/springframework/samples/petclinic/PetclinicInitializer.java">PetclinicInitializer.java</a>
-    </td>
-  </tr>
-  <tr>
-    <td>JdbcTemplate</td>
-    <td>
-      <a href="/src/main/resources/spring/business-config.xml">business-config.xml</a>
-      <a href="/src/main/java/org/springframework/samples/petclinic/repository/jdbc">jdbc folder</a></td>
-  </tr>
-  <tr>
-    <td>JPA</td>
-    <td>
-      <a href="/src/main/resources/spring/business-config.xml">business-config.xml</a>
-      <a href="/src/main/java/org/springframework/samples/petclinic/repository/jpa">jpa folder</a></td>
-  </tr>
-  <tr>
-    <td>Spring Data JPA</td>
-    <td>
-      <a href="/src/main/resources/spring/business-config.xml">business-config.xml</a>
-      <a href="/src/main/java/org/springframework/samples/petclinic/repository/springdatajpa">springdatajpa folder</a></td>
-  </tr>
-</table>
+| 'Service' and 'Repository' layers | Files |
+|-----------------------------------|-------|
+| Transactions | [business-config.xml](src/main/resources/spring/business-config.xml), [ClinicServiceImpl.java](src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java) |
+| Cache | [tools-config.xml](src/main/resources/spring/tools-config.xml), [ClinicServiceImpl.java](src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java) |
+| Bean Profiles | [business-config.xml](src/main/resources/spring/business-config.xml), [ClinicServiceJdbcTests.java](src/test/java/org/springframework/samples/petclinic/service/ClinicServiceJdbcTests.java), [PetclinicInitializer.java](src/main/java/org/springframework/samples/petclinic/PetclinicInitializer.java) |
+| JDBC | [business-config.xml](src/main/resources/spring/business-config.xml), [jdbc folder](src/main/java/org/springframework/samples/petclinic/repository/jdb) |
+| JPA | [business-config.xml](src/main/resources/spring/business-config.xml), [jpa folder](src/main/java/org/springframework/samples/petclinic/repository/jpa) |
+| Spring Data JPA | [business-config.xml](src/main/resources/spring/business-config.xml), [springdatajpa folder](src/main/java/org/springframework/samples/petclinic/repository/springdatajpa) |
 
-<table>
-  <tr>
-    <th width="300px">Others</th><th width="300px">Files</th>
-  </tr>
-  <tr>
-    <td>Spring Boot branch (with JSP)</td>
-    <td>
-      <a href="https://github.com/spring-projects/spring-petclinic/tree/springboot">See here</a></td>
-  </tr>
-  <tr>
-    <td>Angular JS and Spring Boot branch</td>
-    <td>
-      <a href="https://github.com/spring-projects/spring-petclinic/tree/angularjs">See here</a></td>
-  </tr>    
-  <tr>
-    <td>ReactJS and Spring Boot branch</td>
-    <td>
-      <a href="https://github.com/nilshartmann/spring-petclinic/tree/reactjs">See here</a></td>
-  </tr>
-  <tr>
-    <td>Gradle branch</td>
-    <td>
-      <a href="https://github.com/whimet/spring-petclinic">See here</a></td>
-  </tr>
-</table>
+
 
 
 ## Interaction with other open source projects
@@ -230,41 +127,14 @@ File -> Import -> Maven -> Existing Maven project
 One of the best parts about working on the Spring Petclinic application is that we have the opportunity to work in direct contact with many Open Source projects. We found some bugs/suggested improvements on various topics such as Spring, Spring Data, Bean Validation and even Eclipse! In many cases, they've been fixed/implemented in just a few days.
 Here is a list of them:
 
-<table>
-  <tr>
-    <th width="300px">Name</th>
-    <th width="300px"> Issue </th>
-  </tr>
+| Name | Issue |
+|------|-------|
+| Spring JDBC: simplify usage of NamedParameterJdbcTemplate | [SPR-10256](https://jira.springsource.org/browse/SPR-10256) and [SPR-10257](https://jira.springsource.org/browse/SPR-10257) |
+| Bean Validation / Hibernate Validator: simplify Maven dependencies and backward compatibility |[HV-790](https://hibernate.atlassian.net/browse/HV-790) and [HV-792](https://hibernate.atlassian.net/browse/HV-792) |
+| Spring Data: provide more flexibility when working with JPQL queries | [DATAJPA-292](https://jira.springsource.org/browse/DATAJPA-292) |
+| Dandelion: improves the DandelionFilter for Jetty support | [113](https://github.com/dandelion/dandelion/issues/113) |
 
-  <tr>
-    <td>Spring JDBC: simplify usage of NamedParameterJdbcTemplate</td>
-    <td> <a href="https://jira.springsource.org/browse/SPR-10256"> SPR-10256</a> and <a href="https://jira.springsource.org/browse/SPR-10257"> SPR-10257</a> </td>
-  </tr>
-  <tr>
-    <td>Bean Validation / Hibernate Validator: simplify Maven dependencies and backward compatibility</td>
-    <td>
-      <a href="https://hibernate.atlassian.net/browse/HV-790"> HV-790</a> and <a href="https://hibernate.atlassian.net/browse/HV-792"> HV-792</a>
-      </td>
-  </tr>
-  <tr>
-    <td>Spring Data: provide more flexibility when working with JPQL queries</td>
-    <td>
-      <a href="https://jira.springsource.org/browse/DATAJPA-292"> DATAJPA-292</a>
-      </td>
-  </tr>  
-  <tr>
-    <td>Eclipse: validation bug when working with .tag/.tagx files (has only been fixed for Eclipse 4.3 (Kepler)). <a href="https://github.com/spring-projects/spring-petclinic/issues/14">See here for more details.</a></td>
-    <td>
-      <a href="https://issuetracker.springsource.com/browse/STS-3294"> STS-3294</a>
-    </td>
-  </tr>  
-  <tr>
-    <td>Dandelion: improves the DandelionFilter for Jetty support</td>
-    <td>
-      <a href="https://github.com/dandelion/dandelion/issues/113"> GitHub issue 113</a>
-      </td>
-  </tr>   
-</table>
+
 
 
 # Contributing

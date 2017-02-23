@@ -31,7 +31,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Java config for Springfox swagger documentation plugin
- * see also tools-config.xml and mvc-core-config.xml
+ * see also tools-config.xml and mvc-config.xml
  * @author Vitaliy Fedoriv
  *
  */
@@ -51,7 +51,7 @@ public class ApplicationSwaggerConfig {
               .build()
               .apiInfo(getApiInfo());
    }
-   
+
    private ApiInfo getApiInfo() {
 	   return new ApiInfo(
 		"REST Petclinic backend Api Documentation",

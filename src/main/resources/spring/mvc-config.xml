@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    - DispatcherServlet application context for PetClinic's web tier.
+-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--
+        - POJOs labeled with the @RestController are auto-detected.
+    -->
+	<context:component-scan
+        base-package="org.springframework.samples.petclinic.rest"/>
+
+    <mvc:annotation-driven />
+
+    <mvc:redirect-view-controller path="/" redirect-url="swagger-ui.html"/>
+
+    <!-- Enables swagger ui-->
+    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
+
+    <!-- serve static resources (*.html, ...) from src/main/webapp/
+    Required when both servlet-mapping is '/' and static resources need to be served -->
+    <mvc:default-servlet-handler/>
+
+    <!--
+        - Message source for this context, loaded from localized "messages_xx" files.
+        - Files are stored inside src/main/resources
+    -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+          p:basename="messages/messages"/>
+
+</beans>

@@ -58,7 +58,7 @@ public class PetclinicInitializer extends AbstractDispatcherServletInitializer {
     @Override
     protected WebApplicationContext createServletApplicationContext() {
         XmlWebApplicationContext webAppContext = new XmlWebApplicationContext();
-        webAppContext.setConfigLocation("classpath:spring/mvc-core-config.xml");
+        webAppContext.setConfigLocation("classpath:spring/mvc-config.xml");
         return webAppContext;
     }
 

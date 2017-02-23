@@ -50,7 +50,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-core-config.xml"})
+@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-config.xml"})
 @WebAppConfiguration
 public class VetRestControllerTests {
 
@@ -70,8 +70,8 @@ public class VetRestControllerTests {
     			.setControllerAdvice(new ExceptionControllerAdvice())
     			.build();
     	vets = new ArrayList<Vet>();
-    	
-    	
+
+
     	Vet vet = new Vet();
     	vet.setId(1);
     	vet.setFirstName("James");
@@ -83,14 +83,14 @@ public class VetRestControllerTests {
     	vet.setFirstName("Helen");
     	vet.setLastName("Leary");
     	vets.add(vet);
-    	
+
     	vet = new Vet();
     	vet.setId(3);
     	vet.setFirstName("Linda");
     	vet.setLastName("Douglas");
     	vets.add(vet);
     }
-    
+
     @Test
     public void testGetVetSuccess() throws Exception {
     	given(this.clinicService.findVetById(1)).willReturn(vets.get(0));
@@ -101,7 +101,7 @@ public class VetRestControllerTests {
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.firstName").value("James"));
     }
-    
+
     @Test
     public void testGetVetNotFound() throws Exception {
     	given(this.clinicService.findVetById(-1)).willReturn(null);
@@ -109,7 +109,7 @@ public class VetRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testGetAllVetsSuccess() throws Exception {
     	given(this.clinicService.findAllVets()).willReturn(vets);
@@ -122,7 +122,7 @@ public class VetRestControllerTests {
             .andExpect(jsonPath("$.[1].id").value(2))
             .andExpect(jsonPath("$.[1].firstName").value("Helen"));
     }
-    
+
     @Test
     public void testGetAllVetsNotFound() throws Exception {
     	vets.clear();
@@ -131,7 +131,7 @@ public class VetRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testCreateVetSuccess() throws Exception {
     	Vet newVet = vets.get(0);
@@ -142,7 +142,7 @@ public class VetRestControllerTests {
     		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
     		.andExpect(status().isCreated());
     }
-    
+
     @Test
     public void testCreateVetError() throws Exception {
     	Vet newVet = vets.get(0);
@@ -154,7 +154,7 @@ public class VetRestControllerTests {
         		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         		.andExpect(status().isBadRequest());
      }
-    
+
     @Test
     public void testUpdateVetSuccess() throws Exception {
     	Vet newVet = vets.get(0);
@@ -165,16 +165,16 @@ public class VetRestControllerTests {
     		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(content().contentType("application/json;charset=UTF-8"))
         	.andExpect(status().isNoContent());
-    	
+
     	this.mockMvc.perform(get("/api/vets/1")
            	.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.firstName").value("James"));
-        	
+
     }
-    
+
     @Test
     public void testUpdateVetError() throws Exception {
     	Vet newVet = vets.get(0);
@@ -185,7 +185,7 @@ public class VetRestControllerTests {
     		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isBadRequest());
      }
-    
+
     @Test
     public void testDeleteVetSuccess() throws Exception {
     	Vet newVet = vets.get(0);
@@ -196,7 +196,7 @@ public class VetRestControllerTests {
     		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
     }
-    
+
     @Test
     public void testDeleteVetError() throws Exception {
     	Vet newVet = vets.get(0);
