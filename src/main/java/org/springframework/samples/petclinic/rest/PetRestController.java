@@ -47,10 +47,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 @CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("api/pets")
 public class PetRestController {
-	
+
 	@Autowired
 	private ClinicServiceExt clinicService;
-	
+
 	@RequestMapping(value = "/{petId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Pet> getPet(@PathVariable("petId") int petId){
 		Pet pet = this.clinicService.findPetById(petId);
@@ -59,7 +59,7 @@ public class PetRestController {
 		}
 		return new ResponseEntity<Pet>(pet, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Collection<Pet>> getPets(){
 		Collection<Pet> pets = this.clinicService.findAllPets();
@@ -68,12 +68,12 @@ public class PetRestController {
 		}
 		return new ResponseEntity<Collection<Pet>>(pets, HttpStatus.OK);
 	}
-	
-	@RequestMapping(value = "/pettypes}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+
+	@RequestMapping(value = "/pettypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Collection<PetType>> getPetTypes(){
 		return new ResponseEntity<Collection<PetType>>(this.clinicService.findPetTypes(), HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Pet> addPet(@RequestBody @Valid Pet pet, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
@@ -87,7 +87,7 @@ public class PetRestController {
 		headers.setLocation(ucBuilder.path("/api/pets/{id}").buildAndExpand(pet.getId()).toUri());
 		return new ResponseEntity<Pet>(pet, headers, HttpStatus.CREATED);
 	}
-	
+
 	@RequestMapping(value = "/{petId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Pet> updatePet(@PathVariable("petId") int petId, @RequestBody @Valid Pet pet, BindingResult bindingResult){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
@@ -108,7 +108,7 @@ public class PetRestController {
 		this.clinicService.savePet(currentPet);
 		return new ResponseEntity<Pet>(currentPet, HttpStatus.NO_CONTENT);
 	}
-	
+
 	@RequestMapping(value = "/{petId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@Transactional
 	public ResponseEntity<Void> deletePet(@PathVariable("petId") int petId){
@@ -119,6 +119,6 @@ public class PetRestController {
 		this.clinicService.deletePet(pet);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
-	
+
 
 }
