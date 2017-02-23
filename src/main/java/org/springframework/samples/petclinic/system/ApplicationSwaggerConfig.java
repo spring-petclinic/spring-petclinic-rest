@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.util;
+package org.springframework.samples.petclinic.system;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,22 +31,18 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Java config for Springfox swagger documentation plugin
- * see also tools-config.xml and mvc-config.xml
  * @author Vitaliy Fedoriv
- *
  */
 
 @Configuration
-@EnableWebMvc
 @EnableSwagger2
-@ComponentScan(basePackages="org.springframework.samples.petclinic.rest")
 public class ApplicationSwaggerConfig {
 
    @Bean
    public Docket customDocket(){
       return new Docket(DocumentationType.SWAGGER_2)
     		  .select()
-              .apis(RequestHandlerSelectors.any())
+              .apis(RequestHandlerSelectors.basePackage("org.springframework.samples.petclinic.rest"))
               .paths(PathSelectors.any())
               .build()
               .apiInfo(getApiInfo());

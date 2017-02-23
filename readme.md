@@ -8,15 +8,15 @@ The [spring-petclinic-angular2 project](https://github.com/spring-petclinic/spri
 
 ## Running petclinic locally
 ```
-	git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
+	git clone https://github.com/spring-projects/spring-petclinic.git
 	cd spring-petclinic
-	./mvnw tomcat7:run
+	./mvnw spring-boot:run
 ```
 
-You can then access petclinic here: http://localhost:9966/petclinic/
+You can then access petclinic here: http://localhost:8080/
 
 ## Swagger REST API documentation presented here:
-http://localhost:9966/petclinic/swagger-ui.html
+http://localhost:8080/swagger-ui.html
 
 ## Screenshot of the Angular client
 
@@ -29,53 +29,15 @@ Our issue tracker is available here: https://github.com/spring-petclinic/spring-
 ## Database configuration
 
 In its default configuration, Petclinic uses an in-memory database (HSQLDB) which
-gets populated at startup with data.
-A similar setups is provided for MySql and PostgreSQL in case a persistent database configuration is needed.
-To run petclinic locally using persistent database, it is needed to run with profile defined in main pom.xml file.
+gets populated at startup with data. A similar setup is provided for MySql in case a persistent database configuration is needed.
+Note that whenever the database type is changed, the data-access.properties file needs to be updated and the mysql-connector-java artifact from the pom.xml needs to be uncommented.
 
-For MySQL database, it is needed to run with 'MySQL' profile defined in main pom.xml file.
-
+You could start a MySql database with docker:
 ```
-    ./mvnw tomcat7:run -P MySQL
+docker run -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:5.7.8
 ```
 
-Before do this, would be good to check properties defined in MySQL profile inside pom.xml file.
-
-```
-    <properties>
-        <jpa.database>MYSQL</jpa.database>
-        <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-        <jdbc.url>jdbc:mysql://localhost:3306/petclinic?useUnicode=true</jdbc.url>
-        <jdbc.username>root</jdbc.username>
-        <jdbc.password>petclinic</jdbc.password>
-    </properties>
-```      
-
-You may also start a MySql database with docker:
-
-```
-docker run --name mysql-petclinic -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:5.7.8
-```
-
-For PostgreSQL database, it is needed to run with 'PostgreSQL' profile defined in main pom.xml file.
-
-```
-    ./mvnw tomcat7:run -P PostgreSQL
-```
-
-Before do this, would be good to check properties defined in PostgreSQL profile inside pom.xml file.
-
-```
-			<properties>
-                <jpa.database>POSTGRESQL</jpa.database>
-                <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:postgresql://localhost:5432/petclinic</jdbc.url>
-                <jdbc.username>postgres</jdbc.username>
-                <jdbc.password>petclinic</jdbc.password>
-            </properties>
-```
 You may also start a Postgres database with docker:
-
 ```
 docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0
 ```
@@ -105,6 +67,13 @@ File -> Import -> Maven -> Existing Maven project
 
 
 ## Looking for something in particular?
+
+|Spring Boot Configuration | Class or Java property files  |
+|--------------------------|---|
+|The Main Class | [PetClinicApplication](src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java) |
+|Properties Files | [application.properties](src/main/resources) |
+|Caching | [CacheConfig](src/main/java/org/springframework/samples/petclinic/system/CacheConfig.java) |
+
 
 | Inside the 'Web' layer | Files |
 |------------------------|-------|

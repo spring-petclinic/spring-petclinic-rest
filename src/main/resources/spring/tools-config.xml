@@ -33,13 +33,13 @@
         based on the @ManagedResource, @ManagedAttribute, and @ManagedOperation annotations.
     -->
     <context:mbean-export/>
-    
+
     <!-- Required to enable Spring post processing on @Configuration classes. -->
 	<context:annotation-config/>
 
 	<!-- Config class name for Swagger plugin -->
-	<bean class="org.springframework.samples.petclinic.util.ApplicationSwaggerConfig"/>
-	
+	<bean class="org.springframework.samples.petclinic.system.ApplicationSwaggerConfig"/>
+
     <!-- enables scanning for @Cacheable annotation -->
     <cache:annotation-driven/>
 
