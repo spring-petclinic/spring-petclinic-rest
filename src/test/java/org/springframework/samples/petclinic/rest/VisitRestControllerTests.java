@@ -55,7 +55,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-core-config.xml"})
+@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-config.xml"})
 @WebAppConfiguration
 public class VisitRestControllerTests {
 
@@ -74,9 +74,9 @@ public class VisitRestControllerTests {
     	this.mockMvc = MockMvcBuilders.standaloneSetup(visitRestController)
     			.setControllerAdvice(new ExceptionControllerAdvice())
     			.build();
-    	
+
     	visits = new ArrayList<Visit>();
-    	
+
     	Owner owner = new Owner();
     	owner.setId(1);
     	owner.setFirstName("Eduardo");
@@ -84,18 +84,18 @@ public class VisitRestControllerTests {
     	owner.setAddress("2693 Commerce St.");
     	owner.setCity("McFarland");
     	owner.setTelephone("6085558763");
-    	
+
     	PetType petType = new PetType();
     	petType.setId(2);
     	petType.setName("dog");
-    	
+
     	Pet pet = new Pet();
     	pet.setId(8);
     	pet.setName("Rosy");
     	pet.setBirthDate(new Date());
     	pet.setOwner(owner);
     	pet.setType(petType);
-    	
+
 
     	Visit visit = new Visit();
     	visit.setId(2);
@@ -103,17 +103,17 @@ public class VisitRestControllerTests {
     	visit.setDate(new Date());
     	visit.setDescription("rabies shot");
     	visits.add(visit);
-    	
+
     	visit = new Visit();
     	visit.setId(3);
     	visit.setPet(pet);
     	visit.setDate(new Date());
     	visit.setDescription("neutered");
     	visits.add(visit);
-    	
+
 
     }
-    
+
     @Test
     public void testGetVisitSuccess() throws Exception {
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
@@ -124,7 +124,7 @@ public class VisitRestControllerTests {
             .andExpect(jsonPath("$.id").value(2))
             .andExpect(jsonPath("$.description").value("rabies shot"));
     }
-    
+
     @Test
     public void testGetVisitNotFound() throws Exception {
     	given(this.clinicService.findVisitById(-1)).willReturn(null);
@@ -132,7 +132,7 @@ public class VisitRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testGetAllVisitsSuccess() throws Exception {
     	given(this.clinicService.findAllVisits()).willReturn(visits);
@@ -145,7 +145,7 @@ public class VisitRestControllerTests {
         	.andExpect(jsonPath("$.[1].id").value(3))
         	.andExpect(jsonPath("$.[1].description").value("neutered"));
     }
-    
+
     @Test
     public void testGetAllVisitsNotFound() throws Exception {
     	visits.clear();
@@ -154,7 +154,7 @@ public class VisitRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testCreateVisitSuccess() throws Exception {
     	Visit newVisit = visits.get(0);
@@ -166,7 +166,7 @@ public class VisitRestControllerTests {
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
     		.andExpect(status().isCreated());
     }
-    
+
     @Test(expected = IOException.class)
     public void testCreateVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
@@ -178,7 +178,7 @@ public class VisitRestControllerTests {
         		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         		.andExpect(status().isBadRequest());
      }
-    
+
     @Test
     public void testUpdateVisitSuccess() throws Exception {
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
@@ -190,15 +190,15 @@ public class VisitRestControllerTests {
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(content().contentType("application/json;charset=UTF-8"))
         	.andExpect(status().isNoContent());
-    	
+
     	this.mockMvc.perform(get("/api/visits/2")
            	.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("$.id").value(2))
-            .andExpect(jsonPath("$.description").value("rabies shot test"));	
+            .andExpect(jsonPath("$.description").value("rabies shot test"));
     }
-    
+
     @Test(expected = IOException.class)
     public void testUpdateVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
@@ -209,7 +209,7 @@ public class VisitRestControllerTests {
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isBadRequest());
      }
-    
+
     @Test
     public void testDeleteVisitSuccess() throws Exception {
     	Visit newVisit = visits.get(0);
@@ -220,7 +220,7 @@ public class VisitRestControllerTests {
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
     }
-    
+
     @Test
     public void testDeleteVisitError() throws Exception {
     	Visit newVisit = visits.get(0);

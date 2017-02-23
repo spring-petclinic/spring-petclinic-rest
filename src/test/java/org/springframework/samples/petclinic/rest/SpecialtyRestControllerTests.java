@@ -49,7 +49,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Vitaliy Fedoriv
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-core-config.xml"})
+@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-config.xml"})
 @WebAppConfiguration
 public class SpecialtyRestControllerTests {
 
@@ -74,19 +74,19 @@ public class SpecialtyRestControllerTests {
     	specialty.setId(1);
     	specialty.setName("radiology");
     	specialties.add(specialty);
-    	
+
     	specialty = new Specialty();
     	specialty.setId(2);
     	specialty.setName("surgery");
     	specialties.add(specialty);
-    	
+
     	specialty = new Specialty();
     	specialty.setId(3);
     	specialty.setName("dentistry");
     	specialties.add(specialty);
 
     }
-    
+
     @Test
     public void testGetSpecialtySuccess() throws Exception {
     	given(this.clinicService.findSpecialtyById(1)).willReturn(specialties.get(0));
@@ -97,7 +97,7 @@ public class SpecialtyRestControllerTests {
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.name").value("radiology"));
     }
-    
+
     @Test
     public void testGetSpecialtyNotFound() throws Exception {
     	given(this.clinicService.findSpecialtyById(-1)).willReturn(null);
@@ -105,10 +105,10 @@ public class SpecialtyRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testGetAllSpecialtysSuccess() throws Exception {
-    	specialties.remove(0); 
+    	specialties.remove(0);
     	given(this.clinicService.findAllSpecialties()).willReturn(specialties);
         this.mockMvc.perform(get("/api/specialties/")
         	.accept(MediaType.APPLICATION_JSON))
@@ -119,7 +119,7 @@ public class SpecialtyRestControllerTests {
         	.andExpect(jsonPath("$.[1].id").value(3))
         	.andExpect(jsonPath("$.[1].name").value("dentistry"));
     }
-    
+
     @Test
     public void testGetAllSpecialtysNotFound() throws Exception {
     	specialties.clear();
@@ -128,7 +128,7 @@ public class SpecialtyRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testCreateSpecialtySuccess() throws Exception {
     	Specialty newSpecialty = specialties.get(0);
@@ -139,7 +139,7 @@ public class SpecialtyRestControllerTests {
     		.content(newSpecialtyAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
     		.andExpect(status().isCreated());
     }
-    
+
     @Test
     public void testCreateSpecialtyError() throws Exception {
     	Specialty newSpecialty = specialties.get(0);
@@ -151,7 +151,7 @@ public class SpecialtyRestControllerTests {
         		.content(newSpecialtyAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         		.andExpect(status().isBadRequest());
      }
-    
+
     @Test
     public void testUpdateSpecialtySuccess() throws Exception {
     	given(this.clinicService.findSpecialtyById(2)).willReturn(specialties.get(1));
@@ -163,15 +163,15 @@ public class SpecialtyRestControllerTests {
     		.content(newSpecialtyAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(content().contentType("application/json;charset=UTF-8"))
         	.andExpect(status().isNoContent());
-    	
+
     	this.mockMvc.perform(get("/api/specialties/2")
            	.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("$.id").value(2))
-            .andExpect(jsonPath("$.name").value("surgery I"));	
+            .andExpect(jsonPath("$.name").value("surgery I"));
     }
-    
+
     @Test
     public void testUpdateSpecialtyError() throws Exception {
     	Specialty newSpecialty = specialties.get(0);
@@ -182,7 +182,7 @@ public class SpecialtyRestControllerTests {
     		.content(newSpecialtyAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isBadRequest());
      }
-    
+
     @Test
     public void testDeleteSpecialtySuccess() throws Exception {
     	Specialty newSpecialty = specialties.get(0);
@@ -193,7 +193,7 @@ public class SpecialtyRestControllerTests {
     		.content(newSpecialtyAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
     }
-    
+
     @Test
     public void testDeleteSpecialtyError() throws Exception {
     	Specialty newSpecialty = specialties.get(0);

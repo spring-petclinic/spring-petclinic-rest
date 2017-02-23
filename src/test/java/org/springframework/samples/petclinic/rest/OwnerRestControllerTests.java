@@ -50,7 +50,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Vitaliy Fedoriv
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-core-config.xml"})
+@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-config.xml"})
 @WebAppConfiguration
 public class OwnerRestControllerTests {
 
@@ -79,7 +79,7 @@ public class OwnerRestControllerTests {
     	owner.setCity("Madison");
     	owner.setTelephone("6085551023");
     	owners.add(owner);
-    	
+
     	owner = new Owner();
     	owner.setId(2);
     	owner.setFirstName("Betty");
@@ -88,7 +88,7 @@ public class OwnerRestControllerTests {
     	owner.setCity("Sun Prairie");
     	owner.setTelephone("6085551749");
     	owners.add(owner);
-    	
+
     	owner = new Owner();
     	owner.setId(3);
     	owner.setFirstName("Eduardo");
@@ -97,7 +97,7 @@ public class OwnerRestControllerTests {
     	owner.setCity("McFarland");
     	owner.setTelephone("6085558763");
     	owners.add(owner);
-    	
+
     	owner = new Owner();
     	owner.setId(4);
     	owner.setFirstName("Harold");
@@ -106,10 +106,10 @@ public class OwnerRestControllerTests {
     	owner.setCity("Windsor");
     	owner.setTelephone("6085553198");
     	owners.add(owner);
-    	
-    	
+
+
     }
-    
+
     @Test
     public void testGetOwnerSuccess() throws Exception {
     	given(this.clinicService.findOwnerById(1)).willReturn(owners.get(0));
@@ -120,7 +120,7 @@ public class OwnerRestControllerTests {
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.firstName").value("George"));
     }
-    
+
     @Test
     public void testGetOwnerNotFound() throws Exception {
     	given(this.clinicService.findOwnerById(-1)).willReturn(null);
@@ -128,10 +128,10 @@ public class OwnerRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testGetOwnersListSuccess() throws Exception {
-    	owners.remove(0); 
+    	owners.remove(0);
     	owners.remove(1);
     	given(this.clinicService.findOwnerByLastName("Davis")).willReturn(owners);
         this.mockMvc.perform(get("/api/owners/*/lastname/Davis")
@@ -143,7 +143,7 @@ public class OwnerRestControllerTests {
             .andExpect(jsonPath("$.[1].id").value(4))
             .andExpect(jsonPath("$.[1].firstName").value("Harold"));
     }
-    
+
     @Test
     public void testGetOwnersListNotFound() throws Exception {
     	owners.clear();
@@ -152,10 +152,10 @@ public class OwnerRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testGetAllOwnersSuccess() throws Exception {
-    	owners.remove(0); 
+    	owners.remove(0);
     	owners.remove(1);
     	given(this.clinicService.findAllOwners()).willReturn(owners);
         this.mockMvc.perform(get("/api/owners/")
@@ -167,7 +167,7 @@ public class OwnerRestControllerTests {
             .andExpect(jsonPath("$.[1].id").value(4))
             .andExpect(jsonPath("$.[1].firstName").value("Harold"));
     }
-    
+
     @Test
     public void testGetAllOwnersNotFound() throws Exception {
     	owners.clear();
@@ -176,7 +176,7 @@ public class OwnerRestControllerTests {
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testCreateOwnerSuccess() throws Exception {
     	Owner newOwner = owners.get(0);
@@ -187,7 +187,7 @@ public class OwnerRestControllerTests {
     		.content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
     		.andExpect(status().isCreated());
     }
-    
+
     @Test
     public void testCreateOwnerError() throws Exception {
     	Owner newOwner = owners.get(0);
@@ -199,7 +199,7 @@ public class OwnerRestControllerTests {
         		.content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         		.andExpect(status().isBadRequest());
      }
-    
+
     @Test
     public void testUpdateOwnerSuccess() throws Exception {
     	Owner newOwner = owners.get(0);
@@ -210,16 +210,16 @@ public class OwnerRestControllerTests {
     		.content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(content().contentType("application/json;charset=UTF-8"))
         	.andExpect(status().isNoContent());
-    	
+
     	this.mockMvc.perform(get("/api/owners/1")
            	.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.firstName").value("George I"));
-        	
+
     }
-    
+
     @Test
     public void testUpdateOwnerError() throws Exception {
     	Owner newOwner = owners.get(0);
@@ -230,7 +230,7 @@ public class OwnerRestControllerTests {
     		.content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isBadRequest());
      }
-    
+
     @Test
     public void testDeleteOwnerSuccess() throws Exception {
     	Owner newOwner = owners.get(0);
@@ -241,7 +241,7 @@ public class OwnerRestControllerTests {
     		.content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
     }
-    
+
     @Test
     public void testDeleteOwnerError() throws Exception {
     	Owner newOwner = owners.get(0);
