@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2002-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
  */
 package org.springframework.samples.petclinic.repository.jpa;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.repository.PetRepository;
@@ -33,10 +34,9 @@ import org.springframework.stereotype.Repository;
  * @author Rod Johnson
  * @author Sam Brannen
  * @author Michael Isvy
- * @since 22.4.2006
+ * @author Vitaliy Fedoriv
  */
 @Repository
-@Qualifier("PetRepository")
 public class JpaPetRepositoryImpl implements PetRepository {
 
     @PersistenceContext
@@ -61,5 +61,22 @@ public class JpaPetRepositoryImpl implements PetRepository {
             this.em.merge(pet);
         }
     }
+    
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<Pet> findAll() throws DataAccessException {
+		return this.em.createQuery("SELECT pet FROM Pet pet").getResultList();
+	}
+
+	@Override
+	public void delete(Pet pet) throws DataAccessException {
+		//this.em.remove(this.em.contains(pet) ? pet : this.em.merge(pet));
+		String petId = pet.getId().toString();
+		this.em.createQuery("DELETE FROM Visit visit WHERE pet_id=" + petId).executeUpdate();
+		this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
+		if (em.contains(pet)) {
+			em.remove(pet);
+		}
+	}
 
 }

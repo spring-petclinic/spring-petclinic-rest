@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.springdatajpa.ext;
+package org.springframework.samples.petclinic.repository.springdatajpa;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,7 +26,7 @@ import org.springframework.samples.petclinic.model.Pet;
  *
  */
 
-public class SpringDataPetRepositoryExtImpl implements PetRepositoryExtOverride {
+public class SpringDataPetRepositoryImpl implements PetRepositoryOverride {
 	
 	@PersistenceContext
     private EntityManager em;

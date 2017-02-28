@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,29 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository;
+package org.springframework.samples.petclinic.repository.springdatajpa;
 
-import java.util.Collection;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.Visit;
 
 /**
  * @author Vitaliy Fedoriv
  *
  */
 
-public interface PetRepositoryExt extends PetRepository {
+public class SpringDataVisitRepositoryImpl implements VisitRepositoryOverride {
 	
-	Collection<Pet> findAll() throws DataAccessException;
+	@PersistenceContext
+    private EntityManager em;
 
-	void delete(Pet pet) throws DataAccessException;
+	@Override
+	public void delete(Visit visit) throws DataAccessException {
+		String visitId = visit.getId().toString();
+		this.em.createQuery("DELETE FROM Visit visit WHERE id=" + visitId).executeUpdate();
+	}
+
 
 }

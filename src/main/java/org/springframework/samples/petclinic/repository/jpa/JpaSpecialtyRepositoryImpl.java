@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.jpa.ext;
+package org.springframework.samples.petclinic.repository.jpa;
 
 import java.util.Collection;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Specialty;
-import org.springframework.samples.petclinic.repository.SpecialtyRepositoryExt;
+import org.springframework.samples.petclinic.repository.SpecialtyRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -33,8 +32,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-@Qualifier("SpecialtyRepositoryExt")
-public class JpaSpecialtyRepositoryExtImpl implements SpecialtyRepositoryExt {
+public class JpaSpecialtyRepositoryImpl implements SpecialtyRepository {
 	
     @PersistenceContext
     private EntityManager em;

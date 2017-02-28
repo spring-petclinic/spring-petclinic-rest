@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.jdbc.ext;
+package org.springframework.samples.petclinic.repository.jdbc;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,7 +23,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -32,7 +31,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.samples.petclinic.model.Specialty;
-import org.springframework.samples.petclinic.repository.SpecialtyRepositoryExt;
+import org.springframework.samples.petclinic.repository.SpecialtyRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -41,15 +40,14 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-@Qualifier("SpecialtyRepositoryExt")
-public class JdbcSpecialtyRepositoryExtImpl implements SpecialtyRepositoryExt {
+public class JdbcSpecialtyRepositoryImpl implements SpecialtyRepository {
 	
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	private SimpleJdbcInsert insertSpecialty;
 
 	@Autowired
-	public JdbcSpecialtyRepositoryExtImpl(DataSource dataSource) {
+	public JdbcSpecialtyRepositoryImpl(DataSource dataSource) {
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		this.insertSpecialty = new SimpleJdbcInsert(dataSource)
 	            .withTableName("specialties")

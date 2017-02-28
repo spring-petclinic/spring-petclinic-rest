@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository.jdbc.ext;
+package org.springframework.samples.petclinic.repository.jdbc;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -36,7 +35,7 @@ import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
-import org.springframework.samples.petclinic.repository.PetTypeRepositoryExt;
+import org.springframework.samples.petclinic.repository.PetTypeRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -45,15 +44,14 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-@Qualifier("PetTypeRepositoryExt")
-public class JdbcPetTypeRepositoryExtImpl implements PetTypeRepositoryExt {
+public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
 	
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	private SimpleJdbcInsert insertPetType;
 	
 	@Autowired
-	public JdbcPetTypeRepositoryExtImpl(DataSource dataSource) {
+	public JdbcPetTypeRepositoryImpl(DataSource dataSource) {
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		this.insertPetType = new SimpleJdbcInsert(dataSource)
 	            .withTableName("types")

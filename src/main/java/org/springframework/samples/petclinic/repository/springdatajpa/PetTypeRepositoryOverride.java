@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.repository;
+package org.springframework.samples.petclinic.repository.springdatajpa;
 
-import java.util.Collection;
-
-import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.model.PetType;
 
 /**
  * @author Vitaliy Fedoriv
  *
  */
 
-public interface VisitRepositoryExt extends VisitRepository {
+public interface PetTypeRepositoryOverride {
 	
-	Visit findById(int id) throws DataAccessException;
-	
-	Collection<Visit> findAll() throws DataAccessException;
-
-	void delete(Visit visit) throws DataAccessException;
+	public void delete(PetType petType);
 
 }
