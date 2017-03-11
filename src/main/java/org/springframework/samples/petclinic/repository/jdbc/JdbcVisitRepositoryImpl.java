@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -53,6 +54,7 @@ import java.util.Map;
  * @author Vitaliy Fedoriv
  */
 @Repository
+@Profile("jdbc")
 public class JdbcVisitRepositoryImpl implements VisitRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

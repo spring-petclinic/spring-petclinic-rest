@@ -24,6 +24,7 @@ import javax.sql.DataSource;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -52,6 +53,7 @@ import org.springframework.stereotype.Repository;
  * @author Vitaliy Fedoriv
  */
 @Repository
+@Profile("jdbc")
 public class JdbcOwnerRepositoryImpl implements OwnerRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

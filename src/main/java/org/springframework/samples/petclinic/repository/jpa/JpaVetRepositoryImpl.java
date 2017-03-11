@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.repository.jpa;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.VetRepository;
@@ -34,7 +35,7 @@ import java.util.Collection;
  * @author Vitaliy Fedoriv
  */
 @Repository
-
+@Profile("jpa")
 public class JpaVetRepositoryImpl implements VetRepository {
 
     @PersistenceContext

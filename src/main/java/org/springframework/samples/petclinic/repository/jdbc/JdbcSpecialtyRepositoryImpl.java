@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
+@Profile("jdbc")
 public class JdbcSpecialtyRepositoryImpl implements SpecialtyRepository {
 	
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
