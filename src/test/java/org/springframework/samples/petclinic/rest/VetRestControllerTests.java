@@ -50,7 +50,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-config.xml"})
+@ContextConfiguration({"classpath:spring/mvc-test-config.xml"})
 @WebAppConfiguration
 public class VetRestControllerTests {
 

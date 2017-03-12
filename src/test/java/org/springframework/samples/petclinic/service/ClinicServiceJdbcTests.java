@@ -16,8 +16,8 @@
 package org.springframework.samples.petclinic.service;
 
 import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
@@ -27,9 +27,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Michael Isvy
  * @see AbstractClinicServiceTests AbstractClinicServiceTests for more details. </p>
  */
-@ContextConfiguration(locations = {"classpath:spring/business-config.xml"})
+@SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("jdbc")
+@ActiveProfiles("jdbc, hsqldb")
 public class ClinicServiceJdbcTests extends AbstractClinicServiceTests {
 
 
