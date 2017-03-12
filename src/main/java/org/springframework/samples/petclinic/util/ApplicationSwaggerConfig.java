@@ -16,11 +16,10 @@
 
 package org.springframework.samples.petclinic.util;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -32,7 +31,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Java config for Springfox swagger documentation plugin
- * see also tools-config.xml and mvc-config.xml
+ * 
  * @author Vitaliy Fedoriv
  *
  */
