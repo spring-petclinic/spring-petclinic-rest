@@ -2,21 +2,16 @@
 ===        Spring PetClinic sample application - PostgreSQL Configuration    ===
 ================================================================================
 
-@author Sam Brannen
-@author Costin Leau
+@author Vitaliy Fedoriv
+@autor Antoine Rey
 
 --------------------------------------------------------------------------------
 
 1) Download and install the PostgreSQL database,
    which can be found here: https://www.postgresql.org/download/
 
-2) Dependency for postgresql-driver included in Petclinic pom.xml file.
-   See the PostgreSQL maven profile.
-   Alternatively, download PostgreSQL JDBC driver from here: https://jdbc.postgresql.org/download.html
-   and copy the PostgreSQL JDBC driver JAR file (e.g., postgresql-9.4.1211.jre7.jar) into
-   the db/postgesql directory.
 
-3) Open psql and create the PetClinic database:
+2) Open psql and create the PetClinic database:
  
 	CREATE DATABASE petclinic
   	WITH OWNER = postgres
@@ -24,6 +19,9 @@
        TABLESPACE = pg_default
        CONNECTION LIMIT = -1;
 
-4) If required, change connection parameters into the PostgreSQL profile of the pom.xml.
-   Build and starth the web app with the PostgreSQL profile:
-   ./mvnw tomcat7:run -P PostgreSQL
+3) Create the PetClinic tables by executing the "db/postgresql/initDB.sql".
+Then execute "db/mysql/populateDB.sql" script.
+Or uncomment strings
+#spring.datasource.schema=classpath*:db/postgresql/initDB.sql
+#spring.datasource.data=classpath*:db/postgresql/populateDB.sql
+ in application-postgresql.properties file at the first time you run the app.

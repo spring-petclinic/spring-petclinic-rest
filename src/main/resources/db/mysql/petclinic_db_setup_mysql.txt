@@ -12,12 +12,9 @@
    Alternatively, you may use the official MySQL docker image. Refer to the
    README.md for the Docker command line.
 
-2) Dependency for Connector/J, the MySQL JDBC driver (e.g., Connector/J 5.1.x) is
-   included in Petclinic pom.xml file. See the MySQL maven profile.
-   Alternatively, download Connector/J JDBC driver from here:
-   http://dev.mysql.com/downloads/connector/j/
-   and copy the MySQL JDBC driver JAR file (e.g., mysql-connector-java-5.1.5-bin.jar).
 
-3) Change connection parameters into the MySQL profile of the pom.xml.
-   Build and starth the web app with the MySQL profile:
-   ./mvnw tomcat7:run -P MySQL
+2) Create the PetClinic database and user by executing the "db/mysql/initDB.sql"
+and "db/mysql/populateDB.sql" scripts. Or uncomment strings
+#spring.datasource.schema=classpath*:db/mysql/initDB.sql
+#spring.datasource.data=classpath*:db/mysql/populateDB.sql
+ in application-mysql.properties file at the first time you run the app.

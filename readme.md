@@ -10,7 +10,7 @@ The [spring-petclinic-angular2 project](https://github.com/spring-petclinic/spri
 ```
 	git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
 	cd spring-petclinic
-	./mvnw tomcat7:run
+	./mvnw spring-boot:run
 ```
 
 You can then access petclinic here: http://localhost:9966/petclinic/
@@ -31,24 +31,25 @@ Our issue tracker is available here: https://github.com/spring-petclinic/spring-
 In its default configuration, Petclinic uses an in-memory database (HSQLDB) which
 gets populated at startup with data.
 A similar setups is provided for MySql and PostgreSQL in case a persistent database configuration is needed.
-To run petclinic locally using persistent database, it is needed to run with profile defined in main pom.xml file.
+To run petclinic locally using persistent database, it is needed to change profile defined in application.properties file.
 
-For MySQL database, it is needed to run with 'MySQL' profile defined in main pom.xml file.
+For MySQL database, it is needed to change param "hsqldb" to "mysql" in string
+```
+spring.profiles.active=hsqldb,spring-data-jpa
+```
+ defined in application.properties file.
+
+Before do this, would be good to check properties defined in application-mysql.properties file.
 
 ```
-    ./mvnw tomcat7:run -P MySQL
-```
-
-Before do this, would be good to check properties defined in MySQL profile inside pom.xml file.
-
-```
-    <properties>
-        <jpa.database>MYSQL</jpa.database>
-        <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-        <jdbc.url>jdbc:mysql://localhost:3306/petclinic?useUnicode=true</jdbc.url>
-        <jdbc.username>root</jdbc.username>
-        <jdbc.password>petclinic</jdbc.password>
-    </properties>
+spring.datasource.url = jdbc:mysql://localhost:3306/petclinic?useUnicode=true
+spring.datasource.driverClassName = com.mysql.jdbc.Driver
+spring.datasource.username=root 
+spring.datasource.password=petclinic 
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver 
+spring.jpa.database=MYSQL 
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=none
 ```      
 
 You may also start a MySql database with docker:
@@ -57,22 +58,23 @@ You may also start a MySql database with docker:
 docker run --name mysql-petclinic -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:5.7.8
 ```
 
-For PostgreSQL database, it is needed to run with 'PostgreSQL' profile defined in main pom.xml file.
+For PostgeSQL database, it is needed to change param "hsqldb" to "postgresql" in string
+```
+spring.profiles.active=hsqldb,spring-data-jpa
+```
+ defined in applcation.properties file.
+
+Before do this, would be good to check properties defined in application-postgresql.properties file.
 
 ```
-    ./mvnw tomcat7:run -P PostgreSQL
-```
-
-Before do this, would be good to check properties defined in PostgreSQL profile inside pom.xml file.
-
-```
-			<properties>
-                <jpa.database>POSTGRESQL</jpa.database>
-                <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:postgresql://localhost:5432/petclinic</jdbc.url>
-                <jdbc.username>postgres</jdbc.username>
-                <jdbc.password>petclinic</jdbc.password>
-            </properties>
+spring.datasource.url=jdbc:postgresql://localhost:5432/petclinic
+spring.datasource.driverClassName=org.postgresql.Driver
+spring.datasource.username=postgres
+spring.datasource.password=petclinic
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.database=POSTGRESQL
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=none
 ```
 You may also start a Postgres database with docker:
 
