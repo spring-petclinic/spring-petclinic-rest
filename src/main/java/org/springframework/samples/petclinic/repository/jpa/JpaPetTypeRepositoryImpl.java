@@ -67,7 +67,7 @@ public class JpaPetTypeRepositoryImpl implements PetTypeRepository {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void delete(PetType petType) throws DataAccessException {
-		//this.em.remove(this.em.contains(petType) ? petType : this.em.merge(petType));
+		this.em.remove(this.em.contains(petType) ? petType : this.em.merge(petType));
 		String petTypeId = petType.getId().toString();
 		
 		List<Pet> pets = new ArrayList<Pet>();
@@ -81,9 +81,6 @@ public class JpaPetTypeRepositoryImpl implements PetTypeRepository {
 			this.em.createQuery("DELETE FROM Pet pet WHERE id=" + pet.getId().toString()).executeUpdate();
 		}
 		this.em.createQuery("DELETE FROM PetType pettype WHERE id=" + petTypeId).executeUpdate();
-		if (em.contains(petType)) {
-			em.remove(petType);
-		}
 	}
 
 }

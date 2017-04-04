@@ -54,10 +54,6 @@ public class SpringDataPetTypeRepositoryImpl implements PetTypeRepositoryOverrid
 			this.em.createQuery("DELETE FROM Pet pet WHERE id=" + pet.getId().toString()).executeUpdate();
 		}
 		this.em.createQuery("DELETE FROM PetType pettype WHERE id=" + petTypeId).executeUpdate();
-		if (em.contains(petType)) {
-			em.remove(petType);
-		}
-
 	}
 
 }
