@@ -32,8 +32,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.service.ApplicationTestConfig;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -49,15 +52,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  * @author Vitaliy Fedoriv
  */
+@SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:spring/mvc-test-config.xml"})
+@ContextConfiguration(classes=ApplicationTestConfig.class)
 @WebAppConfiguration
 public class PetTypeRestControllerTests {
 
     @Autowired
     private PetTypeRestController petTypeRestController;
 
-    @Autowired
+    @MockBean
     private ClinicService clinicService;
 
     private MockMvc mockMvc;
