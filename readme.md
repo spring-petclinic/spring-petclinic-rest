@@ -1,7 +1,7 @@
 # REST version of Spring PetClinic Sample Application (spring-framework-petclinic extend ) [![Build Status](https://travis-ci.org/spring-petclinic/spring-petclinic-rest.png?branch=master)](https://travis-ci.org/spring-petclinic/spring-petclinic-rest/)
 
-This backend version of the Spring Petclinic application only provides a REST API. There is no UI.
-The [spring-petclinic-angular2 project](https://github.com/spring-petclinic/spring-petclinic-angular2) is a front-end application witch consumes the REST API.
+This backend version of the Spring Petclinic application only provides a REST API. **There is no UI**.
+The [spring-petclinic-angular project](https://github.com/spring-petclinic/spring-petclinic-angular) is a Angular 5 front-end application witch consumes the REST API.
 
 ## Understanding the Spring Petclinic application with a few diagrams
 <a href="https://speakerdeck.com/michaelisvy/spring-petclinic-sample-application">See the presentation here</a>
@@ -15,10 +15,10 @@ The [spring-petclinic-angular2 project](https://github.com/spring-petclinic/spri
 
 You can then access petclinic here: http://localhost:9966/petclinic/
 
-## Swagger REST API documentation presented here:
-http://localhost:9966/petclinic/swagger-ui.html
+## Swagger REST API documentation presented here (after application start):
+<a href="http://localhost:9966/petclinic/swagger-ui.html">http://localhost:9966/petclinic/swagger-ui.html</a>
 
-## Screenshot of the Angular client
+## Screenshot of the Angular 5 client
 
 <img width="1427" alt="spring-petclinic-angular2" src="https://cloud.githubusercontent.com/assets/838318/23263243/f4509c4a-f9dd-11e6-951b-69d0ef72d8bd.png">
 
@@ -62,7 +62,7 @@ For PostgeSQL database, it is needed to change param "hsqldb" to "postgresql" in
 ```
 spring.profiles.active=hsqldb,spring-data-jpa
 ```
- defined in applcation.properties file.
+ defined in application.properties file.
 
 Before do this, would be good to check properties defined in application-postgresql.properties file.
 
@@ -108,36 +108,14 @@ File -> Import -> Maven -> Existing Maven project
 
 ## Looking for something in particular?
 
-| Inside the 'Web' layer | Files |
-|------------------------|-------|
-| Spring MVC and REST API configuration | [mvc-config.xml](src/main/resources/spring/mvc-config.xml)  |
-
-| 'Service' and 'Repository' layers | Files |
-|-----------------------------------|-------|
-| Transactions | [business-config.xml](src/main/resources/spring/business-config.xml), [ClinicServiceImpl.java](src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java) |
-| Cache | [tools-config.xml](src/main/resources/spring/tools-config.xml), [ClinicServiceImpl.java](src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java) |
-| Bean Profiles | [business-config.xml](src/main/resources/spring/business-config.xml), [ClinicServiceJdbcTests.java](src/test/java/org/springframework/samples/petclinic/service/ClinicServiceJdbcTests.java), [PetclinicInitializer.java](src/main/java/org/springframework/samples/petclinic/PetclinicInitializer.java) |
-| JDBC | [business-config.xml](src/main/resources/spring/business-config.xml), [jdbc folder](src/main/java/org/springframework/samples/petclinic/repository/jdb) |
-| JPA | [business-config.xml](src/main/resources/spring/business-config.xml), [jpa folder](src/main/java/org/springframework/samples/petclinic/repository/jpa) |
-| Spring Data JPA | [business-config.xml](src/main/resources/spring/business-config.xml), [springdatajpa folder](src/main/java/org/springframework/samples/petclinic/repository/springdatajpa) |
-
-
-
-
-## Interaction with other open source projects
-
-One of the best parts about working on the Spring Petclinic application is that we have the opportunity to work in direct contact with many Open Source projects. We found some bugs/suggested improvements on various topics such as Spring, Spring Data, Bean Validation and even Eclipse! In many cases, they've been fixed/implemented in just a few days.
-Here is a list of them:
-
-| Name | Issue |
-|------|-------|
-| Spring JDBC: simplify usage of NamedParameterJdbcTemplate | [SPR-10256](https://jira.springsource.org/browse/SPR-10256) and [SPR-10257](https://jira.springsource.org/browse/SPR-10257) |
-| Bean Validation / Hibernate Validator: simplify Maven dependencies and backward compatibility |[HV-790](https://hibernate.atlassian.net/browse/HV-790) and [HV-792](https://hibernate.atlassian.net/browse/HV-792) |
-| Spring Data: provide more flexibility when working with JPQL queries | [DATAJPA-292](https://jira.springsource.org/browse/DATAJPA-292) |
-| Dandelion: improves the DandelionFilter for Jetty support | [113](https://github.com/dandelion/dandelion/issues/113) |
-
-
-
+| Layer | Source |
+|--|--|
+| REST API controllers | [REST folder](src/main/java/org/springframework/samples/petclinic/rest) |
+| Service | [ClinicServiceImpl.java](src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java) |
+|JDBC | [jdbc folder](src/main/java/org/springframework/samples/petclinic/repository/jdb) |
+| JPA | [jpa folder](src/main/java/org/springframework/samples/petclinic/repository/jpa) |
+| Spring Data JPA | [springdatajpa folder](src/main/java/org/springframework/samples/petclinic/repository/springdatajpa) |
+| Tests | [AbstractClinicServiceTests.java](src/test/java/org/springframework/samples/petclinic/service/AbstractClinicServiceTests.java) |
 
 # Contributing
 
