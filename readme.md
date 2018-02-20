@@ -43,11 +43,10 @@ Before do this, would be good to check properties defined in application-mysql.p
 
 ```
 spring.datasource.url = jdbc:mysql://localhost:3306/petclinic?useUnicode=true
-spring.datasource.driverClassName = com.mysql.jdbc.Driver
-spring.datasource.username=root 
+spring.datasource.username=pc
 spring.datasource.password=petclinic 
 spring.datasource.driver-class-name=com.mysql.jdbc.Driver 
-spring.jpa.database=MYSQL 
+spring.jpa.database=MYSQL
 spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 spring.jpa.hibernate.ddl-auto=none
 ```      
@@ -68,7 +67,6 @@ Before do this, would be good to check properties defined in application-postgre
 
 ```
 spring.datasource.url=jdbc:postgresql://localhost:5432/petclinic
-spring.datasource.driverClassName=org.postgresql.Driver
 spring.datasource.username=postgres
 spring.datasource.password=petclinic
 spring.datasource.driver-class-name=org.postgresql.Driver
