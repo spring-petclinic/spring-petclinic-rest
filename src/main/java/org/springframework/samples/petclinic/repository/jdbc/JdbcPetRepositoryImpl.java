@@ -133,7 +133,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 		Collection<Pet> pets = new ArrayList<Pet>();
 		Collection<JdbcPet> jdbcPets = new ArrayList<JdbcPet>();
 		jdbcPets = this.namedParameterJdbcTemplate
-				.query("SELECT pets.id, name, birth_date, type_id, owner_id FROM pets",
+				.query("SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets",
 				params,
 				new JdbcPetRowMapper());
 		Collection<PetType> petTypes = this.namedParameterJdbcTemplate.query("SELECT id, name FROM types ORDER BY name",

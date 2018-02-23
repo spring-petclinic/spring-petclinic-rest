@@ -87,7 +87,7 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
         Map<String, Object> params = new HashMap<>();
         params.put("id", petId);
         JdbcPet pet = this.namedParameterJdbcTemplate.queryForObject(
-                "SELECT id, name, birth_date, type_id, owner_id FROM pets WHERE id=:id",
+                "SELECT id as pets_id, name, birth_date, type_id, owner_id FROM pets WHERE id=:id",
                 params,
                 new JdbcPetRowMapper());
 
@@ -109,7 +109,7 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 			Map<String, Object> params = new HashMap<>();
 			params.put("id", id);
 			visit = this.namedParameterJdbcTemplate.queryForObject(
-					"SELECT id as visit_id, pet_id, visit_date, description FROM visits WHERE id= :id",
+					"SELECT id as visit_id, visits.pet_id as pets_id, visit_date, description FROM visits WHERE id= :id",
 					params,
 					new JdbcVisitRowMapperExt());
 		} catch (EmptyResultDataAccessException ex) {
@@ -122,7 +122,7 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 	public Collection<Visit> findAll() throws DataAccessException {
 		Map<String, Object> params = new HashMap<>();
 		return this.namedParameterJdbcTemplate.query(
-				"SELECT id as visit_id, pets.id as pet_id, visit_date, description FROM visits LEFT JOIN pets ON visits.pet_id = pets.id",
+				"SELECT id as visit_id, pets.id as pets_id, visit_date, description FROM visits LEFT JOIN pets ON visits.pet_id = pets.id",
 				params, new JdbcVisitRowMapperExt());
 	}
 
@@ -158,9 +158,9 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 			visit.setDate(new Date(visitDate.getTime()));
 			visit.setDescription(rs.getString("description"));
 			Map<String, Object> params = new HashMap<>();
-			params.put("id", rs.getInt("pet_id"));
+			params.put("id", rs.getInt("pets_id"));
 			pet = JdbcVisitRepositoryImpl.this.namedParameterJdbcTemplate.queryForObject(
-					"SELECT pets.id, name, birth_date, type_id, owner_id FROM pets WHERE pets.id=:id",
+					"SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets WHERE pets.id=:id",
 					params,
 					new JdbcPetRowMapper());
 			params.put("type_id", pet.getTypeId());

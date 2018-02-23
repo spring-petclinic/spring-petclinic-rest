@@ -30,7 +30,7 @@ public class JdbcPetRowMapper implements RowMapper<JdbcPet> {
     @Override
     public JdbcPet mapRow(ResultSet rs, int rownum) throws SQLException {
         JdbcPet pet = new JdbcPet();
-        pet.setId(rs.getInt("pets.id"));
+        pet.setId(rs.getInt("pets_id"));
         pet.setName(rs.getString("name"));
         Date birthDate = rs.getDate("birth_date");
         pet.setBirthDate(new Date(birthDate.getTime()));

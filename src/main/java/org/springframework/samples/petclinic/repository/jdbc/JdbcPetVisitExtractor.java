@@ -35,15 +35,15 @@ public class JdbcPetVisitExtractor extends
 
     @Override
     protected Integer mapPrimaryKey(ResultSet rs) throws SQLException {
-        return rs.getInt("pets.id");
+        return rs.getInt("pets_id");
     }
 
     @Override
     protected Integer mapForeignKey(ResultSet rs) throws SQLException {
-        if (rs.getObject("visits.pet_id") == null) {
+        if (rs.getObject("visits_pet_id") == null) {
             return null;
         } else {
-            return rs.getInt("visits.pet_id");
+            return rs.getInt("visits_pet_id");
         }
     }
 
