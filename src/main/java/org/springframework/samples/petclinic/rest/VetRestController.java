@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 the original author or authors.
+ * Copyright 2016-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.validation.BindingResult;
@@ -99,6 +100,10 @@ public class VetRestController {
 		}
 		currentVet.setFirstName(vet.getFirstName());
 		currentVet.setLastName(vet.getLastName());
+		currentVet.clearSpecialties();
+		for(Specialty spec : vet.getSpecialties()) {
+			currentVet.addSpecialty(spec);
+		}
 		this.clinicService.saveVet(currentVet);
 		return new ResponseEntity<Vet>(currentVet, HttpStatus.NO_CONTENT);
 	}

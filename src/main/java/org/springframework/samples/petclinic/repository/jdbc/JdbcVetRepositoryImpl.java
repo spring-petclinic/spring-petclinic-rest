@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2017 the original author or authors.
+ * Copyright 2002-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,9 +143,11 @@ public class JdbcVetRepositoryImpl implements VetRepository {
 		if (vet.isNew()) {
 			Number newKey = this.insertVet.executeAndReturnKey(parameterSource);
 			vet.setId(newKey.intValue());
+			updateVetSpecialties(vet);
 		} else {
 			this.namedParameterJdbcTemplate
 					.update("UPDATE vets SET first_name=:firstName, last_name=:lastName WHERE id=:id", parameterSource);
+			updateVetSpecialties(vet);
 		}
 	}
 
@@ -153,6 +155,20 @@ public class JdbcVetRepositoryImpl implements VetRepository {
 	public void delete(Vet vet) throws DataAccessException {
 		Map<String, Object> params = new HashMap<>();
 		params.put("id", vet.getId());
+		this.namedParameterJdbcTemplate.update("DELETE FROM vet_specialties WHERE vet_id=:id", params);
 		this.namedParameterJdbcTemplate.update("DELETE FROM vets WHERE id=:id", params);
 	}
+	
+	private void updateVetSpecialties(Vet vet) throws DataAccessException {
+		Map<String, Object> params = new HashMap<>();
+		params.put("id", vet.getId());
+		this.namedParameterJdbcTemplate.update("DELETE FROM vet_specialties WHERE vet_id=:id", params);
+		for (Specialty spec : vet.getSpecialties()) {
+			params.put("spec_id", spec.getId());
+			if(!(spec.getId() == null)) {
+				this.namedParameterJdbcTemplate.update("INSERT INTO vet_specialties VALUES (:id, :spec_id)", params);
+			}
+		}
+	}
+
 }
