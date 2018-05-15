@@ -9,7 +9,7 @@ The [spring-petclinic-angular project](https://github.com/spring-petclinic/sprin
 ## Running petclinic locally
 ```
 	git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
-	cd spring-petclinic
+	cd spring-petclinic-rest
 	./mvnw spring-boot:run
 ```
 
