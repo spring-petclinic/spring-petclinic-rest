@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.2.RELEASE</version>
+		<version>1.5.13.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -25,6 +25,7 @@
 
         <spring-data-jdbc.version>1.2.1.RELEASE</spring-data-jdbc.version>
 		<cobertura.version>2.7</cobertura.version>
+		<spring-security-oauth.version>2.3.3.RELEASE</spring-security-oauth.version>
 
         <start-class>org.springframework.samples.petclinic.PetClinicApplication</start-class>
 
@@ -145,6 +146,14 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.3.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.springframework.boot</groupId>
+        	<artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>org.springframework.security.oauth</groupId>
+        	<artifactId>spring-security-oauth2</artifactId>
         </dependency>
 	</dependencies>
 
