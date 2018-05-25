@@ -16,43 +16,29 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.stereotype.Component;
  
-/**
- * Servlet Filter implementation class CORSFilter
- */
 // Enable it for Servlet 3.x implementations
 /* @ WebFilter(asyncSupported = true, urlPatterns = { "/*" }) */
 @Component
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER-4)
+
 public class CORSFilter implements Filter {
 	
 	private final Logger log = LoggerFactory.getLogger(CORSFilter.class);
  
-    /**
-     * Default constructor.
-     */
     public CORSFilter() {
-    	log.info("=======================================================================");
         log.info("=============CORSFilter constructor=====================================");
-        log.info("=======================================================================");
-        // TODO Auto-generated constructor stub
     }
  
-    /**
-     * @see Filter#destroy()
-     */
     public void destroy() {
-    	log.info("=======================================================================");
         log.info("=============CORSFilter destroy()=====================================");
-        log.info("=======================================================================");
-        // TODO Auto-generated method stub
     }
  
-    /**
-     * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
-     */
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
             throws IOException, ServletException {
     	
@@ -88,9 +74,10 @@ public class CORSFilter implements Filter {
         ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
         ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Credentials", "true");
         
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Max-Age", "3600");
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, Authorization");
- 
+        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Max-Age", "10800");
+        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers", "*");
+        // ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers", "access-control-allow-methods, access-control-allow-origin, Content-Type, Accept, X-Requested-With, remember-me, Authorization");
+        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers", "content-type, accept, x-requested-with, authorization");
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
  
         // For HTTP OPTIONS verb/method reply with ACCEPTED status code -- per CORS handshake
@@ -103,11 +90,16 @@ public class CORSFilter implements Filter {
         chain.doFilter(request, servletResponse);
     }
  
-    /**
-     * @see Filter#init(FilterConfig)
-     */
     public void init(FilterConfig fConfig) throws ServletException {
         // TODO Auto-generated method stub
+    }
+    
+    @Bean
+    public FilterRegistrationBean CORSFilterRegistration(CORSFilter filter) {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(filter);
+        registration.setOrder(-100);
+        return registration;
     }
 
 }
