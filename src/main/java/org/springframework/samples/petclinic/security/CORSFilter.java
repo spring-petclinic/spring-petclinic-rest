@@ -1,7 +1,22 @@
+/*
+ * Copyright 2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.samples.petclinic.security;
 
 import java.io.IOException;
-import java.util.Enumeration;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -9,90 +24,52 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.stereotype.Component;
- 
-// Enable it for Servlet 3.x implementations
-/* @ WebFilter(asyncSupported = true, urlPatterns = { "/*" }) */
-@Component
 
+/**
+ * @author Vitaliy Fedoriv
+ *
+ */
+
+@Component
 public class CORSFilter implements Filter {
 	
-	private final Logger log = LoggerFactory.getLogger(CORSFilter.class);
+    public CORSFilter() { }
  
-    public CORSFilter() {
-        log.info("=============CORSFilter constructor=====================================");
-    }
- 
-    public void destroy() {
-        log.info("=============CORSFilter destroy()=====================================");
-    }
+    public void destroy() { }
  
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
             throws IOException, ServletException {
     	
-    	log.info("=======================================================================");
-        log.info("=============CORSFilter doFilter()=====================================");
-        log.info("=======================================================================");
- 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        System.out.println("CORSFilter HTTP Request: " + request.getMethod());
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
         
-        Enumeration<String> headerNames = request.getHeaderNames();
-    	while (headerNames.hasMoreElements()) {
-    		String headerName = headerNames.nextElement();
-    		log.debug("Header Name:  " + headerName);
-    		String headerValue = request.getHeader(headerName);
-    		log.debug(" , Header Value:  " + headerValue);
-    		log.debug(" ");
-    	}
-        
-    	log.debug("request.getHeader(Content-Type)");
-        log.debug(request.getHeader("Content-Type"));
-        
-        log.debug("request.getHeader(content-type)");
-        log.debug(request.getHeader("content-type"));
-        
-        log.debug("request.getHeader(authorization)");
-        log.debug(request.getHeader("authorization"));
-        
-        
+        fixHeader(response,"Access-Control-Allow-Origin", "*" );
+        fixHeader(response,"Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST, DELETE" );
+        fixHeader(response,"Access-Control-Allow-Credentials", "true" );
+        fixHeader(response,"Access-Control-Max-Age", "10800" );
+        fixHeader(response,"Access-Control-Allow-Headers", "content-type, accept, x-requested-with, authorization" );
  
-        // Authorize (allow) all domains to consume the content
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Origin", "*");
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Credentials", "true");
-        
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Max-Age", "10800");
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers", "*");
-        // ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers", "access-control-allow-methods, access-control-allow-origin, Content-Type, Accept, X-Requested-With, remember-me, Authorization");
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers", "content-type, accept, x-requested-with, authorization");
-        HttpServletResponse resp = (HttpServletResponse) servletResponse;
- 
-        // For HTTP OPTIONS verb/method reply with ACCEPTED status code -- per CORS handshake
+        // answer for CORS handshake
         if (request.getMethod().equals("OPTIONS")) {
-            resp.setStatus(HttpServletResponse.SC_ACCEPTED);
+        	response.setStatus(HttpServletResponse.SC_ACCEPTED);
             return;
         }
- 
-        // pass the request along the filter chain
-        chain.doFilter(request, servletResponse);
+        chain.doFilter(request, response);
     }
- 
-    public void init(FilterConfig fConfig) throws ServletException {
-        // TODO Auto-generated method stub
+    
+    private void fixHeader(HttpServletResponse response, String header, String value) {
+    	if (response.containsHeader(header)) 
+    		response.setHeader(header, value);
+    	else response.addHeader(header, value);
     }
+    
+    public void init(FilterConfig fConfig) throws ServletException { }
     
     @Bean
     public FilterRegistrationBean CORSFilterRegistration(CORSFilter filter) {
