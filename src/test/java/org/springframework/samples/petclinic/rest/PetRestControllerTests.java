@@ -39,8 +39,9 @@ import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.service.ApplicationTestConfig;
+import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -109,6 +110,7 @@ public class PetRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetPetSuccess() throws Exception {
     	given(this.clinicService.findPetById(3)).willReturn(pets.get(0));
         this.mockMvc.perform(get("/api/pets/3")
@@ -120,6 +122,7 @@ public class PetRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetPetNotFound() throws Exception {
     	given(this.clinicService.findPetById(-1)).willReturn(null);
         this.mockMvc.perform(get("/api/pets/-1")
@@ -128,6 +131,7 @@ public class PetRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetAllPetsSuccess() throws Exception {
     	given(this.clinicService.findAllPets()).willReturn(pets);
         this.mockMvc.perform(get("/api/pets/")
@@ -141,6 +145,7 @@ public class PetRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetAllPetsNotFound() throws Exception {
     	pets.clear();
     	given(this.clinicService.findAllPets()).willReturn(pets);
@@ -150,6 +155,7 @@ public class PetRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testCreatePetSuccess() throws Exception {
     	Pet newPet = pets.get(0);
     	newPet.setId(999);
@@ -161,6 +167,7 @@ public class PetRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testCreatePetError() throws Exception {
     	Pet newPet = pets.get(0);
     	newPet.setId(null);
@@ -173,6 +180,7 @@ public class PetRestControllerTests {
      }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testUpdatePetSuccess() throws Exception {
     	given(this.clinicService.findPetById(3)).willReturn(pets.get(0));
     	Pet newPet = pets.get(0);
@@ -194,6 +202,7 @@ public class PetRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testUpdatePetError() throws Exception {
     	Pet newPet = pets.get(0);
     	newPet.setName("");
@@ -205,6 +214,7 @@ public class PetRestControllerTests {
      }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testDeletePetSuccess() throws Exception {
     	Pet newPet = pets.get(0);
     	ObjectMapper mapper = new ObjectMapper();
@@ -216,6 +226,7 @@ public class PetRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testDeletePetError() throws Exception {
     	Pet newPet = pets.get(0);
     	ObjectMapper mapper = new ObjectMapper();

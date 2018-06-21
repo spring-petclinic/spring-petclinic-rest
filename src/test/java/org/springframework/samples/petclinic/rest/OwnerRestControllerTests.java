@@ -36,8 +36,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.service.ApplicationTestConfig;
+import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -115,6 +116,7 @@ public class OwnerRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetOwnerSuccess() throws Exception {
     	given(this.clinicService.findOwnerById(1)).willReturn(owners.get(0));
         this.mockMvc.perform(get("/api/owners/1")
@@ -126,6 +128,7 @@ public class OwnerRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetOwnerNotFound() throws Exception {
     	given(this.clinicService.findOwnerById(-1)).willReturn(null);
         this.mockMvc.perform(get("/api/owners/-1")
@@ -134,6 +137,7 @@ public class OwnerRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetOwnersListSuccess() throws Exception {
     	owners.remove(0);
     	owners.remove(1);
@@ -149,6 +153,7 @@ public class OwnerRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetOwnersListNotFound() throws Exception {
     	owners.clear();
     	given(this.clinicService.findOwnerByLastName("0")).willReturn(owners);
@@ -158,6 +163,7 @@ public class OwnerRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetAllOwnersSuccess() throws Exception {
     	owners.remove(0);
     	owners.remove(1);
@@ -173,6 +179,7 @@ public class OwnerRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetAllOwnersNotFound() throws Exception {
     	owners.clear();
     	given(this.clinicService.findAllOwners()).willReturn(owners);
@@ -182,6 +189,7 @@ public class OwnerRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testCreateOwnerSuccess() throws Exception {
     	Owner newOwner = owners.get(0);
     	newOwner.setId(999);
@@ -193,6 +201,7 @@ public class OwnerRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testCreateOwnerError() throws Exception {
     	Owner newOwner = owners.get(0);
     	newOwner.setId(null);
@@ -205,6 +214,7 @@ public class OwnerRestControllerTests {
      }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testUpdateOwnerSuccess() throws Exception {
     	given(this.clinicService.findOwnerById(1)).willReturn(owners.get(0));
     	Owner newOwner = owners.get(0);
@@ -226,6 +236,7 @@ public class OwnerRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testUpdateOwnerError() throws Exception {
     	Owner newOwner = owners.get(0);
     	newOwner.setFirstName("");
@@ -237,6 +248,7 @@ public class OwnerRestControllerTests {
      }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testDeleteOwnerSuccess() throws Exception {
     	Owner newOwner = owners.get(0);
     	ObjectMapper mapper = new ObjectMapper();
@@ -248,6 +260,7 @@ public class OwnerRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testDeleteOwnerError() throws Exception {
     	Owner newOwner = owners.get(0);
     	ObjectMapper mapper = new ObjectMapper();

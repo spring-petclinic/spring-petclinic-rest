@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.service;
+package org.springframework.samples.petclinic.service.clinicService;
 
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

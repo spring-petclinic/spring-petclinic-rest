@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +52,7 @@ public class PetRestController {
 	@Autowired
 	private ClinicService clinicService;
 
+    @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
 	@RequestMapping(value = "/{petId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Pet> getPet(@PathVariable("petId") int petId){
 		Pet pet = this.clinicService.findPetById(petId);
@@ -60,6 +62,7 @@ public class PetRestController {
 		return new ResponseEntity<Pet>(pet, HttpStatus.OK);
 	}
 
+    @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Collection<Pet>> getPets(){
 		Collection<Pet> pets = this.clinicService.findAllPets();
@@ -69,11 +72,13 @@ public class PetRestController {
 		return new ResponseEntity<Collection<Pet>>(pets, HttpStatus.OK);
 	}
 
+    @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
 	@RequestMapping(value = "/pettypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Collection<PetType>> getPetTypes(){
 		return new ResponseEntity<Collection<PetType>>(this.clinicService.findPetTypes(), HttpStatus.OK);
 	}
 
+    @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Pet> addPet(@RequestBody @Valid Pet pet, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
@@ -88,6 +93,7 @@ public class PetRestController {
 		return new ResponseEntity<Pet>(pet, headers, HttpStatus.CREATED);
 	}
 
+    @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
 	@RequestMapping(value = "/{petId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Pet> updatePet(@PathVariable("petId") int petId, @RequestBody @Valid Pet pet, BindingResult bindingResult){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
@@ -109,6 +115,7 @@ public class PetRestController {
 		return new ResponseEntity<Pet>(currentPet, HttpStatus.NO_CONTENT);
 	}
 
+    @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
 	@RequestMapping(value = "/{petId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@Transactional
 	public ResponseEntity<Void> deletePet(@PathVariable("petId") int petId){
