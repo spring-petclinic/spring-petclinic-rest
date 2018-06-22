@@ -36,8 +36,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.service.ApplicationTestConfig;
+import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -97,7 +98,8 @@ public class PetTypeRestControllerTests {
     }
 
     @Test
-    public void testGetPetTypeSuccess() throws Exception {
+    @WithMockUser(roles="OWNER_ADMIN")
+    public void testGetPetTypeSuccessAsOwnerAdmin() throws Exception {
     	given(this.clinicService.findPetTypeById(1)).willReturn(petTypes.get(0));
         this.mockMvc.perform(get("/api/pettypes/1")
         	.accept(MediaType.APPLICATION_JSON_VALUE))
@@ -108,6 +110,19 @@ public class PetTypeRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="VET_ADMIN")
+    public void testGetPetTypeSuccessAsVetAdmin() throws Exception {
+        given(this.clinicService.findPetTypeById(1)).willReturn(petTypes.get(0));
+        this.mockMvc.perform(get("/api/pettypes/1")
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(jsonPath("$.id").value(1))
+            .andExpect(jsonPath("$.name").value("cat"));
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetPetTypeNotFound() throws Exception {
     	given(this.clinicService.findPetTypeById(-1)).willReturn(null);
         this.mockMvc.perform(get("/api/pettypes/-1")
@@ -116,7 +131,8 @@ public class PetTypeRestControllerTests {
     }
 
     @Test
-    public void testGetAllPetTypesSuccess() throws Exception {
+    @WithMockUser(roles="OWNER_ADMIN")
+    public void testGetAllPetTypesSuccessAsOwnerAdmin() throws Exception {
     	petTypes.remove(0);
     	petTypes.remove(1);
     	given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
@@ -131,6 +147,23 @@ public class PetTypeRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="VET_ADMIN")
+    public void testGetAllPetTypesSuccessAsVetAdmin() throws Exception {
+        petTypes.remove(0);
+        petTypes.remove(1);
+        given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
+        this.mockMvc.perform(get("/api/pettypes/")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(jsonPath("$.[0].id").value(2))
+            .andExpect(jsonPath("$.[0].name").value("dog"))
+            .andExpect(jsonPath("$.[1].id").value(4))
+            .andExpect(jsonPath("$.[1].name").value("snake"));
+    }
+
+    @Test
+    @WithMockUser(roles="VET_ADMIN")
     public void testGetAllPetTypesNotFound() throws Exception {
     	petTypes.clear();
     	given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
@@ -140,6 +173,7 @@ public class PetTypeRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="VET_ADMIN")
     public void testCreatePetTypeSuccess() throws Exception {
     	PetType newPetType = petTypes.get(0);
     	newPetType.setId(999);
@@ -151,6 +185,7 @@ public class PetTypeRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="VET_ADMIN")
     public void testCreatePetTypeError() throws Exception {
     	PetType newPetType = petTypes.get(0);
     	newPetType.setId(null);
@@ -163,6 +198,7 @@ public class PetTypeRestControllerTests {
      }
 
     @Test
+    @WithMockUser(roles="VET_ADMIN")
     public void testUpdatePetTypeSuccess() throws Exception {
     	given(this.clinicService.findPetTypeById(2)).willReturn(petTypes.get(1));
     	PetType newPetType = petTypes.get(1);
@@ -183,6 +219,7 @@ public class PetTypeRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="VET_ADMIN")
     public void testUpdatePetTypeError() throws Exception {
     	PetType newPetType = petTypes.get(0);
     	newPetType.setName("");
@@ -194,6 +231,7 @@ public class PetTypeRestControllerTests {
      }
 
     @Test
+    @WithMockUser(roles="VET_ADMIN")
     public void testDeletePetTypeSuccess() throws Exception {
     	PetType newPetType = petTypes.get(0);
     	ObjectMapper mapper = new ObjectMapper();
@@ -205,6 +243,7 @@ public class PetTypeRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="VET_ADMIN")
     public void testDeletePetTypeError() throws Exception {
     	PetType newPetType = petTypes.get(0);
     	ObjectMapper mapper = new ObjectMapper();

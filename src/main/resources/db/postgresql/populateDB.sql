@@ -51,3 +51,9 @@ INSERT INTO visits VALUES (1, 7, '2010-03-04', 'rabies shot') ON CONFLICT DO NOT
 INSERT INTO visits VALUES (2, 8, '2011-03-04', 'rabies shot') ON CONFLICT DO NOTHING;
 INSERT INTO visits VALUES (3, 8, '2009-06-04', 'neutered') ON CONFLICT DO NOTHING;
 INSERT INTO visits VALUES (4, 7, '2008-09-04', 'spayed') ON CONFLICT DO NOTHING;
+
+INSERT INTO users(username,password,enabled) VALUES ('admin','admin', true) ON CONFLICT DO NOTHING;
+
+INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_OWNER_ADMIN') ON CONFLICT DO NOTHING;
+INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_VET_ADMIN') ON CONFLICT DO NOTHING;
+INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_ADMIN') ON CONFLICT DO NOTHING;

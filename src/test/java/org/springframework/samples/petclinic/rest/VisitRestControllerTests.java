@@ -41,8 +41,9 @@ import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
-import org.springframework.samples.petclinic.service.ApplicationTestConfig;
+import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -118,6 +119,7 @@ public class VisitRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetVisitSuccess() throws Exception {
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
         this.mockMvc.perform(get("/api/visits/2")
@@ -129,6 +131,7 @@ public class VisitRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetVisitNotFound() throws Exception {
     	given(this.clinicService.findVisitById(-1)).willReturn(null);
         this.mockMvc.perform(get("/api/visits/-1")
@@ -137,6 +140,7 @@ public class VisitRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetAllVisitsSuccess() throws Exception {
     	given(this.clinicService.findAllVisits()).willReturn(visits);
         this.mockMvc.perform(get("/api/visits/")
@@ -150,6 +154,7 @@ public class VisitRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testGetAllVisitsNotFound() throws Exception {
     	visits.clear();
     	given(this.clinicService.findAllVisits()).willReturn(visits);
@@ -159,6 +164,7 @@ public class VisitRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testCreateVisitSuccess() throws Exception {
     	Visit newVisit = visits.get(0);
     	newVisit.setId(999);
@@ -171,6 +177,7 @@ public class VisitRestControllerTests {
     }
 
     @Test(expected = IOException.class)
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testCreateVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
     	newVisit.setId(null);
@@ -183,6 +190,7 @@ public class VisitRestControllerTests {
      }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testUpdateVisitSuccess() throws Exception {
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
     	Visit newVisit = visits.get(0);
@@ -203,6 +211,7 @@ public class VisitRestControllerTests {
     }
 
     @Test(expected = IOException.class)
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testUpdateVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
     	newVisit.setPet(null);
@@ -214,6 +223,7 @@ public class VisitRestControllerTests {
      }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testDeleteVisitSuccess() throws Exception {
     	Visit newVisit = visits.get(0);
     	ObjectMapper mapper = new ObjectMapper();
@@ -225,6 +235,7 @@ public class VisitRestControllerTests {
     }
 
     @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     public void testDeleteVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
     	ObjectMapper mapper = new ObjectMapper();
