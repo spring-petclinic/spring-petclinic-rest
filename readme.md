@@ -80,6 +80,35 @@ You may also start a Postgres database with docker:
 docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0
 ```
 
+## Security configuration
+In its default configuration, Petclinic doesn't have authentication and authorization enabled.
+
+### Basic Authentication
+In order to use the basic authentication functionality, turn in on from the application.properties file
+```
+basic.authentication.enabled=true
+```
+This will secure all APIs and in order to access them, basic authentication is required.
+Apart from authentication, APIs also require authorization. This is done via roles that a user can have.
+The existing roles are listed below with the corresponding permissions 
+* OWNER_ADMIN -> OwnerController, PetController, PetTypeController (getAllPetTypes and getPetType), VisitController
+* VET_ADMIN   -> PetTypeController, SpecialityController, VetController
+* ADMIN       -> UserController
+
+There is an existing user with the username admin and password admin that has access to all APIs.
+ In order to add a new user, please use the following API:
+```
+POST /api/users
+{
+    "username": "secondAdmin",
+    "password": "password",
+    "enabled": true,
+    "roles": [
+    	{ "name" : "OWNER_ADMIN" }
+	]
+}
+```
+
 ## Working with Petclinic in Eclipse/STS
 
 ### prerequisites
