@@ -41,17 +41,16 @@ public class SpringDataPetTypeRepositoryImpl implements PetTypeRepositoryOverrid
 	@SuppressWarnings("unchecked")
 	@Override
 	public void delete(PetType petType) {
-		String petTypeId = petType.getId().toString();
+        this.em.remove(this.em.contains(petType) ? petType : this.em.merge(petType));
+		Integer petTypeId = petType.getId();
 		
-		List<Pet> pets = new ArrayList<Pet>();
-		pets = this.em.createQuery("SELECT pet FROM Pet pet WHERE type_id=" + petTypeId).getResultList();
+		List<Pet> pets = this.em.createQuery("SELECT pet FROM Pet pet WHERE type_id=" + petTypeId).getResultList();
 		for (Pet pet : pets){
-			List<Visit> visits = new ArrayList<Visit>();
-			visits = pet.getVisits();
+			List<Visit> visits = pet.getVisits();
 			for (Visit visit : visits){
-				this.em.createQuery("DELETE FROM Visit visit WHERE id=" + visit.getId().toString()).executeUpdate();
+				this.em.createQuery("DELETE FROM Visit visit WHERE id=" + visit.getId()).executeUpdate();
 			}
-			this.em.createQuery("DELETE FROM Pet pet WHERE id=" + pet.getId().toString()).executeUpdate();
+			this.em.createQuery("DELETE FROM Pet pet WHERE id=" + pet.getId()).executeUpdate();
 		}
 		this.em.createQuery("DELETE FROM PetType pettype WHERE id=" + petTypeId).executeUpdate();
 	}

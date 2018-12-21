@@ -62,7 +62,7 @@ public class JpaSpecialtyRepositoryImpl implements SpecialtyRepository {
 	@Override
 	public void delete(Specialty specialty) throws DataAccessException {
 		this.em.remove(this.em.contains(specialty) ? specialty : this.em.merge(specialty));
-		String specId = specialty.getId().toString();
+		Integer specId = specialty.getId();
 		this.em.createNativeQuery("DELETE FROM vet_specialties WHERE specialty_id=" + specId).executeUpdate();
 		this.em.createQuery("DELETE FROM Specialty specialty WHERE id=" + specId).executeUpdate();
 	}
