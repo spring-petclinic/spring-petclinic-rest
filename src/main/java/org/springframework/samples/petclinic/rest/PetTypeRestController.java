@@ -29,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.samples.petclinic.service.PetTypeService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,13 +46,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class PetTypeRestController {
 
 	@Autowired
-	private ClinicService clinicService;
+    private PetTypeService petTypeService;
 
     @PreAuthorize( "hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)" )
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Collection<PetType>> getAllPetTypes(){
 		Collection<PetType> petTypes = new ArrayList<PetType>();
-		petTypes.addAll(this.clinicService.findAllPetTypes());
+		petTypes.addAll(this.petTypeService.findAllPetTypes());
 		if (petTypes.isEmpty()){
 			return new ResponseEntity<Collection<PetType>>(HttpStatus.NOT_FOUND);
 		}
@@ -61,7 +62,7 @@ public class PetTypeRestController {
     @PreAuthorize( "hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)" )
 	@RequestMapping(value = "/{petTypeId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<PetType> getPetType(@PathVariable("petTypeId") int petTypeId){
-		PetType petType = this.clinicService.findPetTypeById(petTypeId);
+		PetType petType = this.petTypeService.findPetTypeById(petTypeId);
 		if(petType == null){
 			return new ResponseEntity<PetType>(HttpStatus.NOT_FOUND);
 		}
@@ -78,7 +79,7 @@ public class PetTypeRestController {
 			headers.add("errors", errors.toJSON());
 			return new ResponseEntity<PetType>(headers, HttpStatus.BAD_REQUEST);
 		}
-		this.clinicService.savePetType(petType);
+		this.petTypeService.savePetType(petType);
 		headers.setLocation(ucBuilder.path("/api/pettypes/{id}").buildAndExpand(petType.getId()).toUri());
 		return new ResponseEntity<PetType>(petType, headers, HttpStatus.CREATED);
 	}
@@ -93,12 +94,12 @@ public class PetTypeRestController {
 			headers.add("errors", errors.toJSON());
 			return new ResponseEntity<PetType>(headers, HttpStatus.BAD_REQUEST);
 		}
-		PetType currentPetType = this.clinicService.findPetTypeById(petTypeId);
+		PetType currentPetType = this.petTypeService.findPetTypeById(petTypeId);
 		if(currentPetType == null){
 			return new ResponseEntity<PetType>(HttpStatus.NOT_FOUND);
 		}
 		currentPetType.setName(petType.getName());
-		this.clinicService.savePetType(currentPetType);
+		this.petTypeService.savePetType(currentPetType);
 		return new ResponseEntity<PetType>(currentPetType, HttpStatus.NO_CONTENT);
 	}
 
@@ -106,11 +107,11 @@ public class PetTypeRestController {
 	@RequestMapping(value = "/{petTypeId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@Transactional
 	public ResponseEntity<Void> deletePetType(@PathVariable("petTypeId") int petTypeId){
-		PetType petType = this.clinicService.findPetTypeById(petTypeId);
+		PetType petType = this.petTypeService.findPetTypeById(petTypeId);
 		if(petType == null){
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
-		this.clinicService.deletePetType(petType);
+		this.petTypeService.deletePetType(petType);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
