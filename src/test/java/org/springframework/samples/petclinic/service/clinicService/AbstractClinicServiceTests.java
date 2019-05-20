@@ -32,6 +32,7 @@ import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.service.PetTypeService;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +61,9 @@ public abstract class AbstractClinicServiceTests {
 
     @Autowired
     protected ClinicService clinicService;
+
+    @Autowired
+    protected PetTypeService petTypeService;
 
     @Autowired
     protected PetService petService;
@@ -147,7 +151,7 @@ public abstract class AbstractClinicServiceTests {
 
         Pet pet = new Pet();
         pet.setName("bowser");
-        Collection<PetType> types = this.clinicService.findPetTypes();
+        Collection<PetType> types = this.petTypeService.findPetTypes();
         pet.setType(EntityUtils.getById(types, PetType.class, 2));
         pet.setBirthDate(new Date());
         owner6.addPet(pet);
@@ -366,62 +370,6 @@ public abstract class AbstractClinicServiceTests {
 			owner = null;
 		}
         assertThat(owner).isNull();
-    }
-
-    @Test
-    public void shouldFindPetTypeById(){
-    	PetType petType = this.clinicService.findPetTypeById(1);
-    	assertThat(petType.getName()).isEqualTo("cat");
-    }
-
-    @Test
-    public void shouldFindAllPetTypes(){
-        Collection<PetType> petTypes = this.clinicService.findAllPetTypes();
-        PetType petType1 = EntityUtils.getById(petTypes, PetType.class, 1);
-        assertThat(petType1.getName()).isEqualTo("cat");
-        PetType petType3 = EntityUtils.getById(petTypes, PetType.class, 3);
-        assertThat(petType3.getName()).isEqualTo("lizard");
-    }
-
-    @Test
-    @Transactional
-    public void shouldInsertPetType() {
-        Collection<PetType> petTypes = this.clinicService.findAllPetTypes();
-        int found = petTypes.size();
-
-        PetType petType = new PetType();
-        petType.setName("tiger");
-
-        this.clinicService.savePetType(petType);
-        assertThat(petType.getId().longValue()).isNotEqualTo(0);
-
-        petTypes = this.clinicService.findAllPetTypes();
-        assertThat(petTypes.size()).isEqualTo(found + 1);
-    }
-
-    @Test
-    @Transactional
-    public void shouldUpdatePetType(){
-    	PetType petType = this.clinicService.findPetTypeById(1);
-    	String oldLastName = petType.getName();
-        String newLastName = oldLastName + "X";
-        petType.setName(newLastName);
-        this.clinicService.savePetType(petType);
-        petType = this.clinicService.findPetTypeById(1);
-        assertThat(petType.getName()).isEqualTo(newLastName);
-    }
-
-    @Test
-    @Transactional
-    public void shouldDeletePetType(){
-    	PetType petType = this.clinicService.findPetTypeById(1);
-        this.clinicService.deletePetType(petType);
-        try {
-        	petType = this.clinicService.findPetTypeById(1);
-		} catch (Exception e) {
-			petType = null;
-		}
-        assertThat(petType).isNull();
     }
 
     @Test
