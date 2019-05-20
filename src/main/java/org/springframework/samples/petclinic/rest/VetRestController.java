@@ -29,6 +29,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.samples.petclinic.service.VetServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -50,13 +52,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class VetRestController {
 
 	@Autowired
-	private ClinicService clinicService;
+	private VetService vetService;
 
     @PreAuthorize( "hasRole(@roles.VET_ADMIN)" )
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Collection<Vet>> getAllVets(){
 		Collection<Vet> vets = new ArrayList<Vet>();
-		vets.addAll(this.clinicService.findAllVets());
+		vets.addAll(this.vetService.findAllVets());
 		if (vets.isEmpty()){
 			return new ResponseEntity<Collection<Vet>>(HttpStatus.NOT_FOUND);
 		}
@@ -66,7 +68,7 @@ public class VetRestController {
     @PreAuthorize( "hasRole(@roles.VET_ADMIN)" )
 	@RequestMapping(value = "/{vetId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Vet> getVet(@PathVariable("vetId") int vetId){
-		Vet vet = this.clinicService.findVetById(vetId);
+		Vet vet = this.vetService.findVetById(vetId);
 		if(vet == null){
 			return new ResponseEntity<Vet>(HttpStatus.NOT_FOUND);
 		}
@@ -83,7 +85,7 @@ public class VetRestController {
 			headers.add("errors", errors.toJSON());
 			return new ResponseEntity<Vet>(headers, HttpStatus.BAD_REQUEST);
 		}
-		this.clinicService.saveVet(vet);
+		this.vetService.saveVet(vet);
 		headers.setLocation(ucBuilder.path("/api/vets/{id}").buildAndExpand(vet.getId()).toUri());
 		return new ResponseEntity<Vet>(vet, headers, HttpStatus.CREATED);
 	}
@@ -98,7 +100,7 @@ public class VetRestController {
 			headers.add("errors", errors.toJSON());
 			return new ResponseEntity<Vet>(headers, HttpStatus.BAD_REQUEST);
 		}
-		Vet currentVet = this.clinicService.findVetById(vetId);
+		Vet currentVet = this.vetService.findVetById(vetId);
 		if(currentVet == null){
 			return new ResponseEntity<Vet>(HttpStatus.NOT_FOUND);
 		}
@@ -108,7 +110,7 @@ public class VetRestController {
 		for(Specialty spec : vet.getSpecialties()) {
 			currentVet.addSpecialty(spec);
 		}
-		this.clinicService.saveVet(currentVet);
+		this.vetService.saveVet(currentVet);
 		return new ResponseEntity<Vet>(currentVet, HttpStatus.NO_CONTENT);
 	}
 
@@ -116,14 +118,13 @@ public class VetRestController {
 	@RequestMapping(value = "/{vetId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@Transactional
 	public ResponseEntity<Void> deleteVet(@PathVariable("vetId") int vetId){
-		Vet vet = this.clinicService.findVetById(vetId);
+		Vet vet = this.vetService.findVetById(vetId);
 		if(vet == null){
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
-		this.clinicService.deleteVet(vet);
+		this.vetService.deleteVet(vet);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
-
 
 
 }
