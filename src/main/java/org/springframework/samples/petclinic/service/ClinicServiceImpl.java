@@ -51,7 +51,6 @@ public class ClinicServiceImpl implements ClinicService {
     private PetRepository petRepository;
     private VetRepository vetRepository;
     private OwnerRepository ownerRepository;
-    private VisitRepository visitRepository;
     private SpecialtyRepository specialtyRepository;
 	private PetTypeRepository petTypeRepository;
 
@@ -60,13 +59,11 @@ public class ClinicServiceImpl implements ClinicService {
        		 PetRepository petRepository,
     		 VetRepository vetRepository,
     		 OwnerRepository ownerRepository,
-    		 VisitRepository visitRepository,
     		 SpecialtyRepository specialtyRepository,
 			 PetTypeRepository petTypeRepository) {
         this.petRepository = petRepository;
         this.vetRepository = vetRepository;
         this.ownerRepository = ownerRepository;
-        this.visitRepository = visitRepository;
         this.specialtyRepository = specialtyRepository; 
 		this.petTypeRepository = petTypeRepository;
     }
@@ -83,30 +80,7 @@ public class ClinicServiceImpl implements ClinicService {
 		petRepository.delete(pet);
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public Visit findVisitById(int visitId) throws DataAccessException {
-		Visit visit = null;
-		try {
-			visit = visitRepository.findById(visitId);
-		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-		// just ignore not found exceptions for Jdbc/Jpa realization
-			return null;
-		}
-		return visit;
-	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public Collection<Visit> findAllVisits() throws DataAccessException {
-		return visitRepository.findAll();
-	}
-
-	@Override
-	@Transactional
-	public void deleteVisit(Visit visit) throws DataAccessException {
-		visitRepository.delete(visit);
-	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -253,13 +227,6 @@ public class ClinicServiceImpl implements ClinicService {
 	}
 
 	@Override
-	@Transactional
-	public void saveVisit(Visit visit) throws DataAccessException {
-		visitRepository.save(visit);
-		
-	}
-
-	@Override
 	@Transactional(readOnly = true)
     @Cacheable(value = "vets")
 	public Collection<Vet> findVets() throws DataAccessException {
@@ -279,12 +246,6 @@ public class ClinicServiceImpl implements ClinicService {
 		return ownerRepository.findByLastName(lastName);
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public Collection<Visit> findVisitsByPetId(int petId) {
-		return visitRepository.findByPetId(petId);
-	}
-	
 	
 
 

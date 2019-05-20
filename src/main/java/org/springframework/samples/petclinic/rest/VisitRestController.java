@@ -29,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -50,13 +51,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class VisitRestController {
 
 	@Autowired
-	private ClinicService clinicService;
+    private VisitService visitService;
 
     @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Collection<Visit>> getAllVisits(){
 		Collection<Visit> visits = new ArrayList<Visit>();
-		visits.addAll(this.clinicService.findAllVisits());
+		visits.addAll(this.visitService.findAllVisits());
 		if (visits.isEmpty()){
 			return new ResponseEntity<Collection<Visit>>(HttpStatus.NOT_FOUND);
 		}
@@ -66,7 +67,7 @@ public class VisitRestController {
     @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
 	@RequestMapping(value = "/{visitId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Visit> getVisit(@PathVariable("visitId") int visitId){
-		Visit visit = this.clinicService.findVisitById(visitId);
+		Visit visit = this.visitService.findVisitById(visitId);
 		if(visit == null){
 			return new ResponseEntity<Visit>(HttpStatus.NOT_FOUND);
 		}
@@ -83,7 +84,7 @@ public class VisitRestController {
 			headers.add("errors", errors.toJSON());
 			return new ResponseEntity<Visit>(headers, HttpStatus.BAD_REQUEST);
 		}
-		this.clinicService.saveVisit(visit);
+		this.visitService.saveVisit(visit);
 		headers.setLocation(ucBuilder.path("/api/visits/{id}").buildAndExpand(visit.getId()).toUri());
 		return new ResponseEntity<Visit>(visit, headers, HttpStatus.CREATED);
 	}
@@ -98,14 +99,14 @@ public class VisitRestController {
 			headers.add("errors", errors.toJSON());
 			return new ResponseEntity<Visit>(headers, HttpStatus.BAD_REQUEST);
 		}
-		Visit currentVisit = this.clinicService.findVisitById(visitId);
+		Visit currentVisit = this.visitService.findVisitById(visitId);
 		if(currentVisit == null){
 			return new ResponseEntity<Visit>(HttpStatus.NOT_FOUND);
 		}
 		currentVisit.setDate(visit.getDate());
 		currentVisit.setDescription(visit.getDescription());
 		currentVisit.setPet(visit.getPet());
-		this.clinicService.saveVisit(currentVisit);
+		this.visitService.saveVisit(currentVisit);
 		return new ResponseEntity<Visit>(currentVisit, HttpStatus.NO_CONTENT);
 	}
 
@@ -113,11 +114,11 @@ public class VisitRestController {
 	@RequestMapping(value = "/{visitId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@Transactional
 	public ResponseEntity<Void> deleteVisit(@PathVariable("visitId") int visitId){
-		Visit visit = this.clinicService.findVisitById(visitId);
+		Visit visit = this.visitService.findVisitById(visitId);
 		if(visit == null){
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
-		this.clinicService.deleteVisit(visit);
+		this.visitService.deleteVisit(visit);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 

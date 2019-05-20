@@ -41,6 +41,7 @@ import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.service.VisitService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -68,6 +69,9 @@ public class VisitRestControllerTests {
 
     @MockBean
     private ClinicService clinicService;
+
+    @MockBean
+    private VisitService visitService;
 
     private MockMvc mockMvc;
 
@@ -121,7 +125,7 @@ public class VisitRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testGetVisitSuccess() throws Exception {
-    	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
+    	given(this.visitService.findVisitById(2)).willReturn(visits.get(0));
         this.mockMvc.perform(get("/api/visits/2")
         	.accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
@@ -133,7 +137,7 @@ public class VisitRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testGetVisitNotFound() throws Exception {
-    	given(this.clinicService.findVisitById(-1)).willReturn(null);
+    	given(this.visitService.findVisitById(-1)).willReturn(null);
         this.mockMvc.perform(get("/api/visits/-1")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -142,7 +146,7 @@ public class VisitRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testGetAllVisitsSuccess() throws Exception {
-    	given(this.clinicService.findAllVisits()).willReturn(visits);
+    	given(this.visitService.findAllVisits()).willReturn(visits);
         this.mockMvc.perform(get("/api/visits/")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -157,7 +161,7 @@ public class VisitRestControllerTests {
     @WithMockUser(roles="OWNER_ADMIN")
     public void testGetAllVisitsNotFound() throws Exception {
     	visits.clear();
-    	given(this.clinicService.findAllVisits()).willReturn(visits);
+    	given(this.visitService.findAllVisits()).willReturn(visits);
         this.mockMvc.perform(get("/api/visits/")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -192,7 +196,7 @@ public class VisitRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testUpdateVisitSuccess() throws Exception {
-    	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
+    	given(this.visitService.findVisitById(2)).willReturn(visits.get(0));
     	Visit newVisit = visits.get(0);
     	newVisit.setDescription("rabies shot test");
     	ObjectMapper mapper = new ObjectMapper();
@@ -228,7 +232,7 @@ public class VisitRestControllerTests {
     	Visit newVisit = visits.get(0);
     	ObjectMapper mapper = new ObjectMapper();
     	String newVisitAsJSON = mapper.writeValueAsString(newVisit);
-    	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
+    	given(this.visitService.findVisitById(2)).willReturn(visits.get(0));
     	this.mockMvc.perform(delete("/api/visits/2")
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
@@ -240,7 +244,7 @@ public class VisitRestControllerTests {
     	Visit newVisit = visits.get(0);
     	ObjectMapper mapper = new ObjectMapper();
     	String newVisitAsJSON = mapper.writeValueAsString(newVisit);
-    	given(this.clinicService.findVisitById(-1)).willReturn(null);
+    	given(this.visitService.findVisitById(-1)).willReturn(null);
     	this.mockMvc.perform(delete("/api/visits/-1")
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNotFound());
