@@ -172,16 +172,6 @@ public abstract class AbstractClinicServiceTests {
         assertThat(pet7.getName()).isEqualTo(newName);
     }
 
-    @Test
-    public void shouldFindVets() {
-        Collection<Vet> vets = this.clinicService.findVets();
-
-        Vet vet = EntityUtils.getById(vets, Vet.class, 3);
-        assertThat(vet.getLastName()).isEqualTo("Douglas");
-        assertThat(vet.getNrOfSpecialties()).isEqualTo(2);
-        assertThat(vet.getSpecialties().get(0).getName()).isEqualTo("dentistry");
-        assertThat(vet.getSpecialties().get(1).getName()).isEqualTo("surgery");
-    }
 
     @Test
     @Transactional
@@ -293,54 +283,6 @@ public abstract class AbstractClinicServiceTests {
         assertThat(visit).isNull();
     }
 
-    @Test
-    public void shouldFindVetDyId(){
-    	Vet vet = this.clinicService.findVetById(1);
-    	assertThat(vet.getFirstName()).isEqualTo("James");
-    	assertThat(vet.getLastName()).isEqualTo("Carter");
-    }
-
-    @Test
-    @Transactional
-    public void shouldInsertVet() {
-        Collection<Vet> vets = this.clinicService.findAllVets();
-        int found = vets.size();
-
-        Vet vet = new Vet();
-        vet.setFirstName("John");
-        vet.setLastName("Dow");
-
-        this.clinicService.saveVet(vet);
-        assertThat(vet.getId().longValue()).isNotEqualTo(0);
-
-        vets = this.clinicService.findAllVets();
-        assertThat(vets.size()).isEqualTo(found + 1);
-    }
-
-    @Test
-    @Transactional
-    public void shouldUpdateVet(){
-    	Vet vet = this.clinicService.findVetById(1);
-    	String oldLastName = vet.getLastName();
-        String newLastName = oldLastName + "X";
-        vet.setLastName(newLastName);
-        this.clinicService.saveVet(vet);
-        vet = this.clinicService.findVetById(1);
-        assertThat(vet.getLastName()).isEqualTo(newLastName);
-    }
-
-    @Test
-    @Transactional
-    public void shouldDeleteVet(){
-    	Vet vet = this.clinicService.findVetById(1);
-        this.clinicService.deleteVet(vet);
-        try {
-        	vet = this.clinicService.findVetById(1);
-		} catch (Exception e) {
-			vet = null;
-		}
-        assertThat(vet).isNull();
-    }
 
     @Test
     public void shouldFindAllOwners(){
