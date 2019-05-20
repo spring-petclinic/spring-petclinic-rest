@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class VetServiceImpl implements VetService {
@@ -24,16 +25,16 @@ public class VetServiceImpl implements VetService {
 
     @Override
     @Transactional(readOnly = true)
-    public Vet findVetById(int id) throws DataAccessException {
+    public Optional<Vet> findVetById(int id) throws DataAccessException {
         Vet vet = null;
         try {
             vet = vetRepository.findById(id);
         } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
             // just ignore not found exceptions for Jdbc/Jpa realization
-            return null;
         }
-        return vet;
+        return Optional.of(vet);
     }
+
 
     @Override
     @Transactional(readOnly = true)

@@ -31,7 +31,7 @@ public abstract class AbstractVetServiceTests {
 
     @Test
     public void shouldFindVetDyId(){
-        Vet vet = this.vetService.findVetById(1);
+        Vet vet = this.vetService.findVetById(1).get();
         assertThat(vet.getFirstName()).isEqualTo("James");
         assertThat(vet.getLastName()).isEqualTo("Carter");
     }
@@ -56,22 +56,22 @@ public abstract class AbstractVetServiceTests {
     @Test
     @Transactional
     public void shouldUpdateVet(){
-        Vet vet = this.vetService.findVetById(1);
+        Vet vet = this.vetService.findVetById(1).get();
         String oldLastName = vet.getLastName();
         String newLastName = oldLastName + "X";
         vet.setLastName(newLastName);
         this.vetService.saveVet(vet);
-        vet = this.vetService.findVetById(1);
+        vet = this.vetService.findVetById(1).get();
         assertThat(vet.getLastName()).isEqualTo(newLastName);
     }
 
     @Test
     @Transactional
     public void shouldDeleteVet(){
-        Vet vet = this.vetService.findVetById(1);
+        Vet vet = this.vetService.findVetById(1).get();
         this.vetService.deleteVet(vet);
         try {
-            vet = this.vetService.findVetById(1);
+            vet = this.vetService.findVetById(1).get();
         } catch (Exception e) {
             vet = null;
         }

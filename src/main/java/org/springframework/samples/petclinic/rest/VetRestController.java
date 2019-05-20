@@ -17,6 +17,7 @@ package org.springframework.samples.petclinic.rest;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -68,11 +69,11 @@ public class VetRestController {
     @PreAuthorize( "hasRole(@roles.VET_ADMIN)" )
 	@RequestMapping(value = "/{vetId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Vet> getVet(@PathVariable("vetId") int vetId){
-		Vet vet = this.vetService.findVetById(vetId);
-		if(vet == null){
-			return new ResponseEntity<Vet>(HttpStatus.NOT_FOUND);
+		Optional<Vet> vet = this.vetService.findVetById(vetId);
+		if(vet.isPresent()){
+            return new ResponseEntity<Vet>(vet.get(), HttpStatus.OK);
 		}
-		return new ResponseEntity<Vet>(vet, HttpStatus.OK);
+        return new ResponseEntity<Vet>(HttpStatus.NOT_FOUND);
 	}
 
     @PreAuthorize( "hasRole(@roles.VET_ADMIN)" )
@@ -100,10 +101,11 @@ public class VetRestController {
 			headers.add("errors", errors.toJSON());
 			return new ResponseEntity<Vet>(headers, HttpStatus.BAD_REQUEST);
 		}
-		Vet currentVet = this.vetService.findVetById(vetId);
-		if(currentVet == null){
+		Optional<Vet> optVet = this.vetService.findVetById(vetId);
+		if(!optVet.isPresent()){
 			return new ResponseEntity<Vet>(HttpStatus.NOT_FOUND);
 		}
+		Vet currentVet = optVet.get();
 		currentVet.setFirstName(vet.getFirstName());
 		currentVet.setLastName(vet.getLastName());
 		currentVet.clearSpecialties();
@@ -118,12 +120,12 @@ public class VetRestController {
 	@RequestMapping(value = "/{vetId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@Transactional
 	public ResponseEntity<Void> deleteVet(@PathVariable("vetId") int vetId){
-		Vet vet = this.vetService.findVetById(vetId);
-		if(vet == null){
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		Optional<Vet> vet = this.vetService.findVetById(vetId);
+		if(vet.isPresent()){
+            this.vetService.deleteVet(vet.get());
+            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}
-		this.vetService.deleteVet(vet);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
 
