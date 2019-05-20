@@ -31,6 +31,7 @@ import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.PetTypeService;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.test.context.ContextConfiguration;
@@ -43,7 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
  * TestContext Framework: </p> <ul> <li><strong>Spring IoC container caching</strong> which spares us unnecessary set up
  * time between test execution.</li> <li><strong>Dependency Injection</strong> of test fixture instances, meaning that
  * we don't need to perform application context lookups. See the use of {@link Autowired @Autowired} on the <code>{@link
- * AbstractClinicServiceTests#clinicService clinicService}</code> instance variable, which uses autowiring <em>by
+ * AbstractClinicServiceTests#clinicService petService}</code> instance variable, which uses autowiring <em>by
  * type</em>. <li><strong>Transaction management</strong>, meaning each test method is executed in its own transaction,
  * which is automatically rolled back by default. Thus, even if tests insert or otherwise change database state, there
  * is no need for a teardown or cleanup script. <li> An {@link org.springframework.context.ApplicationContext
@@ -63,6 +64,9 @@ public abstract class AbstractClinicServiceTests {
 
     @Autowired
     protected PetTypeService petTypeService;
+
+    @Autowired
+    protected PetService petService;
 
     @Before
     public void init() {
@@ -123,7 +127,7 @@ public abstract class AbstractClinicServiceTests {
 
     @Test
     public void shouldFindPetWithCorrectId() {
-        Pet pet7 = this.clinicService.findPetById(7);
+        Pet pet7 = this.petService.findPetById(7).get();
         assertThat(pet7.getName()).startsWith("Samantha");
         assertThat(pet7.getOwner().getFirstName()).isEqualTo("Jean");
 
@@ -131,7 +135,7 @@ public abstract class AbstractClinicServiceTests {
 
 //    @Test
 //    public void shouldFindAllPetTypes() {
-//        Collection<PetType> petTypes = this.clinicService.findPetTypes();
+//        Collection<PetType> petTypes = this.petService.findPetTypes();
 //
 //        PetType petType1 = EntityUtils.getById(petTypes, PetType.class, 1);
 //        assertThat(petType1.getName()).isEqualTo("cat");
@@ -153,7 +157,7 @@ public abstract class AbstractClinicServiceTests {
         owner6.addPet(pet);
         assertThat(owner6.getPets().size()).isEqualTo(found + 1);
 
-        this.clinicService.savePet(pet);
+        this.petService.savePet(pet);
         this.clinicService.saveOwner(owner6);
 
         owner6 = this.clinicService.findOwnerById(6);
@@ -165,14 +169,14 @@ public abstract class AbstractClinicServiceTests {
     @Test
     @Transactional
     public void shouldUpdatePetName() throws Exception {
-        Pet pet7 = this.clinicService.findPetById(7);
+        Pet pet7 = this.petService.findPetById(7).get();
         String oldName = pet7.getName();
 
         String newName = oldName + "X";
         pet7.setName(newName);
-        this.clinicService.savePet(pet7);
+        this.petService.savePet(pet7);
 
-        pet7 = this.clinicService.findPetById(7);
+        pet7 = this.petService.findPetById(7).get();
         assertThat(pet7.getName()).isEqualTo(newName);
     }
 
@@ -180,15 +184,15 @@ public abstract class AbstractClinicServiceTests {
     @Test
     @Transactional
     public void shouldAddNewVisitForPet() {
-        Pet pet7 = this.clinicService.findPetById(7);
+        Pet pet7 = this.petService.findPetById(7).get();
         int found = pet7.getVisits().size();
         Visit visit = new Visit();
         pet7.addVisit(visit);
         visit.setDescription("test");
         this.clinicService.saveVisit(visit);
-        this.clinicService.savePet(pet7);
+        this.petService.savePet(pet7);
 
-        pet7 = this.clinicService.findPetById(7);
+        pet7 = this.petService.findPetById(7).get();
         assertThat(pet7.getVisits().size()).isEqualTo(found + 1);
         assertThat(visit.getId()).isNotNull();
     }
@@ -205,7 +209,7 @@ public abstract class AbstractClinicServiceTests {
 
     @Test
     public void shouldFindAllPets(){
-        Collection<Pet> pets = this.clinicService.findAllPets();
+        Collection<Pet> pets = this.petService.findAllPets();
         Pet pet1 = EntityUtils.getById(pets, Pet.class, 1);
         assertThat(pet1.getName()).isEqualTo("Leo");
         Pet pet3 = EntityUtils.getById(pets, Pet.class, 3);
@@ -215,10 +219,10 @@ public abstract class AbstractClinicServiceTests {
     @Test
     @Transactional
     public void shouldDeletePet(){
-        Pet pet = this.clinicService.findPetById(1);
-        this.clinicService.deletePet(pet);
+        Pet pet = this.petService.findPetById(1).get();
+        this.petService.deletePet(pet);
         try {
-        pet = this.clinicService.findPetById(1);
+        pet = this.petService.findPetById(1).get();
 		} catch (Exception e) {
 			pet = null;
 		}
@@ -247,7 +251,7 @@ public abstract class AbstractClinicServiceTests {
         Collection<Visit> visits = this.clinicService.findAllVisits();
         int found = visits.size();
 
-        Pet pet = this.clinicService.findPetById(1);
+        Pet pet = this.petService.findPetById(1).get();
 
         Visit visit = new Visit();
         visit.setPet(pet);
