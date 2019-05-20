@@ -19,6 +19,7 @@ package org.springframework.samples.petclinic.repository.jpa;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -44,8 +45,13 @@ public class JpaPetTypeRepositoryImpl implements PetTypeRepository {
     private EntityManager em;
 
 	@Override
-	public PetType findById(int id) {
-		return this.em.find(PetType.class, id);
+	public Optional<PetType> findById(int id) {
+	    try {
+            return Optional.of(this.em.find(PetType.class, id));
+        }
+	    catch(DataAccessException ex){
+	        return Optional.empty();
+        }
 	}
 
 	@SuppressWarnings("unchecked")

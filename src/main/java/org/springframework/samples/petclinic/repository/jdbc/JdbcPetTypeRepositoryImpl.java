@@ -16,11 +16,7 @@
 
 package org.springframework.samples.petclinic.repository.jdbc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.sql.DataSource;
 
@@ -61,7 +57,7 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
 	}
 
 	@Override
-	public PetType findById(int id) {
+	public Optional<PetType> findById(int id) {
 		PetType petType;
         try {
             Map<String, Object> params = new HashMap<>();
@@ -70,10 +66,10 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
                 "SELECT id, name FROM types WHERE id= :id",
                 params,
                 BeanPropertyRowMapper.newInstance(PetType.class));
+            return Optional.of(petType);
         } catch (EmptyResultDataAccessException ex) {
-            throw new ObjectRetrievalFailureException(PetType.class, id);
+            return Optional.empty();
         }
-        return petType;
 	}
 
 	@Override

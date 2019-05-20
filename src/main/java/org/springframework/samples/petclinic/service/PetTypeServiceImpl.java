@@ -28,7 +28,7 @@ public class PetTypeServiceImpl implements PetTypeService {
     public PetType findPetTypeById(int petTypeId) {
         PetType petType = null;
         try {
-            petType = petTypeRepository.findById(petTypeId);
+            petType = petTypeRepository.findById(petTypeId).get();
         } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
             // just ignore not found exceptions for Jdbc/Jpa realization
             return null;
