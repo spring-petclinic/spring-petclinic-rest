@@ -86,7 +86,7 @@ In its default configuration, Petclinic doesn't have authentication and authoriz
 ### Basic Authentication
 In order to use the basic authentication functionality, turn in on from the application.properties file
 ```
-basic.authentication.enabled=true
+petclinic.security.enable=true
 ```
 This will secure all APIs and in order to access them, basic authentication is required.
 Apart from authentication, APIs also require authorization. This is done via roles that a user can have.
@@ -95,7 +95,7 @@ The existing roles are listed below with the corresponding permissions
 * VET_ADMIN   -> PetTypeController, SpecialityController, VetController
 * ADMIN       -> UserController
 
-There is an existing user with the username admin and password admin that has access to all APIs.
+There is an existing user with the username `admin` and password `admin` that has access to all APIs.
  In order to add a new user, please use the following API:
 ```
 POST /api/users
@@ -139,7 +139,7 @@ File -> Import -> Maven -> Existing Maven project
 |--|--|
 | REST API controllers | [REST folder](src/main/java/org/springframework/samples/petclinic/rest) |
 | Service | [ClinicServiceImpl.java](src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java) |
-|JDBC | [jdbc folder](src/main/java/org/springframework/samples/petclinic/repository/jdb) |
+| JDBC | [jdbc folder](src/main/java/org/springframework/samples/petclinic/repository/jdbc) |
 | JPA | [jpa folder](src/main/java/org/springframework/samples/petclinic/repository/jpa) |
 | Spring Data JPA | [springdatajpa folder](src/main/java/org/springframework/samples/petclinic/repository/springdatajpa) |
 | Tests | [AbstractClinicServiceTests.java](src/test/java/org/springframework/samples/petclinic/service/AbstractClinicServiceTests.java) |

@@ -20,9 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Collection;
 import java.util.Date;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
@@ -59,11 +57,6 @@ public abstract class AbstractClinicServiceTests {
 
     @Autowired
     protected ClinicService clinicService;
-
-    @Before
-    public void init() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void shouldFindOwnersByLastName() {
@@ -224,7 +217,7 @@ public abstract class AbstractClinicServiceTests {
         Pet pet = this.clinicService.findPetById(1);
         this.clinicService.deletePet(pet);
         try {
-        pet = this.clinicService.findPetById(1);
+            pet = this.clinicService.findPetById(1);
 		} catch (Exception e) {
 			pet = null;
 		}
@@ -466,16 +459,21 @@ public abstract class AbstractClinicServiceTests {
     @Test
     @Transactional
     public void shouldDeleteSpecialty(){
-    	Specialty specialty = this.clinicService.findSpecialtyById(1);
+        Specialty specialty = new Specialty();
+        specialty.setName("test");
+        this.clinicService.saveSpecialty(specialty);
+        Integer specialtyId = specialty.getId();
+        assertThat(specialtyId).isNotNull();
+    	specialty = this.clinicService.findSpecialtyById(specialtyId);
+        assertThat(specialty).isNotNull();
         this.clinicService.deleteSpecialty(specialty);
         try {
-        	specialty = this.clinicService.findSpecialtyById(1);
+        	specialty = this.clinicService.findSpecialtyById(specialtyId);
 		} catch (Exception e) {
 			specialty = null;
 		}
         assertThat(specialty).isNull();
     }
-
 
 
 }
