@@ -1,24 +1,32 @@
 # REST version of Spring PetClinic Sample Application (spring-framework-petclinic extend ) [![Build Status](https://travis-ci.org/spring-petclinic/spring-petclinic-rest.png?branch=master)](https://travis-ci.org/spring-petclinic/spring-petclinic-rest/)
 
 This backend version of the Spring Petclinic application only provides a REST API. **There is no UI**.
-The [spring-petclinic-angular project](https://github.com/spring-petclinic/spring-petclinic-angular) is a Angular 5 front-end application witch consumes the REST API.
+The [spring-petclinic-angular project](https://github.com/spring-petclinic/spring-petclinic-angular) is a Angular front-end application witch consumes the REST API.
 
 ## Understanding the Spring Petclinic application with a few diagrams
-<a href="https://speakerdeck.com/michaelisvy/spring-petclinic-sample-application">See the presentation here</a>
+
+[See the presentation of the Spring Petclinic Framework version](http://fr.slideshare.net/AntoineRey/spring-framework-petclinic-sample-application)
 
 ## Running petclinic locally
+
+### With maven command line
 ```
-	git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
-	cd spring-petclinic-rest
-	./mvnw spring-boot:run
+git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
+cd spring-petclinic-rest
+./mvnw spring-boot:run
 ```
 
-You can then access petclinic here: http://localhost:9966/petclinic/
+### With Docker
+```
+docker run -p 9966:9966 springcommunity/spring-petclinic-rest
+```
+
+You can then access petclinic here: [http://localhost:9966/petclinic/](http://localhost:9966/petclinic/)
 
 ## Swagger REST API documentation presented here (after application start):
-<a href="http://localhost:9966/petclinic/swagger-ui.html">http://localhost:9966/petclinic/swagger-ui.html</a>
+[http://localhost:9966/petclinic/swagger-ui.html](http://localhost:9966/petclinic/swagger-ui.html)
 
-## Screenshot of the Angular 5 client
+## Screenshot of the Angular client
 
 <img width="1427" alt="spring-petclinic-angular2" src="https://cloud.githubusercontent.com/assets/838318/23263243/f4509c4a-f9dd-11e6-951b-69d0ef72d8bd.png">
 
@@ -143,6 +151,25 @@ File -> Import -> Maven -> Existing Maven project
 | JPA | [jpa folder](src/main/java/org/springframework/samples/petclinic/repository/jpa) |
 | Spring Data JPA | [springdatajpa folder](src/main/java/org/springframework/samples/petclinic/repository/springdatajpa) |
 | Tests | [AbstractClinicServiceTests.java](src/test/java/org/springframework/samples/petclinic/service/AbstractClinicServiceTests.java) |
+
+
+## Publishing a Docker image
+
+This application uses [Google Jib]([https://github.com/GoogleContainerTools/jib) to build an optimized Docker image
+into the [Docker Hub](https://cloud.docker.com/u/springcommunity/repository/docker/springcommunity/spring-petclinic-rest/)
+repository.
+The [pom.xml](pom.xml) has been configured to publish the image with a the `springcommunity/spring-petclinic-rest`image name.
+
+## Interesting Spring Petclinic forks
+
+The Spring Petclinic master branch in the main [spring-projects](https://github.com/spring-projects/spring-petclinic)
+GitHub org is the "canonical" implementation, currently based on Spring Boot and Thymeleaf.
+
+This [spring-petclinic-rest](https://github.com/spring-petclinic/spring-petclinic-rest/) project is one of the [several forks](https://spring-petclinic.github.io/docs/forks.html) 
+hosted in a special GitHub org: [spring-petclinic](https://github.com/spring-petclinic).
+If you have a special interest in a different technology stack
+that could be used to implement the Pet Clinic then please join the community there.
+
 
 # Contributing
 
