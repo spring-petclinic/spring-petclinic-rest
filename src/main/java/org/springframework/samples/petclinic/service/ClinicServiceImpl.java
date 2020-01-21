@@ -38,8 +38,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Mostly used as a facade for all Petclinic controllers
- * Also a placeholder for @Transactional and @Cacheable annotations
+ * Mostly used as a facade for all Petclinic controllers Also a placeholder
+ * for @Transactional and @Cacheable annotations
  *
  * @author Michael Isvy
  * @author Vitaliy Fedoriv
@@ -48,28 +48,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class ClinicServiceImpl implements ClinicService {
 
-    private PetRepository petRepository;
-    private VetRepository vetRepository;
-    private OwnerRepository ownerRepository;
-    private VisitRepository visitRepository;
-    private SpecialtyRepository specialtyRepository;
+	private PetRepository petRepository;
+	private VetRepository vetRepository;
+	private OwnerRepository ownerRepository;
+	private VisitRepository visitRepository;
+	private SpecialtyRepository specialtyRepository;
 	private PetTypeRepository petTypeRepository;
 
-    @Autowired
-     public ClinicServiceImpl(
-       		 PetRepository petRepository,
-    		 VetRepository vetRepository,
-    		 OwnerRepository ownerRepository,
-    		 VisitRepository visitRepository,
-    		 SpecialtyRepository specialtyRepository,
-			 PetTypeRepository petTypeRepository) {
-        this.petRepository = petRepository;
-        this.vetRepository = vetRepository;
-        this.ownerRepository = ownerRepository;
-        this.visitRepository = visitRepository;
-        this.specialtyRepository = specialtyRepository; 
+	@Autowired
+	public ClinicServiceImpl(PetRepository petRepository, VetRepository vetRepository, OwnerRepository ownerRepository,
+			VisitRepository visitRepository, SpecialtyRepository specialtyRepository,
+			PetTypeRepository petTypeRepository) {
+		this.petRepository = petRepository;
+		this.vetRepository = vetRepository;
+		this.ownerRepository = ownerRepository;
+		this.visitRepository = visitRepository;
+		this.specialtyRepository = specialtyRepository;
 		this.petTypeRepository = petTypeRepository;
-    }
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -89,8 +85,8 @@ public class ClinicServiceImpl implements ClinicService {
 		Visit visit = null;
 		try {
 			visit = visitRepository.findById(visitId);
-		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-		// just ignore not found exceptions for Jdbc/Jpa realization
+		} catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
+			// just ignore not found exceptions for Jdbc/Jpa realization
 			return null;
 		}
 		return visit;
@@ -114,8 +110,8 @@ public class ClinicServiceImpl implements ClinicService {
 		Vet vet = null;
 		try {
 			vet = vetRepository.findById(id);
-		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-		// just ignore not found exceptions for Jdbc/Jpa realization
+		} catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
+			// just ignore not found exceptions for Jdbc/Jpa realization
 			return null;
 		}
 		return vet;
@@ -157,8 +153,8 @@ public class ClinicServiceImpl implements ClinicService {
 		PetType petType = null;
 		try {
 			petType = petTypeRepository.findById(petTypeId);
-		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-		// just ignore not found exceptions for Jdbc/Jpa realization
+		} catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
+			// just ignore not found exceptions for Jdbc/Jpa realization
 			return null;
 		}
 		return petType;
@@ -188,8 +184,8 @@ public class ClinicServiceImpl implements ClinicService {
 		Specialty specialty = null;
 		try {
 			specialty = specialtyRepository.findById(specialtyId);
-		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-		// just ignore not found exceptions for Jdbc/Jpa realization
+		} catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
+			// just ignore not found exceptions for Jdbc/Jpa realization
 			return null;
 		}
 		return specialty;
@@ -225,8 +221,8 @@ public class ClinicServiceImpl implements ClinicService {
 		Owner owner = null;
 		try {
 			owner = ownerRepository.findById(id);
-		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-		// just ignore not found exceptions for Jdbc/Jpa realization
+		} catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
+			// just ignore not found exceptions for Jdbc/Jpa realization
 			return null;
 		}
 		return owner;
@@ -238,8 +234,8 @@ public class ClinicServiceImpl implements ClinicService {
 		Pet pet = null;
 		try {
 			pet = petRepository.findById(id);
-		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-		// just ignore not found exceptions for Jdbc/Jpa realization
+		} catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
+			// just ignore not found exceptions for Jdbc/Jpa realization
 			return null;
 		}
 		return pet;
@@ -249,19 +245,19 @@ public class ClinicServiceImpl implements ClinicService {
 	@Transactional
 	public void savePet(Pet pet) throws DataAccessException {
 		petRepository.save(pet);
-		
+
 	}
 
 	@Override
 	@Transactional
 	public void saveVisit(Visit visit) throws DataAccessException {
 		visitRepository.save(visit);
-		
+
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-    @Cacheable(value = "vets")
+	@Cacheable(value = "vets")
 	public Collection<Vet> findVets() throws DataAccessException {
 		return vetRepository.findAll();
 	}
@@ -270,7 +266,7 @@ public class ClinicServiceImpl implements ClinicService {
 	@Transactional
 	public void saveOwner(Owner owner) throws DataAccessException {
 		ownerRepository.save(owner);
-		
+
 	}
 
 	@Override
@@ -284,8 +280,16 @@ public class ClinicServiceImpl implements ClinicService {
 	public Collection<Visit> findVisitsByPetId(int petId) {
 		return visitRepository.findByPetId(petId);
 	}
-	
-	
 
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<Pet> findPetByOwnerId(int ownerId) throws DataAccessException {
+		return petRepository.findPetByOwnerId(ownerId);
+	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<Pet> findPetByVetId(int vetId) throws DataAccessException {
+		return petRepository.findPetByVetId(vetId);
+	}
 }

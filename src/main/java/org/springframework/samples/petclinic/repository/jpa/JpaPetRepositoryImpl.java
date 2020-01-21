@@ -81,4 +81,13 @@ public class JpaPetRepositoryImpl implements PetRepository {
 		}
 	}
 
+	@Override
+	public List<Pet> findPetByOwnerId(int ownerId) throws DataAccessException {
+		return null;
+	}
+
+	@Override
+	public List<Pet> findPetByVetId(int vetId) throws DataAccessException {
+		return null;
+	}
 }

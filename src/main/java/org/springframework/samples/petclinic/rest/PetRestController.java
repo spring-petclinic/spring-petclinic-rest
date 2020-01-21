@@ -61,7 +61,7 @@ public class PetRestController {
 		}
 		return new ResponseEntity<Pet>(pet, HttpStatus.OK);
 	}
-
+    
     @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Collection<Pet>> getPets(){
@@ -126,6 +126,15 @@ public class PetRestController {
 		this.clinicService.deletePet(pet);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
+    
+    @RequestMapping(value = "/ownerId/{ownerId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<Collection<Pet>> findPetsByOwnerId(@PathVariable("ownerId") int ownerId){
+		return new ResponseEntity<Collection<Pet>>(this.clinicService.findPetByOwnerId(ownerId), HttpStatus.OK);
+	}
 
+	@RequestMapping(value = "/vetId/{vetId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<Collection<Pet>> findPetByVetId(@PathVariable("vetId") int vetId){
+		return new ResponseEntity<Collection<Pet>>(this.clinicService.findPetByVetId(vetId), HttpStatus.OK);
+	}
 
 }
