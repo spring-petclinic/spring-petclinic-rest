@@ -5,7 +5,7 @@
 
 	<groupId>org.springframework.samples</groupId>
 	<artifactId>spring-petclinic-rest</artifactId>
-	<version>2.1.5</version>
+	<version>2.2.4</version>
 
 	<description>REST version of the Spring Petclinic sample application</description>
     <url>https://spring-petclinic.github.io/</url>
@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.5.RELEASE</version>
+		<version>2.2.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from Maven repository -->
 	</parent>
 
