@@ -53,7 +53,7 @@ public class VetRestController {
 	private ClinicService clinicService;
 
     @PreAuthorize( "hasRole(@roles.VET_ADMIN)" )
-	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Collection<Vet>> getAllVets(){
 		Collection<Vet> vets = new ArrayList<Vet>();
 		vets.addAll(this.clinicService.findAllVets());
@@ -64,7 +64,7 @@ public class VetRestController {
 	}
 
     @PreAuthorize( "hasRole(@roles.VET_ADMIN)" )
-	@RequestMapping(value = "/{vetId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{vetId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Vet> getVet(@PathVariable("vetId") int vetId){
 		Vet vet = this.clinicService.findVetById(vetId);
 		if(vet == null){
@@ -74,7 +74,7 @@ public class VetRestController {
 	}
 
     @PreAuthorize( "hasRole(@roles.VET_ADMIN)" )
-	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Vet> addVet(@RequestBody @Valid Vet vet, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
 		HttpHeaders headers = new HttpHeaders();
@@ -89,7 +89,7 @@ public class VetRestController {
 	}
 
     @PreAuthorize( "hasRole(@roles.VET_ADMIN)" )
-	@RequestMapping(value = "/{vetId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{vetId}", method = RequestMethod.PUT, produces = "application/json")
 	public ResponseEntity<Vet> updateVet(@PathVariable("vetId") int vetId, @RequestBody @Valid Vet vet, BindingResult bindingResult){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
 		HttpHeaders headers = new HttpHeaders();
@@ -113,7 +113,7 @@ public class VetRestController {
 	}
 
     @PreAuthorize( "hasRole(@roles.VET_ADMIN)" )
-	@RequestMapping(value = "/{vetId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{vetId}", method = RequestMethod.DELETE, produces = "application/json")
 	@Transactional
 	public ResponseEntity<Void> deleteVet(@PathVariable("vetId") int vetId){
 		Vet vet = this.clinicService.findVetById(vetId);

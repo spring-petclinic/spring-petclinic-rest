@@ -53,7 +53,7 @@ public class VisitRestController {
 	private ClinicService clinicService;
 
     @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
-	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Collection<Visit>> getAllVisits(){
 		Collection<Visit> visits = new ArrayList<Visit>();
 		visits.addAll(this.clinicService.findAllVisits());
@@ -64,7 +64,7 @@ public class VisitRestController {
 	}
 
     @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
-	@RequestMapping(value = "/{visitId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{visitId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Visit> getVisit(@PathVariable("visitId") int visitId){
 		Visit visit = this.clinicService.findVisitById(visitId);
 		if(visit == null){
@@ -74,7 +74,7 @@ public class VisitRestController {
 	}
 
     @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
-	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Visit> addVisit(@RequestBody @Valid Visit visit, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
 		HttpHeaders headers = new HttpHeaders();
@@ -89,7 +89,7 @@ public class VisitRestController {
 	}
 
     @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
-	@RequestMapping(value = "/{visitId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{visitId}", method = RequestMethod.PUT, produces = "application/json")
 	public ResponseEntity<Visit> updateVisit(@PathVariable("visitId") int visitId, @RequestBody @Valid Visit visit, BindingResult bindingResult){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
 		HttpHeaders headers = new HttpHeaders();
@@ -110,7 +110,7 @@ public class VisitRestController {
 	}
 
     @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
-	@RequestMapping(value = "/{visitId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{visitId}", method = RequestMethod.DELETE, produces = "application/json")
 	@Transactional
 	public ResponseEntity<Void> deleteVisit(@PathVariable("visitId") int visitId){
 		Visit visit = this.clinicService.findVisitById(visitId);

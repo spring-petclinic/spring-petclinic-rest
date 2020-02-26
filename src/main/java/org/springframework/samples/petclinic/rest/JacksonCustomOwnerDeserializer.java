@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
  */
 
 public class JacksonCustomOwnerDeserializer extends StdDeserializer<Owner> {
-	
+
 	public JacksonCustomOwnerDeserializer(){
 		this(null);
 	}
@@ -45,15 +45,13 @@ public class JacksonCustomOwnerDeserializer extends StdDeserializer<Owner> {
 	public Owner deserialize(JsonParser parser, DeserializationContext context) throws IOException, JsonProcessingException {
 		JsonNode node = parser.getCodec().readTree(parser);
 		Owner owner = new Owner();
-		int id = node.get("id").asInt();
 		String firstName = node.get("firstName").asText(null);
 		String lastName = node.get("lastName").asText(null);
 		String address = node.get("address").asText(null);
 		String city = node.get("city").asText(null);
 		String telephone = node.get("telephone").asText(null);
-
-		if (!(id == 0)) {
-			owner.setId(id);
+		if (node.hasNonNull("id")) {
+			owner.setId(node.get("id").asInt());
 		}
         owner.setFirstName(firstName);
         owner.setLastName(lastName);

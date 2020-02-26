@@ -29,9 +29,11 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.Collections;
+
 /**
  * Java config for Springfox swagger documentation plugin
- * 
+ *
  * @author Vitaliy Fedoriv
  *
  */
@@ -62,7 +64,7 @@ public class ApplicationSwaggerConfig {
 				"https://github.com/spring-petclinic/spring-petclinic-rest",
 				"vitaliy.fedoriv@gmail.com"),
 		"Apache 2.0",
-		"http://www.apache.org/licenses/LICENSE-2.0");
+		"http://www.apache.org/licenses/LICENSE-2.0", Collections.emptyList());
    }
 
 

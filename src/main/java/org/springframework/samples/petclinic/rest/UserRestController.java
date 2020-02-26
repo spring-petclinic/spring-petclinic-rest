@@ -42,7 +42,7 @@ public class UserRestController {
     private UserService userService;
 
     @PreAuthorize( "hasRole(@roles.ADMIN)" )
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<User> addOwner(@RequestBody @Valid User user,  BindingResult bindingResult) throws Exception {
         BindingErrorsResponse errors = new BindingErrorsResponse();
         HttpHeaders headers = new HttpHeaders();
