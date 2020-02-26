@@ -99,7 +99,7 @@ public class SpecialtyRestControllerTests {
         this.mockMvc.perform(get("/api/specialties/1")
         	.accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.name").value("radiology"));
     }
@@ -121,7 +121,7 @@ public class SpecialtyRestControllerTests {
         this.mockMvc.perform(get("/api/specialties/")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(content().contentType("application/json"))
         	.andExpect(jsonPath("$.[0].id").value(2))
         	.andExpect(jsonPath("$.[0].name").value("surgery"))
         	.andExpect(jsonPath("$.[1].id").value(3))
@@ -173,13 +173,13 @@ public class SpecialtyRestControllerTests {
     	String newSpecialtyAsJSON = mapper.writeValueAsString(newSpecialty);
     	this.mockMvc.perform(put("/api/specialties/2")
     		.content(newSpecialtyAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        	.andExpect(content().contentType("application/json;charset=UTF-8"))
+        	.andExpect(content().contentType("application/json"))
         	.andExpect(status().isNoContent());
 
     	this.mockMvc.perform(get("/api/specialties/2")
            	.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(2))
             .andExpect(jsonPath("$.name").value("surgery I"));
     }

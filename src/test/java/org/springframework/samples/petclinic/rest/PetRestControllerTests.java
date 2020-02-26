@@ -46,6 +46,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -116,7 +117,7 @@ public class PetRestControllerTests {
         this.mockMvc.perform(get("/api/pets/3")
         	.accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(3))
             .andExpect(jsonPath("$.name").value("Rosy"));
     }
@@ -137,7 +138,7 @@ public class PetRestControllerTests {
         this.mockMvc.perform(get("/api/pets/")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.[0].id").value(3))
             .andExpect(jsonPath("$.[0].name").value("Rosy"))
             .andExpect(jsonPath("$.[1].id").value(4))
@@ -176,7 +177,7 @@ public class PetRestControllerTests {
     	String newPetAsJSON = mapper.writeValueAsString(newPet);
     	this.mockMvc.perform(post("/api/pets/")
         		.content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        		.andExpect(status().isBadRequest());
+        		.andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
      }
 
     @Test
@@ -189,13 +190,13 @@ public class PetRestControllerTests {
     	String newPetAsJSON = mapper.writeValueAsString(newPet);
     	this.mockMvc.perform(put("/api/pets/3")
     		.content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        	.andExpect(content().contentType("application/json;charset=UTF-8"))
+        	.andExpect(content().contentType("application/json"))
         	.andExpect(status().isNoContent());
 
     	this.mockMvc.perform(get("/api/pets/3")
            	.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(3))
             .andExpect(jsonPath("$.name").value("Rosy I"));
 

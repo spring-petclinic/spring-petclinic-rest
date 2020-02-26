@@ -125,7 +125,7 @@ public class VisitRestControllerTests {
         this.mockMvc.perform(get("/api/visits/2")
         	.accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(2))
             .andExpect(jsonPath("$.description").value("rabies shot"));
     }
@@ -146,7 +146,7 @@ public class VisitRestControllerTests {
         this.mockMvc.perform(get("/api/visits/")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(content().contentType("application/json"))
         	.andExpect(jsonPath("$.[0].id").value(2))
         	.andExpect(jsonPath("$.[0].description").value("rabies shot"))
         	.andExpect(jsonPath("$.[1].id").value(3))
@@ -199,13 +199,13 @@ public class VisitRestControllerTests {
     	String newVisitAsJSON = mapper.writeValueAsString(newVisit);
     	this.mockMvc.perform(put("/api/visits/2")
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        	.andExpect(content().contentType("application/json;charset=UTF-8"))
+        	.andExpect(content().contentType("application/json"))
         	.andExpect(status().isNoContent());
 
     	this.mockMvc.perform(get("/api/visits/2")
            	.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(2))
             .andExpect(jsonPath("$.description").value("rabies shot test"));
     }
