@@ -62,7 +62,7 @@ public class BindingErrorsResponse {
         addError(error);
     }
 
-	private List<BindingError> bindingErrors = new ArrayList<BindingError>();
+	private final List<BindingError> bindingErrors = new ArrayList<BindingError>();
 
 	public void addError(BindingError bindingError) {
 		this.bindingErrors.add(bindingError);
@@ -73,7 +73,7 @@ public class BindingErrorsResponse {
 			BindingError error = new BindingError();
 			error.setObjectName(fieldError.getObjectName());
 			error.setFieldName(fieldError.getField());
-			error.setFieldValue(fieldError.getRejectedValue().toString());
+			error.setFieldValue(String.valueOf(fieldError.getRejectedValue()));
 			error.setErrorMessage(fieldError.getDefaultMessage());
 			addError(error);
 		}
@@ -96,7 +96,7 @@ public class BindingErrorsResponse {
 		return "BindingErrorsResponse [bindingErrors=" + bindingErrors + "]";
 	}
 
-	protected class BindingError {
+	protected static class BindingError {
 
 		private String objectName;
 		private String fieldName;
