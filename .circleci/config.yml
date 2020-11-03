@@ -19,7 +19,7 @@ jobs:
       - run:
           name: install awscli
           command: apt-get update && apt-get -y install awscli
-
+      - run: aws s3 ls
       - save_cache:
           paths:
             - ~/.m2
