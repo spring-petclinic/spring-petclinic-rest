@@ -16,9 +16,7 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
       - run: mvn -U clean package verify
-      - run: sudo apt update
-      - run: sudo apt install awscli
-      - run: aws s3 ls
+      - run: pip install awscli --upgrade --user
       - save_cache:
           paths:
             - ~/.m2
