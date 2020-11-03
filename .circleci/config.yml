@@ -16,7 +16,10 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
       - run: mvn -U clean package verify
-      - run: pip install awscli --upgrade --user
+      - run:
+          name: install awscli
+          command: apt update | apt install awscli -f
+
       - save_cache:
           paths:
             - ~/.m2
