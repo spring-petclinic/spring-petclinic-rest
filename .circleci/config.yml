@@ -18,7 +18,7 @@ jobs:
       - run: mvn -U clean package verify
       - run:
           name: install awscli
-          command: apt-get update && apt-get -Y install awscli
+          command: apt-get update && apt-get -y install awscli
 
       - save_cache:
           paths:
