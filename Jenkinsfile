@@ -60,7 +60,6 @@ pipeline {
             steps {
                 sh 'docker rmi npetersdev/spring-petclinic-rest:latest'
             }
-          }
         }
 
       }
