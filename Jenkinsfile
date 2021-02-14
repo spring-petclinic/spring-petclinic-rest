@@ -18,7 +18,7 @@ pipeline {
           withCredentials([usernamePassword(credentialsId: 'remote-server-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             def remote = [:]
             remote.name = 'server'
-            remote.host = 'server.ninopeters.de'
+            remote.host = 'jenkins.ninopeters.de'
             remote.user = USERNAME
             remote.password = PASSWORD
             remote.allowAnyHosts = true
@@ -41,7 +41,7 @@ pipeline {
           withCredentials([usernamePassword(credentialsId: 'remote-server-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             def remote = [:]
             remote.name = 'server'
-            remote.host = 'server.ninopeters.de'
+            remote.host = 'jenkins.ninopeters.de'
             remote.user = USERNAME
             remote.password = PASSWORD
             remote.allowAnyHosts = true
