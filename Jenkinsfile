@@ -22,7 +22,7 @@ pipeline {
             remote.user = USERNAME
             remote.password = PASSWORD
             remote.allowAnyHosts = true
-
+            remote.port = 4714
             try {
               sshCommand remote: remote, command: 'docker container stop spring-petclinic-rest-A'
             } catch (err) {
@@ -45,7 +45,7 @@ pipeline {
             remote.user = USERNAME
             remote.password = PASSWORD
             remote.allowAnyHosts = true
-
+            remote.port = 4714
             try {
               sshCommand remote: remote, command: 'docker container stop spring-petclinic-rest-B'
             } catch (err) {
