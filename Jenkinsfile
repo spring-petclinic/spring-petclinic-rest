@@ -15,14 +15,16 @@ pipeline {
     stage('Run docker image on remote server A') {
       steps {
         script {
-          withCredentials([usernamePassword(credentialsId: 'remote-server-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          withCredentials([sshUserPrivateKey(credentialsId: 'remote_guest_auth', keyFileVariable: 'KEYFILE', passphraseVariable: 'PASSPHRASE', usernameVariable: 'USERNAME')]) {
             def remote = [:]
             remote.name = 'server'
-            remote.host = 'jenkins.ninopeters.de'
-            remote.user = USERNAME
-            remote.password = PASSWORD
-            remote.allowAnyHosts = true
+            remote.host = '185.207.106.34'
             remote.port = 4714
+            remote.allowAnyHosts = true
+            remote.user = USERNAME
+            remote.identityFile = KEYFILE
+            remote.passphrase = PASSPHRASE
+            
             try {
               sshCommand remote: remote, command: 'docker container stop spring-petclinic-rest-A'
             } catch (err) {
@@ -38,14 +40,16 @@ pipeline {
     stage('Run docker image on remote server B') {
       steps {
         script {
-          withCredentials([usernamePassword(credentialsId: 'remote-server-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          withCredentials([sshUserPrivateKey(credentialsId: 'remote_guest_auth', keyFileVariable: 'KEYFILE', passphraseVariable: 'PASSPHRASE', usernameVariable: 'USERNAME')]) {
             def remote = [:]
             remote.name = 'server'
-            remote.host = 'jenkins.ninopeters.de'
-            remote.user = USERNAME
-            remote.password = PASSWORD
-            remote.allowAnyHosts = true
+            remote.host = '185.207.106.34'
             remote.port = 4714
+            remote.allowAnyHosts = true
+            remote.user = USERNAME
+            remote.identityFile = KEYFILE
+            remote.passphrase = PASSPHRASE
+
             try {
               sshCommand remote: remote, command: 'docker container stop spring-petclinic-rest-B'
             } catch (err) {
