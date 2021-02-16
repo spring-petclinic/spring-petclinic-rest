@@ -25,8 +25,10 @@ pipeline {
             }
         }
         stage ('Wait') {
-            echo 'Waiting for container A to start up'
-            sleep 30 // seconds
+            steps {
+                echo 'Waiting for container A to start up'
+                sleep 30 // seconds
+            }
         }
         stage('Run docker image on remote server B') {
             when {
