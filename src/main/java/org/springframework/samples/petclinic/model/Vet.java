@@ -21,18 +21,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.samples.petclinic.rest.JacksonCustomVetDeserializer;
+import org.springframework.samples.petclinic.rest.JacksonCustomVetSerializer;
+import org.springframework.samples.petclinic.rest.JacksonCustomVisitDeserializer;
+import org.springframework.samples.petclinic.rest.JacksonCustomVisitSerializer;
 
 /**
  * Simple JavaBean domain object representing a veterinarian.
@@ -44,13 +45,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "vets")
+@JsonSerialize(using = JacksonCustomVetSerializer.class)
+@JsonDeserialize(using = JacksonCustomVetDeserializer.class)
 public class Vet extends Person {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "vet_specialties", joinColumns = @JoinColumn(name = "vet_id"),
         inverseJoinColumns = @JoinColumn(name = "specialty_id"))
     private Set<Specialty> specialties;
-    
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vet", fetch = FetchType.EAGER)
+    private Set<Visit> visits;
+
     @JsonIgnore
     protected Set<Specialty> getSpecialtiesInternal() {
         if (this.specialties == null) {
@@ -77,9 +83,27 @@ public class Vet extends Person {
     public void addSpecialty(Specialty specialty) {
         getSpecialtiesInternal().add(specialty);
     }
-    
+
     public void clearSpecialties() {
         getSpecialtiesInternal().clear();
     }
 
+    @JsonIgnore
+    protected Set<Visit> getVisitsInternal() {
+        if (this.visits == null) {
+            this.visits = new HashSet<>();
+        }
+        return this.visits;
+    }
+
+    public List<Visit> getVisits() {
+        List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
+        PropertyComparator.sort(sortedVisits, new MutableSortDefinition("date", false, false));
+        return Collections.unmodifiableList(sortedVisits);
+    }
+
+    public void addVisit(Visit visit) {
+        getVisitsInternal().add(visit);
+        visit.setVet(this);
+    }
 }
