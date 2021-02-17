@@ -20,10 +20,7 @@ import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.model.*;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -94,6 +91,12 @@ public class JacksonCustomOwnerSerializer extends StdSerializer<Owner> {
 				jgen.writeStringField("date", formatter.format(visit.getDate()));
 				jgen.writeStringField("description", visit.getDescription());
 				jgen.writeNumberField("pet", visit.getPet().getId());
+                Vet vet = visit.getVet();
+                jgen.writeObjectFieldStart("vet");
+                jgen.writeNumberField("id", visit.getVet().getId());
+                jgen.writeStringField("firstName", vet.getFirstName());
+                jgen.writeStringField("lastName", vet.getLastName());
+                jgen.writeEndObject(); // vet
 				jgen.writeEndObject(); // visit
 			}
 			jgen.writeEndArray(); // visits

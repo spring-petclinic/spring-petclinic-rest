@@ -75,6 +75,7 @@ ALTER SEQUENCE pets_id_seq RESTART WITH 100;
 CREATE TABLE IF NOT EXISTS visits (
   id SERIAL,
   pet_id INT NOT NULL,
+  vet_id INT NOT NULL,
   visit_date DATE,
   description VARCHAR(255),
   FOREIGN KEY (pet_id) REFERENCES pets(id),
