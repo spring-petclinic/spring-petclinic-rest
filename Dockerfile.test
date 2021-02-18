@@ -10,8 +10,8 @@ RUN mvn --version
 
 FROM openjdk:8u171-jre-alpine
 
-WORKDIR /petclinic-rest
-COPY --from=maven target/spring-petclinic-rest-*.jar ./spring-petclinic-rest.jar
+#WORKDIR /petclinic-rest
+#COPY --from=maven target/spring-petclinic-rest-*.jar ./spring-petclinic-rest.jar
 
 # RUN java -jar ./spring-petclinic-rest.jar
 RUN java --version
