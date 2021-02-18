@@ -2,10 +2,10 @@ pipeline {
     agent any
     stages {
         stage('Test') {
+            when {
+                branch 'feature/test-pipeline'
+            }
             agent {
-                when {
-                    branch 'feature/test-pipeline'
-                }
                 docker {
                     image 'maven:3.5.4-jdk-8-alpine'
                     args '-v $HOME/.m2:/root/.m2'
