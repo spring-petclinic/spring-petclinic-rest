@@ -37,6 +37,7 @@ import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -120,22 +121,27 @@ public class OwnerRestControllerTests {
         PetType petType = new PetType();
         petType.setId(2);
         petType.setName("dog");
+        Vet vet = new Vet();
+        vet.setId(1);
+        vet.setFirstName("someV");
+        vet.setLastName("Vet");
         Pet pet = new Pet();
         pet.setId(id);
         pet.setName(name);
         pet.setBirthDate(new Date());
         pet.setOwner(owner);
         pet.setType(petType);
-        pet.addVisit(getTestVisitForPet(pet, 1));
+        pet.addVisit(getTestVisitForPet(pet, 1,vet));
         return pet;
     }
 
-    private Visit getTestVisitForPet(final Pet pet, final int id) {
+    private Visit getTestVisitForPet(final Pet pet, final int id,final Vet vet) {
         Visit visit = new Visit();
         visit.setId(id);
         visit.setPet(pet);
         visit.setDate(new Date());
         visit.setDescription("test" + id);
+        visit.setVet(vet);
         return visit;
     }
 
