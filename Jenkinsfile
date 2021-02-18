@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Test') {
             when {
-                branch 'feature/test-pipeline'
+                branch 'develop'
             }
             agent {
                 docker {
