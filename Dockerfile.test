@@ -14,7 +14,7 @@ WORKDIR /petclinic-rest
 COPY --from=maven target/spring-petclinic-rest-*.jar ./spring-petclinic-rest.jar
 
 RUN java -version
-RUN java -jar ./spring-petclinic-rest.jar
+RUN java -jar ./spring-petclinic-rest.jarn &
 
 
 FROM postman/newman:5
