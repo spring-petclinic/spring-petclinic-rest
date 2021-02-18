@@ -3,17 +3,17 @@ pipeline {
     stages {
         stage('Test') {
             when {
-                branch 'develop'
+                branch 'feature/pipeline'
             }
             agent {
-                docker {
-                    image 'maven:3.5.4-jdk-8-alpine'
+                dockerfile {
+                    filename 'Dockerfile.test'
                     args '-v $HOME/.m2:/root/.m2'
                 }
             }
-            steps {
-                sh 'mvn test'
-            }
+            // steps {
+            //     sh 'mvn test'
+            // }
         }
         stage('Build & Push docker image') {
             when {
