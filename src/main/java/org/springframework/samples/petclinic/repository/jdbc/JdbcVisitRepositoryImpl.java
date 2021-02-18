@@ -79,7 +79,8 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
             .addValue("id", visit.getId())
             .addValue("visit_date", visit.getDate())
             .addValue("description", visit.getDescription())
-            .addValue("pet_id", visit.getPet().getId());
+            .addValue("pet_id", visit.getPet().getId())
+	    .addValue("vet_id", visit.getVet().getId());
     }
 
     @Override
@@ -148,6 +149,7 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 
 	@Override
 	public void save(Visit visit) throws DataAccessException {
+
 		if (visit.isNew()) {
 			Number newKey = this.insertVisit.executeAndReturnKey(createVisitParameterSource(visit));
 			visit.setId(newKey.intValue());

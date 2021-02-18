@@ -40,6 +40,8 @@ import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -49,6 +51,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import jdk.nashorn.internal.runtime.Specialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -81,6 +85,11 @@ public class VisitRestControllerTests {
 
     	visits = new ArrayList<Visit>();
 
+	Vet vet = new Vet();
+	vet.setId(1);
+	vet.setFirstName("someV");
+	vet.setLastName("Vet");
+
     	Owner owner = new Owner();
     	owner.setId(1);
     	owner.setFirstName("Eduardo");
@@ -106,11 +115,13 @@ public class VisitRestControllerTests {
     	visit.setPet(pet);
     	visit.setDate(new Date());
     	visit.setDescription("rabies shot");
+	visit.setVet(vet);
     	visits.add(visit);
 
     	visit = new Visit();
     	visit.setId(3);
     	visit.setPet(pet);
+	visit.setVet(vet);
     	visit.setDate(new Date());
     	visit.setDescription("neutered");
     	visits.add(visit);
