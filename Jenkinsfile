@@ -1,29 +1,44 @@
 pipeline {
     agent any
+    environment {
+        APP = ""
+    }
     stages {
-        stage('Test') {
-            when {
-                branch 'feature/pipeline'
-            }
-            agent {
-                dockerfile {
-                    filename 'Dockerfile.test'
-                    args '-v $HOME/.m2:/root/.m2'
+        stage('Build') {
+            steps {
+                script {
+                    APP = docker.build("npetersdev/spring-petclinic-rest")
                 }
             }
+        }
+        stage('Run test container') {
             steps {
-                echo 'Build & Test'
+                sh 'docker run --rm -d -p 9966:9966 --name rest-test-container npetersdev/spring-petclinic-rest '
             }
         }
-        stage('Build & Push docker image') {
+        stage('Run API test') {
+            agent {
+                docker { image 'postman/newman:5' }
+            }
+            steps {
+                sh 'newman --version'
+                sh 'newman run https://api.getpostman.com/collections/14312820-c39aca89-b267-4d97-a2ca-b65df579f9fa?apikey=PMAK-60101515c9205f003495db6d-37971a23f29ae9913c6657a8fe028239f5 --environment https://api.getpostman.com/environments/14312820-58506620-e644-46ff-a263-1884e7935177?apikey=PMAK-60101515c9205f003495db6d-37971a23f29ae9913c6657a8fe028239f5'
+            }
+        }
+        stage('Stop test container') {
+            steps {
+                sh 'docker container stop rest-test-container'
+            }
+        }
+        stage('Push docker image') {
             when {
                 branch 'master'
             }
             steps {
                 script {
                     def prod = load "jobs/production.groovy"
-                    def app = prod.build()
-                    prod.push(app)
+                    //def app = prod.build()
+                    prod.push(APP)
                 }
             }
         }
@@ -55,12 +70,9 @@ pipeline {
                 }
             }
         }
-        stage('Delete unused docker image') {
-            when {
-                branch 'master'
-            }
+        stage('Clean Up') {
             steps {
-                sh 'docker rmi npetersdev/spring-petclinic-rest:latest'
+                sh 'docker image prune'
             }
         }
     }
