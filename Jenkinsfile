@@ -12,7 +12,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'mvn --version'
+                echo 'Build & Test'
             }
         }
         stage('Build & Push docker image') {
