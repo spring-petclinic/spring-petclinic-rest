@@ -14,7 +14,7 @@ FROM openjdk:8u171-jre-alpine
 #COPY --from=maven target/spring-petclinic-rest-*.jar ./spring-petclinic-rest.jar
 
 # RUN java -jar ./spring-petclinic-rest.jar
-RUN java --version
+RUN java -version
 
 
 FROM postman/newman:5
