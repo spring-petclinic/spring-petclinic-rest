@@ -16,6 +16,8 @@ COPY --from=maven target/spring-petclinic-rest-*.jar ./spring-petclinic-rest.jar
 RUN java -version
 RUN java -jar ./spring-petclinic-rest.jar &
 
+EXPOSE 9966
+
 
 FROM postman/newman:5
 
