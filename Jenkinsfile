@@ -11,9 +11,9 @@ pipeline {
                     args '-v $HOME/.m2:/root/.m2'
                 }
             }
-            // steps {
-            //     sh 'mvn test'
-            // }
+            steps {
+                sh 'mvn --version'
+            }
         }
         stage('Build & Push docker image') {
             when {
