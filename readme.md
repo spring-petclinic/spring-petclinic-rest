@@ -27,6 +27,10 @@ docker run -p 9966:9966 springcommunity/spring-petclinic-rest
 
 You can then access petclinic here: [http://localhost:9966/petclinic/](http://localhost:9966/petclinic/)
 
+There are actuator health check and info routes as well: 
+* [http://localhost:9966/petclinic/actuator/health](http://localhost:9966/petclinic/actuator/health)
+* [http://localhost:9966/petclinic/actuator/info](http://localhost:9966/petclinic/actuator/info)
+
 ## Swagger REST API documentation presented here (after application start):
 [http://localhost:9966/petclinic/swagger-ui.html](http://localhost:9966/petclinic/swagger-ui.html)
 
