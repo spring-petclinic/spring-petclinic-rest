@@ -19,9 +19,8 @@
 
     <properties>
         <spring-data-jdbc.version>1.2.1.RELEASE</spring-data-jdbc.version>
-        <springfox-swagger.version>2.9.2</springfox-swagger.version>
+        <springdoc-openapi.version>2.9.2</springdoc-openapi.version>
         <jacoco.version>0.8.5</jacoco.version>
-
         <docker.jib-maven-plugin.version>1.3.0</docker.jib-maven-plugin.version>
         <docker.image.prefix>springcommunity</docker.image.prefix>
     </properties>
@@ -123,18 +122,11 @@
             <artifactId>json-path</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox-swagger.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi.version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox-swagger.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
