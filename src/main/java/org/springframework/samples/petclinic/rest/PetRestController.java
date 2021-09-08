@@ -26,6 +26,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.petclinic.dto.PetDto;
+import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -51,6 +53,18 @@ public class PetRestController {
     @Autowired
     private ClinicService clinicService;
 
+    @Autowired
+    private PetMapper petMapper;
+
+    @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
+	@RequestMapping(value = "/{petId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<PetDto> getPet(@PathVariable("petId") int petId){
+		PetDto pet = petMapper.toPetDto(this.clinicService.findPetById(petId));
+		if(pet == null){
+			return new ResponseEntity<PetDto>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<PetDto>(pet, HttpStatus.OK);
+	}
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @RequestMapping(value = "/{petId}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Pet> getPet(@PathVariable("petId") int petId) {
