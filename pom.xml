@@ -130,11 +130,7 @@
             <artifactId>springfox-boot-starter</artifactId>
             <version>${springfox-swagger.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>${jsr305.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
@@ -250,6 +246,8 @@
                     </to>
                 </configuration>
             </plugin>
+
+
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -264,8 +262,9 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/api-docs.json</inputSpec>
                             <modelPackage>org.springframework.samples.petclinic.dto</modelPackage>
-                            <generatorName>java</generatorName>
-                            <library>resttemplate</library>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+
                             <!-- Only enabling model generation -->
                             <modelNameSuffix>Dto</modelNameSuffix>
                             <generateApiTests>false</generateApiTests>
@@ -277,8 +276,11 @@
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <!-- Activating JAVA8 features -->
                             <configOptions>
-                                <dateLibrary>java8</dateLibrary>
+                                <performBeanValidation>true</performBeanValidation>
+                                <dateLibrary>legacy</dateLibrary>
                                 <java8>true</java8>
+                                <openApiNullable>false</openApiNullable>
+                                <serializationLibrary>jackson</serializationLibrary>
                             </configOptions>
                             <!-- override the default library to jersey2 -->
                         </configuration>
