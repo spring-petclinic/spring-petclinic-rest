@@ -24,22 +24,23 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.petclinic.dto.OwnerDto;
+import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.util.Collection;
 
 /**
  * @author Vitaliy Fedoriv
+ *
  */
 
 @RestController
@@ -47,82 +48,90 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/api/owners")
 public class OwnerRestController {
 
-    @Autowired
-    private ClinicService clinicService;
+    private final ClinicService clinicService;
+    private final OwnerMapper ownerMapper;
+
+    public OwnerRestController(ClinicService clinicService, OwnerMapper ownerMapper) {
+        this.clinicService = clinicService;
+        this.ownerMapper = ownerMapper;
+    }
+
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @RequestMapping(value = "/*/lastname/{lastName}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Collection<Owner>> getOwnersList(@PathVariable("lastName") String ownerLastName) {
+    public ResponseEntity<Collection<OwnerDto>> getOwnersList(@PathVariable("lastName") String ownerLastName) {
         if (ownerLastName == null) {
             ownerLastName = "";
         }
         Collection<Owner> owners = this.clinicService.findOwnerByLastName(ownerLastName);
         if (owners.isEmpty()) {
-            return new ResponseEntity<Collection<Owner>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Collection<OwnerDto>>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<Owner>>(owners, HttpStatus.OK);
+        return new ResponseEntity<Collection<OwnerDto>>(ownerMapper.toOwnerDtoCollection(owners), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Collection<Owner>> getOwners() {
+    public ResponseEntity<Collection<OwnerDto>> getOwners() {
         Collection<Owner> owners = this.clinicService.findAllOwners();
         if (owners.isEmpty()) {
-            return new ResponseEntity<Collection<Owner>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Collection<OwnerDto>>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<Owner>>(owners, HttpStatus.OK);
+        return new ResponseEntity<Collection<OwnerDto>>(ownerMapper.toOwnerDtoCollection(owners), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @RequestMapping(value = "/{ownerId}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Owner> getOwner(@PathVariable("ownerId") int ownerId) {
+    public ResponseEntity<OwnerDto> getOwner(@PathVariable("ownerId") int ownerId) {
         Owner owner = null;
         owner = this.clinicService.findOwnerById(ownerId);
         if (owner == null) {
-            return new ResponseEntity<Owner>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Owner>(owner, HttpStatus.OK);
+        return new ResponseEntity<>(ownerMapper.toOwnerDto(owner), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<Owner> addOwner(@RequestBody @Valid Owner owner, BindingResult bindingResult,
-                                          UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<OwnerDto> addOwner(@RequestBody @Valid OwnerDto ownerDto, BindingResult bindingResult,
+                                             UriComponentsBuilder ucBuilder) {
         HttpHeaders headers = new HttpHeaders();
-        if (bindingResult.hasErrors() || owner.getId() != null) {
-            BindingErrorsResponse errors = new BindingErrorsResponse(owner.getId());
+        if (bindingResult.hasErrors() || ownerDto.getId() != null) {
+            BindingErrorsResponse errors = new BindingErrorsResponse(ownerDto.getId());
             errors.addAllErrors(bindingResult);
             headers.add("errors", errors.toJSON());
-            return new ResponseEntity<Owner>(headers, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
         }
+        Owner owner = ownerMapper.toOwner(ownerDto);
         this.clinicService.saveOwner(owner);
-        headers.setLocation(ucBuilder.path("/api/owners/{id}").buildAndExpand(owner.getId()).toUri());
-        return new ResponseEntity<Owner>(owner, headers, HttpStatus.CREATED);
+        ownerDto.setId(owner.getId());
+        headers.setLocation(ucBuilder.path("/api/owners/{id}").buildAndExpand(ownerDto.getId()).toUri());
+        return new ResponseEntity<>(ownerDto, headers, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @RequestMapping(value = "/{ownerId}", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<Owner> updateOwner(@PathVariable("ownerId") int ownerId, @RequestBody @Valid Owner owner,
+    public ResponseEntity<Owner> updateOwner(@PathVariable("ownerId") int ownerId, @RequestBody @Valid OwnerDto ownerDto,
                                              BindingResult bindingResult, UriComponentsBuilder ucBuilder) {
-        boolean bodyIdMatchesPathId = owner.getId() == null || ownerId == owner.getId();
+        boolean bodyIdMatchesPathId = ownerDto.getId() == null || ownerId == ownerDto.getId();
         if (bindingResult.hasErrors() || !bodyIdMatchesPathId) {
-            BindingErrorsResponse errors = new BindingErrorsResponse(ownerId, owner.getId());
+            BindingErrorsResponse errors = new BindingErrorsResponse(ownerId, ownerDto.getId());
             errors.addAllErrors(bindingResult);
             HttpHeaders headers = new HttpHeaders();
             headers.add("errors", errors.toJSON());
-            return new ResponseEntity<Owner>(headers, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
         }
         Owner currentOwner = this.clinicService.findOwnerById(ownerId);
         if (currentOwner == null) {
-            return new ResponseEntity<Owner>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        currentOwner.setAddress(owner.getAddress());
-        currentOwner.setCity(owner.getCity());
-        currentOwner.setFirstName(owner.getFirstName());
-        currentOwner.setLastName(owner.getLastName());
-        currentOwner.setTelephone(owner.getTelephone());
+        currentOwner.setAddress(ownerDto.getAddress());
+        currentOwner.setCity(ownerDto.getCity());
+        currentOwner.setFirstName(ownerDto.getFirstName());
+        currentOwner.setLastName(ownerDto.getLastName());
+        currentOwner.setTelephone(ownerDto.getTelephone());
         this.clinicService.saveOwner(currentOwner);
-        return new ResponseEntity<Owner>(currentOwner, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(currentOwner, HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
@@ -134,7 +143,7 @@ public class OwnerRestController {
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         }
         this.clinicService.deleteOwner(owner);
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
