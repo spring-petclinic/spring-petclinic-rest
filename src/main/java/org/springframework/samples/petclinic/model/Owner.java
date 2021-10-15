@@ -36,9 +36,6 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.samples.petclinic.rest.JacksonCustomOwnerDeserializer;
 import org.springframework.samples.petclinic.rest.JacksonCustomOwnerSerializer;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Simple JavaBean domain object representing an owner.
@@ -50,8 +47,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  */
 @Entity
 @Table(name = "owners")
-@JsonSerialize(using = JacksonCustomOwnerSerializer.class)
-@JsonDeserialize(using = JacksonCustomOwnerDeserializer.class)
 public class Owner extends Person {
     @Column(name = "address")
     @NotEmpty
@@ -93,7 +88,6 @@ public class Owner extends Person {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
-    @JsonIgnore
     protected Set<Pet> getPetsInternal() {
         if (this.pets == null) {
             this.pets = new HashSet<>();
