@@ -111,7 +111,6 @@ public class PetRestController {
         currentPet.setBirthDate(pet.getBirthDate());
         currentPet.setName(pet.getName());
         currentPet.setType(petMapper.toPetType(pet.getType()));
-        currentPet.setOwner(petMapper.toOwner(pet.getOwner()));
         this.clinicService.savePet(currentPet);
         return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.NO_CONTENT);
     }

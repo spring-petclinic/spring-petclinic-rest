@@ -5,13 +5,15 @@ import org.springframework.samples.petclinic.dto.OwnerDto;
 import org.springframework.samples.petclinic.model.Owner;
 
 import java.util.Collection;
-import java.util.List;
 
-@Mapper
+@Mapper(uses = PetMapper.class)
 public interface OwnerMapper {
 
     OwnerDto toOwnerDto(Owner owner);
+
     Owner toOwner(OwnerDto ownerDto);
+
     Collection<OwnerDto> toOwnerDtoCollection(Collection<Owner> ownerCollection);
+
     Collection<Owner> toOwners(Collection<OwnerDto> ownerDtos);
 }

@@ -29,6 +29,7 @@ import org.springframework.samples.petclinic.dto.PetDto;
 import org.springframework.samples.petclinic.dto.PetTypeDto;
 import org.springframework.samples.petclinic.dto.VisitDto;
 import org.springframework.samples.petclinic.mapper.OwnerMapper;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -124,7 +125,6 @@ public class OwnerRestControllerTests {
         pet.setId(id);
         pet.setName(name);
         pet.setBirthDate(new Date());
-        pet.setOwner(owner);
         pet.setType(petType);
         pet.addVisitsItem(getTestVisitForPet(pet, 1));
         return pet;
@@ -133,7 +133,6 @@ public class OwnerRestControllerTests {
     private VisitDto getTestVisitForPet(final PetDto pet, final int id) {
         VisitDto visit = new VisitDto();
         visit.setId(id);
-        visit.setPet(pet);
         visit.setDate(new Date());
         visit.setDescription("test" + id);
         return visit;
@@ -259,7 +258,7 @@ public class OwnerRestControllerTests {
         OwnerDto updatedOwnerDto = new OwnerDto();
         // body.id = ownerId which is used in url path
         updatedOwnerDto.setId(ownerId);
-        updatedOwnerDto.setFirstName("George I");
+        updatedOwnerDto.setFirstName("GeorgeI");
         updatedOwnerDto.setLastName("Franklin");
         updatedOwnerDto.setAddress("110 W. Liberty St.");
         updatedOwnerDto.setCity("Madison");
@@ -276,7 +275,7 @@ public class OwnerRestControllerTests {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(ownerId))
-            .andExpect(jsonPath("$.firstName").value("George I"));
+            .andExpect(jsonPath("$.firstName").value("GeorgeI"));
 
     }
 
@@ -286,10 +285,11 @@ public class OwnerRestControllerTests {
         given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
         int ownerId = owners.get(0).getId();
         OwnerDto updatedOwnerDto = new OwnerDto();
-        updatedOwnerDto.setFirstName("George I");
+        updatedOwnerDto.setFirstName("GeorgeI");
         updatedOwnerDto.setLastName("Franklin");
         updatedOwnerDto.setAddress("110 W. Liberty St.");
         updatedOwnerDto.setCity("Madison");
+
         updatedOwnerDto.setTelephone("6085551023");
         ObjectMapper mapper = new ObjectMapper();
         String newOwnerAsJSON = mapper.writeValueAsString(updatedOwnerDto);
@@ -303,7 +303,7 @@ public class OwnerRestControllerTests {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(ownerId))
-            .andExpect(jsonPath("$.firstName").value("George I"));
+            .andExpect(jsonPath("$.firstName").value("GeorgeI"));
 
     }
 
@@ -314,7 +314,7 @@ public class OwnerRestControllerTests {
         OwnerDto updatedOwnerDto = new OwnerDto();
         // body.id != ownerId
         updatedOwnerDto.setId(-1);
-        updatedOwnerDto.setFirstName("George I");
+        updatedOwnerDto.setFirstName("GeorgeI");
         updatedOwnerDto.setLastName("Franklin");
         updatedOwnerDto.setAddress("110 W. Liberty St.");
         updatedOwnerDto.setCity("Madison");
@@ -325,7 +325,7 @@ public class OwnerRestControllerTests {
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isBadRequest())
             .andExpect(header().string("errors",
-                "[{\"objectName\":\"body\",\"fieldName\":\"id\",\"fieldValue\":\"-1\",\"errorMessage\":\"does not match pathId: 1\"}]"));
+                "[{\"objectName\":\"body\",\"fieldName\":\"id\",\"fieldValue\":\"-1\",\"errorMessage\":\"does not match pathId: 1\"},{\"objectName\":\"ownerDto\",\"fieldName\":\"id\",\"fieldValue\":\"-1\",\"errorMessage\":\"must be greater than or equal to 0\"}]"));
     }
 
     @Test
@@ -346,7 +346,8 @@ public class OwnerRestControllerTests {
         OwnerDto newOwnerDto = owners.get(0);
         ObjectMapper mapper = new ObjectMapper();
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
-        given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        final Owner owner = ownerMapper.toOwner(owners.get(0));
+        given(this.clinicService.findOwnerById(1)).willReturn(owner);
         this.mockMvc.perform(delete("/api/owners/1")
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNoContent());
