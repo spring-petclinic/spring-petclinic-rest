@@ -50,13 +50,12 @@ public class Pet extends NamedEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
     private Set<Visit> visits;
 
+    public Date getBirthDate() {
+        return this.birthDate;
+    }
 
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
-    }
-
-    public Date getBirthDate() {
-        return this.birthDate;
     }
 
     public PetType getType() {
@@ -90,6 +89,10 @@ public class Pet extends NamedEntity {
         List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
         PropertyComparator.sort(sortedVisits, new MutableSortDefinition("date", false, false));
         return Collections.unmodifiableList(sortedVisits);
+    }
+
+    public void setVisits(List<Visit> visits) {
+        this.visits = Set.copyOf(visits);
     }
 
     public void addVisit(Visit visit) {
