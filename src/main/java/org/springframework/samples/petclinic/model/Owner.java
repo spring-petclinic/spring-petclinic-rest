@@ -95,7 +95,7 @@ public class Owner extends Person {
     }
 
     public void setPets(List<Pet> pets) {
-        this.pets = Set.copyOf(pets);
+        this.pets = new HashSet<>(pets);
     }
 
     public void addPet(Pet pet) {

@@ -89,7 +89,7 @@ public class PetRestController {
         Pet pet = petMapper.toPet(petDto);
         this.clinicService.savePet(pet);
         petDto.setId(pet.getId());
-        headers.setLocation(ucBuilder.path("/api/pets/{id}").buildAndExpand(petDto.getId()).toUri());
+        headers.setLocation(ucBuilder.path("/api/pets/{id}").buildAndExpand(pet.getId()).toUri());
         return new ResponseEntity<>(petDto, headers, HttpStatus.CREATED);
     }
 

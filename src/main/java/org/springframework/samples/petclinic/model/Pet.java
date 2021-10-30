@@ -92,7 +92,7 @@ public class Pet extends NamedEntity {
     }
 
     public void setVisits(List<Visit> visits) {
-        this.visits = Set.copyOf(visits);
+        this.visits = new HashSet<>(visits);
     }
 
     public void addVisit(Visit visit) {
