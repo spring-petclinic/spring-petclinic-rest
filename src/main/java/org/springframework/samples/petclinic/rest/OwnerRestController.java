@@ -97,7 +97,7 @@ public class OwnerRestController {
         Owner owner = ownerMapper.toOwner(ownerDto);
         this.clinicService.saveOwner(owner);
         ownerDto.setId(owner.getId());
-        headers.setLocation(ucBuilder.path("/api/owners/{id}").buildAndExpand(ownerDto.getId()).toUri());
+        headers.setLocation(ucBuilder.path("/api/owners/{id}").buildAndExpand(owner.getId()).toUri());
         return new ResponseEntity<>(ownerDto, headers, HttpStatus.CREATED);
     }
 
