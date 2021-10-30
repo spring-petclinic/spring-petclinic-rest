@@ -6,6 +6,9 @@ import org.springframework.samples.petclinic.model.Specialty;
 
 import java.util.Collection;
 
+/**
+ * Map Specialty & SpecialtyDto using mapstruct
+ */
 @Mapper
 public interface SpecialtyMapper {
     Specialty toSpecialty(SpecialtyDto specialtyDto);
