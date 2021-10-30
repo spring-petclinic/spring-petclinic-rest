@@ -6,6 +6,9 @@ import org.springframework.samples.petclinic.model.Visit;
 
 import java.util.Collection;
 
+/**
+ * Map Visit & VisitDto using mapstruct
+ */
 @Mapper(uses = PetMapper.class)
 public interface VisitMapper {
     Visit toVisit(VisitDto visitDto);

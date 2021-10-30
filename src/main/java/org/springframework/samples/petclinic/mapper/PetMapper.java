@@ -8,6 +8,9 @@ import org.springframework.samples.petclinic.model.PetType;
 
 import java.util.Collection;
 
+/**
+ * Map Pet & PetDto using mapstruct
+ */
 @Mapper
 public interface PetMapper {
     PetDto toPetDto(Pet pet);

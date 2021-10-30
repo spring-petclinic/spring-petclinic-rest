@@ -6,6 +6,9 @@ import org.springframework.samples.petclinic.model.Owner;
 
 import java.util.Collection;
 
+/**
+ * Maps Owner & OwnerDto using Mapstruct
+ */
 @Mapper(uses = PetMapper.class)
 public interface OwnerMapper {
 
