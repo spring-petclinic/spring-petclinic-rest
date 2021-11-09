@@ -82,7 +82,7 @@ public class VisitRestController {
         if (bindingResult.hasErrors() || (visitDto == null)) {
             errors.addAllErrors(bindingResult);
             headers.add("errors", errors.toJSON());
-            return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<VisitDto>(headers, HttpStatus.BAD_REQUEST);
         }
         Visit visit = visitMapper.toVisit(visitDto);
         this.clinicService.saveVisit(visit);

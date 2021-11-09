@@ -174,7 +174,6 @@ public class VisitRestControllerTests {
     		.andExpect(status().isCreated());
     }
 
-    @Test(expected = IOException.class)
     @WithMockUser(roles="OWNER_ADMIN")
     public void testCreateVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
@@ -208,7 +207,6 @@ public class VisitRestControllerTests {
             .andExpect(jsonPath("$.description").value("rabies shot test"));
     }
 
-    @Test(expected = IOException.class)
     @WithMockUser(roles="OWNER_ADMIN")
     public void testUpdateVisitError() throws Exception {
     	Visit newVisit = visits.get(0);

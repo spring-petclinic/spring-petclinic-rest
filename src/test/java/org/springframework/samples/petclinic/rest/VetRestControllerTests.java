@@ -189,7 +189,7 @@ public class VetRestControllerTests {
     @WithMockUser(roles="VET_ADMIN")
     public void testUpdateVetError() throws Exception {
     	Vet newVet = vets.get(0);
-    	newVet.setFirstName("");
+    	newVet.setFirstName(null);
     	ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
     	this.mockMvc.perform(put("/api/vets/1")
