@@ -15,11 +15,11 @@
  */
 package org.springframework.samples.petclinic.repository.jdbc;
 
+import org.springframework.jdbc.core.RowMapper;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-
-import org.springframework.jdbc.core.RowMapper;
 
 /**
  * {@link RowMapper} implementation mapping data from a {@link ResultSet} to the corresponding properties
@@ -33,7 +33,7 @@ public class JdbcPetRowMapper implements RowMapper<JdbcPet> {
         pet.setId(rs.getInt("pets_id"));
         pet.setName(rs.getString("name"));
         Date birthDate = rs.getDate("birth_date");
-        pet.setBirthDate(new Date(birthDate.getTime()));
+        pet.setBirthDate(new java.sql.Date(birthDate.getTime()).toLocalDate());
         pet.setTypeId(rs.getInt("type_id"));
         pet.setOwnerId(rs.getInt("owner_id"));
         return pet;

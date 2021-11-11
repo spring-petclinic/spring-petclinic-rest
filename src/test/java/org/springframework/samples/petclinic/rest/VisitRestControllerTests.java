@@ -17,6 +17,8 @@
 package org.springframework.samples.petclinic.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,9 +40,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -94,7 +95,7 @@ public class VisitRestControllerTests {
     	Pet pet = new Pet();
     	pet.setId(8);
     	pet.setName("Rosy");
-    	pet.setBirthDate(new Date());
+        pet.setBirthDate(LocalDate.now());
     	pet.setOwner(owner);
     	pet.setType(petType);
 
@@ -102,14 +103,14 @@ public class VisitRestControllerTests {
     	Visit visit = new Visit();
     	visit.setId(2);
     	visit.setPet(pet);
-    	visit.setDate(new Date());
+        visit.setDate(LocalDate.now());
     	visit.setDescription("rabies shot");
     	visits.add(visit);
 
     	visit = new Visit();
     	visit.setId(3);
     	visit.setPet(pet);
-    	visit.setDate(new Date());
+        visit.setDate(LocalDate.now());
     	visit.setDescription("neutered");
     	visits.add(visit);
 
@@ -167,6 +168,8 @@ public class VisitRestControllerTests {
     	Visit newVisit = visits.get(0);
     	newVisit.setId(999);
     	ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	System.out.println("newVisitAsJSON " + newVisitAsJSON);
     	this.mockMvc.perform(post("/api/visits/")
@@ -193,6 +196,8 @@ public class VisitRestControllerTests {
     	Visit newVisit = visits.get(0);
     	newVisit.setDescription("rabies shot test");
     	ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	this.mockMvc.perform(put("/api/visits/2")
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))

@@ -140,6 +140,10 @@
             <version>${jackson-databind-nullable.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
@@ -280,7 +284,7 @@
                             <!-- Activating JAVA8 features -->
                             <configOptions>
                                 <performBeanValidation>true</performBeanValidation>
-                                <dateLibrary>legacy</dateLibrary>
+                                <dateLibrary>java8</dateLibrary>
                                 <java8>true</java8>
                                 <openApiNullable>false</openApiNullable>
                                 <serializationLibrary>jackson</serializationLibrary>
