@@ -1,0 +1,913 @@
+openapi: 3.0.1
+info:
+  title: Spring PetClinic
+  description: Spring PetClinic Sample Application.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+servers:
+  - url: http://localhost:8080/api
+tags:
+  - name: failing
+    description: Endpoint which always returns an error.
+  - name: owner
+    description: Endpoints related to pet owners.
+  - name: pet
+    description: Endpoints related to pets.
+  - name: vet
+    description: Endpoints related to vets.
+  - name: visit
+    description: Endpoints related to vet visits.
+paths:
+  /oops:
+    get:
+      tags:
+        - failing
+      operationId: failingRequest
+      summary: Always fails
+      description: Produces sample error response.
+      parameters:
+        - name: If-None-Match
+          in: header
+          description: A list of ETags of the responses the client has cached.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Never returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            text/plain:
+              schema:
+                type: string
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /owner:
+    post:
+      tags:
+        - owner
+      operationId: addOwner
+      summary: Adds a pet owner
+      description: Records the details of a new pet owner.
+      requestBody:
+        description: The pet owner
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerFields'
+        required: true
+      responses:
+        201:
+          description: The pet owner was sucessfully added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+    get:
+      tags:
+        - owner
+      operationId: listOwners
+      summary: Lists pet owners
+      description: Returns an array of pet owners.
+      parameters:
+        - name: lastName
+          in: query
+          description: Last name.
+          required: false
+          schema:
+            type: string
+            example: Davis
+        - name: If-None-Match
+          in: header
+          description: A list of ETags of the responses the client has cached.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Owner details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Owner'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /owner/{ownerId}:
+    get:
+      tags:
+        - owner
+      operationId: getOwner
+      summary: Get a pet owner by ID
+      description: Returns the pet owner or a 404 error.
+      parameters:
+        - name: ownerId
+          in: path
+          description: The ID of the pet owner.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+        - name: If-None-Match
+          in: header
+          description: A list of ETags of the responses the client has cached.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Owner details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+    put:
+      tags:
+        - owner
+      operationId: updateOwner
+      summary: Update a pet owner's details
+      description: Updates the pet owner record with the specified details.
+      parameters:
+        - name: ownerId
+          in: path
+          description: The ID of the pet owner.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      requestBody:
+        description: The pet owner details to use for the update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerFields'
+        required: true
+      responses:
+        200:
+          description: Update successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /owner/{ownerId}/pet:
+    post:
+      tags:
+        - pet
+      operationId: addPet
+      summary: Adds a pet
+      description: Records the details of a new pet.
+      parameters:
+        - name: ownerId
+          in: path
+          description: The ID of the pet owner.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      requestBody:
+        description: The details of the new pet.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetFields'
+        required: true
+      responses:
+        201:
+          description: The pet was sucessfully added.
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /owner/{ownerId}/pet/{petId}:
+    get:
+      tags:
+        - pet
+      operationId: getPet
+      summary: Get a pet by ID
+      description: Returns the pet or a 404 error.
+      parameters:
+        - name: ownerId
+          in: path
+          description: The ID of the pet owner.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+        - name: petId
+          in: path
+          description: The ID of the pet.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+        - name: If-None-Match
+          in: header
+          description: A list of ETags of the responses the client has cached.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Pet details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+    put:
+      tags:
+        - pet
+      operationId: updatePet
+      summary: Update a pet's details
+      description: Updates the pet record with the specified details.
+      parameters:
+        - name: ownerId
+          in: path
+          description: The ID of the pet owner.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+        - name: petId
+          in: path
+          description: The ID of the pet.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      requestBody:
+        description: The pet details to use for the update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetFields'
+        required: true
+      responses:
+        204:
+          description: Update successful.
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Pet not found for this owner.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /owner/{ownerId}/pet/{petId}/visit:
+    post:
+      tags:
+        - visit
+      operationId: addVisit
+      summary: Adds a vet visit
+      description: Records the details of a new vet visit.
+      parameters:
+        - name: ownerId
+          in: path
+          description: The ID of the pet owner.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+        - name: petId
+          in: path
+          description: The ID of the pet.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      requestBody:
+        description: The details of the new vet visit.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitFields'
+        required: true
+      responses:
+        201:
+          description: The vet visit was sucessfully added.
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Pet not found for this owner.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /pet-type:
+    get:
+      tags:
+        - pet
+      operationId: listPetTypes
+      summary: Lists pet types
+      description: Returns an array of pet types.
+      parameters:
+        - name: If-None-Match
+          in: header
+          description: A list of ETags of the responses the client has cached.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Pet types found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetType'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /vet:
+    get:
+      tags:
+        - vet
+      operationId: listVets
+      summary: Lists vets
+      description: Returns an array of vets.
+      parameters:
+        - name: If-None-Match
+          in: header
+          description: A list of ETags of the responses the client has cached.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Vets found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vet'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+components:
+  schemas:
+    RestError:
+      title: REST Error
+      description: The schema for all error responses.
+      type: object
+      properties:
+        status:
+          title: Status
+          description: The HTTP status code.
+          type: integer
+          format: int32
+          example: 400
+          readOnly: true
+        error:
+          title: Error
+          description: The short error message.
+          type: string
+          example: Bad Request
+          readOnly: true
+        path:
+          title: Path
+          description: The path of the URL for this request.
+          type: string
+          format: uri
+          example: '/api/owner'
+          readOnly: true
+        timestamp:
+          title: Timestamp
+          description: The time the error occured.
+          type: string
+          format: date-time
+          example: '2019-08-21T21:41:46.158+0000'
+          readOnly: true
+        message:
+          title: Message
+          description: The long error message.
+          type: string
+          example: 'Request failed schema validation'
+          readOnly: true
+        schemaValidationErrors:
+          title: Schema validation errors
+          description: Validation errors against the OpenAPI schema.
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationMessage'
+        trace:
+          title: Trace
+          description: The stacktrace for this error.
+          type: string
+          example: 'com.atlassian.oai.validator.springmvc.InvalidRequestException: ...'
+          readOnly: true
+      required:
+        - status
+        - error
+        - path
+        - timestamp
+        - message
+        - schemaValidationErrors
+    ValidationMessage:
+      title: Validation message
+      description: Messages describing a validation error.
+      type: object
+      properties:
+        message:
+          title: Message
+          description: The valiation message.
+          type: string
+          example: "[Path '/lastName'] Instance type (null) does not match any allowed primitive type (allowed: [\"string\"])"
+          readOnly: true
+      required:
+        - message
+      additionalProperties: true
+    Specialty:
+      title: Specialty
+      description: Fields of specialty of vets.
+      type: object
+      properties:
+        id:
+          title: ID
+          description: The ID of the specialty.
+          type: integer
+          format: int32
+          minimum: 0
+          example: 1
+          readOnly: true
+        name:
+          title: Name
+          description: The name of the specialty.
+          type: string
+          maxLength: 80
+          minLength: 1
+          example: radiology
+      required:
+        - id
+        - name
+    OwnerFields:
+      title: Owner fields
+      description: Editable fields of a pet owner.
+      type: object
+      properties:
+        firstName:
+          title: First name
+          description: The first name of the pet owner.
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[a-zA-Z]*$'
+          example: George
+        lastName:
+          title: Last name
+          description: The last name of the pet owner.
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[a-zA-Z]*$'
+          example: Franklin
+        address:
+          title: Address
+          description: The postal address of the pet owner.
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: '110 W. Liberty St.'
+        city:
+          title: City
+          description: The city of the pet owner.
+          type: string
+          minLength: 1
+          maxLength: 80
+          example: Madison
+        telephone:
+          title: Telephone number
+          description: The telephone number of the pet owner.
+          type: string
+          minLength: 1
+          maxLength: 20
+          pattern: '^[0-9]*$'
+          example: '6085551023'
+      required:
+        - firstName
+        - lastName
+        - address
+        - city
+        - telephone
+    Owner:
+      title: Owner
+      description: A pet owner.
+      allOf:
+        - $ref: '#/components/schemas/OwnerFields'
+        - type: object
+          properties:
+            id:
+              title: ID
+              description: The ID of the pet owner.
+              type: integer
+              format: int32
+              minimum: 0
+              example: 1
+              readOnly: true
+            pets:
+              title: Pets
+              description: The pets owned by this individual including any booked vet visits.
+              type: array
+              items:
+                $ref: '#/components/schemas/Pet'
+              readOnly: true
+          required:
+            - pets
+    PetFields:
+      title: Pet fields
+      description: Editable fields of a pet.
+      type: object
+      properties:
+        name:
+          title: Name
+          description: The name of the pet.
+          type: string
+          maxLength: 30
+          example: Leo
+        birthDate:
+          title: Birth date
+          description: The date of birth of the pet.
+          type: string
+          format: date
+          example: '2010-09-07'
+        typeId:
+          title: Type
+          description: The type of the pet.
+          type: integer
+          format: int32
+          example: 1
+      required:
+        - name
+    Pet:
+      title: Pet
+      description: A pet.
+      allOf:
+        - $ref: '#/components/schemas/PetFields'
+        - type: object
+          properties:
+            id:
+              title: ID
+              description: The ID of the pet.
+              type: integer
+              format: int32
+              minimum: 0
+              example: 1
+              readOnly: true
+            type:
+              $ref: '#/components/schemas/PetType'
+            visits:
+              title: Visits
+              description: Vet visit bookings for this pet.
+              type: array
+              items:
+                $ref: '#/components/schemas/Visit'
+              readOnly: true
+          required:
+            - id
+            - type
+            - visits
+    Vet:
+      title: Vet
+      description: A veterinarian.
+      type: object
+      properties:
+        id:
+          title: ID
+          description: The ID of the vet.
+          type: integer
+          format: int32
+          minimum: 0
+          example: 1
+          readOnly: true
+        firstName:
+          title: First name
+          description: The first name of the vet.
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[a-zA-Z]*$'
+          example: 'James'
+        lastName:
+          title: Last name
+          description: The last name of the vet.
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: '^[a-zA-Z]*$'
+          example: 'Carter'
+        specialties:
+          title: Specialties
+          description: The specialties of the vet.
+          type: array
+          items:
+            $ref: '#/components/schemas/Specialty'
+      required:
+        - id
+        - firstName
+        - lastName
+        - specialties
+    VisitFields:
+      title: Visit fields
+      description: Editable fields of a vet visit.
+      type: object
+      properties:
+        date:
+          title: Date
+          description: The date of the visit.
+          type: string
+          format: date
+          example: '2013-01-01'
+        description:
+          title: Description
+          description: The description for the visit.
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: 'rabies shot'
+      required:
+        - description
+    Visit:
+      title: Visit
+      description: A booking for a vet visit.
+      allOf:
+        - $ref: '#/components/schemas/VisitFields'
+        - type: object
+          properties:
+            id:
+              title: ID
+              description: The ID of the visit.
+              type: integer
+              format: int32
+              minimum: 0
+              example: 1
+              readOnly: true
+          required:
+            - id
+    PetType:
+      title: Pet type
+      description: A pet type.
+      type: object
+      properties:
+        id:
+          title: ID
+          description: The ID of the pet type.
+          type: integer
+          format: int32
+          minimum: 0
+          example: 1
+          readOnly: true
+        name:
+          title: Name
+          description: The name of the pet type.
+          type: string
+          maxLength: 80
+          minLength: 1
+          example: cat
+      required:
+        - id
+    User:
+      title: User
+      description: An user.
+      type: object
+      properties:
+        username:
+          title: username
+          description: The username
+          type: string
+          maxLength: 80
+          minLength: 1
+          example: john.doe
+        password:
+          title: Password
+          description: The password
+          type: string
+          maxLength: 80
+          minLength: 1
+          example: 1234
+        enabled:
+          title: enabled
+          description: Indicates if the user is enabled
+          type: boolean
+          example: true
+        roles:
+          title: Roles
+          description: The roles of an user
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+      required:
+        - username
+    Role:
+      title: Role
+      description: A role.
+      type: object
+      properties:
+        name:
+          title: name
+          description: The role's name
+          type: string
+          maxLength: 80
+          minLength: 1
+          example: admin
+      required:
+        - name

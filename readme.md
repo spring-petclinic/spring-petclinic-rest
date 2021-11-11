@@ -33,8 +33,12 @@ There are actuator health check and info routes as well:
 * [http://localhost:9966/petclinic/actuator/health](http://localhost:9966/petclinic/actuator/health)
 * [http://localhost:9966/petclinic/actuator/info](http://localhost:9966/petclinic/actuator/info)
 
-## Swagger REST API documentation presented here (after application start):
-[http://localhost:9966/petclinic/swagger-ui.html](http://localhost:9966/petclinic/swagger-ui.html)
+## OpenAPI REST API documentation presented here (after application start):
+
+You can reach the swagger UI with this URL
+[http://localhost:9966/petclinic/](http://localhost:9966/petclinic/swagger-ui.html).
+
+You then can get the Open API description reaching this URL [localhost:9966/petclinic/v3/api-docs](localhost:9966/petclinic/v3/api-docs).
 
 ## Screenshot of the Angular client
 

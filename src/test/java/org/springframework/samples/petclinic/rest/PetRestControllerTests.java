@@ -16,19 +16,8 @@
 
 package org.springframework.samples.petclinic.rest;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,11 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.dto.OwnerDto;
+import org.springframework.samples.petclinic.dto.PetDto;
+import org.springframework.samples.petclinic.dto.PetTypeDto;
+import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -49,7 +40,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 /**
@@ -67,21 +67,24 @@ public class PetRestControllerTests {
     @Autowired
     private PetRestController petRestController;
 
+    @Autowired
+    private PetMapper petMapper;
+
     @MockBean
     protected ClinicService clinicService;
 
     private MockMvc mockMvc;
 
-    private List<Pet> pets;
+    private List<PetDto> pets;
 
     @Before
     public void initPets(){
     	this.mockMvc = MockMvcBuilders.standaloneSetup(petRestController)
     			.setControllerAdvice(new ExceptionControllerAdvice())
     			.build();
-    	pets = new ArrayList<Pet>();
+    	pets = new ArrayList<>();
 
-    	Owner owner = new Owner();
+    	OwnerDto owner = new OwnerDto();
     	owner.setId(1);
     	owner.setFirstName("Eduardo");
     	owner.setLastName("Rodriquez");
@@ -89,23 +92,21 @@ public class PetRestControllerTests {
     	owner.setCity("McFarland");
     	owner.setTelephone("6085558763");
 
-    	PetType petType = new PetType();
+    	PetTypeDto petType = new PetTypeDto();
     	petType.setId(2);
     	petType.setName("dog");
 
-    	Pet pet = new Pet();
+    	PetDto pet = new PetDto();
     	pet.setId(3);
     	pet.setName("Rosy");
     	pet.setBirthDate(new Date());
-    	pet.setOwner(owner);
     	pet.setType(petType);
     	pets.add(pet);
 
-    	pet = new Pet();
+    	pet = new PetDto();
     	pet.setId(4);
     	pet.setName("Jewel");
     	pet.setBirthDate(new Date());
-    	pet.setOwner(owner);
     	pet.setType(petType);
     	pets.add(pet);
     }
@@ -113,7 +114,7 @@ public class PetRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testGetPetSuccess() throws Exception {
-    	given(this.clinicService.findPetById(3)).willReturn(pets.get(0));
+    	given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
         this.mockMvc.perform(get("/api/pets/3")
         	.accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
@@ -125,7 +126,7 @@ public class PetRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testGetPetNotFound() throws Exception {
-    	given(this.clinicService.findPetById(-1)).willReturn(null);
+    	given(petMapper.toPetDto(this.clinicService.findPetById(-1))).willReturn(null);
         this.mockMvc.perform(get("/api/pets/-1")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -134,7 +135,10 @@ public class PetRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testGetAllPetsSuccess() throws Exception {
-    	given(this.clinicService.findAllPets()).willReturn(pets);
+        final Collection<Pet> pets = petMapper.toPets(this.pets);
+        System.err.println(pets);
+        when(this.clinicService.findAllPets()).thenReturn(pets);
+        //given(this.clinicService.findAllPets()).willReturn(petMapper.toPets(pets));
         this.mockMvc.perform(get("/api/pets/")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -149,7 +153,7 @@ public class PetRestControllerTests {
     @WithMockUser(roles="OWNER_ADMIN")
     public void testGetAllPetsNotFound() throws Exception {
     	pets.clear();
-    	given(this.clinicService.findAllPets()).willReturn(pets);
+    	given(this.clinicService.findAllPets()).willReturn(petMapper.toPets(pets));
         this.mockMvc.perform(get("/api/pets/")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -158,10 +162,13 @@ public class PetRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testCreatePetSuccess() throws Exception {
-    	Pet newPet = pets.get(0);
+    	PetDto newPet = pets.get(0);
     	newPet.setId(999);
     	ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     	String newPetAsJSON = mapper.writeValueAsString(newPet);
+        System.err.println("--> newPetAsJSON="+newPetAsJSON);
     	this.mockMvc.perform(post("/api/pets/")
     		.content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
     		.andExpect(status().isCreated());
@@ -170,10 +177,12 @@ public class PetRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testCreatePetError() throws Exception {
-    	Pet newPet = pets.get(0);
+    	PetDto newPet = pets.get(0);
     	newPet.setId(null);
     	newPet.setName(null);
     	ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     	String newPetAsJSON = mapper.writeValueAsString(newPet);
     	this.mockMvc.perform(post("/api/pets/")
         		.content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -183,10 +192,13 @@ public class PetRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testUpdatePetSuccess() throws Exception {
-    	given(this.clinicService.findPetById(3)).willReturn(pets.get(0));
-    	Pet newPet = pets.get(0);
+    	given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
+    	PetDto newPet = pets.get(0);
     	newPet.setName("Rosy I");
     	ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
     	String newPetAsJSON = mapper.writeValueAsString(newPet);
     	this.mockMvc.perform(put("/api/pets/3")
     		.content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -205,10 +217,13 @@ public class PetRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testUpdatePetError() throws Exception {
-    	Pet newPet = pets.get(0);
-    	newPet.setName("");
+    	PetDto newPet = pets.get(0);
+    	newPet.setName(null);
     	ObjectMapper mapper = new ObjectMapper();
-    	String newPetAsJSON = mapper.writeValueAsString(newPet);
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+
     	this.mockMvc.perform(put("/api/pets/3")
     		.content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isBadRequest());
@@ -217,10 +232,10 @@ public class PetRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testDeletePetSuccess() throws Exception {
-    	Pet newPet = pets.get(0);
+    	PetDto newPet = pets.get(0);
     	ObjectMapper mapper = new ObjectMapper();
     	String newPetAsJSON = mapper.writeValueAsString(newPet);
-    	given(this.clinicService.findPetById(3)).willReturn(pets.get(0));
+    	given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
     	this.mockMvc.perform(delete("/api/pets/3")
     		.content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
@@ -229,7 +244,7 @@ public class PetRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     public void testDeletePetError() throws Exception {
-    	Pet newPet = pets.get(0);
+    	PetDto newPet = pets.get(0);
     	ObjectMapper mapper = new ObjectMapper();
     	String newPetAsJSON = mapper.writeValueAsString(newPet);
     	given(this.clinicService.findPetById(-1)).willReturn(null);
