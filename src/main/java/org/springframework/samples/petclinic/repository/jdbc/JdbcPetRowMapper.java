@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -32,8 +33,7 @@ public class JdbcPetRowMapper implements RowMapper<JdbcPet> {
         JdbcPet pet = new JdbcPet();
         pet.setId(rs.getInt("pets_id"));
         pet.setName(rs.getString("name"));
-        Date birthDate = rs.getDate("birth_date");
-        pet.setBirthDate(new java.sql.Date(birthDate.getTime()).toLocalDate());
+        pet.setBirthDate(rs.getObject("birth_date", LocalDate.class));
         pet.setTypeId(rs.getInt("type_id"));
         pet.setOwnerId(rs.getInt("owner_id"));
         return pet;

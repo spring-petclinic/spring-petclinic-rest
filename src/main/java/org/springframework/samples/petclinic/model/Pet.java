@@ -36,7 +36,6 @@ import java.util.*;
 public class Pet extends NamedEntity {
 
     @Column(name = "birth_date", columnDefinition = "DATE")
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate birthDate;
 
     @ManyToOne

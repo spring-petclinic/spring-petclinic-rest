@@ -34,7 +34,6 @@ public class Visit extends BaseEntity {
      * Holds value of property date.
      */
     @Column(name = "visit_date", columnDefinition = "DATE")
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate date;
 
     /**

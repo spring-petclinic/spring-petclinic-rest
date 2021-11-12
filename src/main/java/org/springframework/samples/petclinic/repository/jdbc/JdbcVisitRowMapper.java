@@ -21,6 +21,7 @@ import org.springframework.samples.petclinic.model.Visit;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -33,8 +34,7 @@ class JdbcVisitRowMapper implements RowMapper<Visit> {
     public Visit mapRow(ResultSet rs, int row) throws SQLException {
         Visit visit = new Visit();
         visit.setId(rs.getInt("visit_id"));
-        Date visitDate = rs.getDate("visit_date");
-        visit.setDate(new java.sql.Date(visitDate.getTime()).toLocalDate());
+        visit.setDate(rs.getObject("visit_date", LocalDate.class));
         visit.setDescription(rs.getString("description"));
         return visit;
     }
