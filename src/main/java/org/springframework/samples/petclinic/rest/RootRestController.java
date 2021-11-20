@@ -40,7 +40,7 @@ public class RootRestController {
 
 	@RequestMapping(value = "/")
 	public void redirectToSwagger(HttpServletResponse response) throws IOException {
-		response.sendRedirect(this.servletContextPath + "/swagger-ui.html");
+		response.sendRedirect(this.servletContextPath + "/swagger-ui/index.html");
 	}
 
 }
