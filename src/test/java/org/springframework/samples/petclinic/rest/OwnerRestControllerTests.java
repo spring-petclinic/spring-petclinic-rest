@@ -17,6 +17,8 @@
 package org.springframework.samples.petclinic.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,13 +41,19 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 /**
@@ -80,62 +88,25 @@ public class OwnerRestControllerTests {
         owners = new ArrayList<OwnerDto>();
 
         OwnerDto ownerWithPet = new OwnerDto();
-        ownerWithPet.setId(1);
-        ownerWithPet.setFirstName("George");
-        ownerWithPet.setLastName("Franklin");
-        ownerWithPet.setAddress("110 W. Liberty St.");
-        ownerWithPet.setCity("Madison");
-        ownerWithPet.setTelephone("6085551023");
-        ownerWithPet.addPetsItem(getTestPetWithIdAndName(ownerWithPet, 1, "Rosy"));
-        owners.add(ownerWithPet);
-
+        owners.add(ownerWithPet.id(1).firstName("George").lastName("Franklin").address("110 W. Liberty St.").city("Madison").telephone("6085551023").addPetsItem(getTestPetWithIdAndName(ownerWithPet, 1, "Rosy")));
         OwnerDto owner = new OwnerDto();
-        owner.setId(2);
-        owner.setFirstName("Betty");
-        owner.setLastName("Davis");
-        owner.setAddress("638 Cardinal Ave.");
-        owner.setCity("Sun Prairie");
-        owner.setTelephone("6085551749");
-        owners.add(owner);
-
+        owners.add(owner.id(2).firstName("Betty").lastName("Davis").address("638 Cardinal Ave.").city("Sun Prairie").telephone("6085551749"));
         owner = new OwnerDto();
-        owner.setId(3);
-        owner.setFirstName("Eduardo");
-        owner.setLastName("Rodriquez");
-        owner.setAddress("2693 Commerce St.");
-        owner.setCity("McFarland");
-        owner.setTelephone("6085558763");
-        owners.add(owner);
-
+        owners.add(owner.id(3).firstName("Eduardo").lastName("Rodriquez").address("2693 Commerce St.").city("McFarland").telephone("6085558763"));
         owner = new OwnerDto();
-        owner.setId(4);
-        owner.setFirstName("Harold");
-        owner.setLastName("Davis");
-        owner.setAddress("563 Friendly St.");
-        owner.setCity("Windsor");
-        owner.setTelephone("6085553198");
-        owners.add(owner);
+        owners.add(owner.id(4).firstName("Harold").lastName("Davis").address("563 Friendly St.").city("Windsor").telephone("6085553198"));
     }
 
     private PetDto getTestPetWithIdAndName(final OwnerDto owner, final int id, final String name) {
         PetTypeDto petType = new PetTypeDto();
-        petType.setId(2);
-        petType.setName("dog");
         PetDto pet = new PetDto();
-        pet.setId(id);
-        pet.setName(name);
-        pet.setBirthDate(new Date());
-        pet.setType(petType);
-        pet.addVisitsItem(getTestVisitForPet(pet, 1));
+        pet.id(id).name(name).birthDate(LocalDate.now()).type(petType.id(2).name("dog")).addVisitsItem(getTestVisitForPet(pet, 1));
         return pet;
     }
 
     private VisitDto getTestVisitForPet(final PetDto pet, final int id) {
         VisitDto visit = new VisitDto();
-        visit.setId(id);
-        visit.setDate(new Date());
-        visit.setDescription("test" + id);
-        return visit;
+        return visit.id(id).date(LocalDate.now()).description("test" + id);
     }
 
     @Test
@@ -217,6 +188,8 @@ public class OwnerRestControllerTests {
         OwnerDto newOwnerDto = owners.get(0);
         newOwnerDto.setId(null);
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         this.mockMvc.perform(post("/api/owners/")
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -229,6 +202,8 @@ public class OwnerRestControllerTests {
         OwnerDto newOwnerDto = owners.get(0);
         newOwnerDto.setId(999);
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         this.mockMvc.perform(post("/api/owners/")
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -244,6 +219,8 @@ public class OwnerRestControllerTests {
         newOwnerDto.setId(null);
         newOwnerDto.setFirstName(null);
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         this.mockMvc.perform(post("/api/owners/")
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -264,6 +241,8 @@ public class OwnerRestControllerTests {
         updatedOwnerDto.setCity("Madison");
         updatedOwnerDto.setTelephone("6085551023");
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         String newOwnerAsJSON = mapper.writeValueAsString(updatedOwnerDto);
         this.mockMvc.perform(put("/api/owners/" + ownerId)
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))

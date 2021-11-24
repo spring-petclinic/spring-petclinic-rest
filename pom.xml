@@ -140,6 +140,10 @@
             <version>${jackson-databind-nullable.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
@@ -191,6 +195,12 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <!-- Generated code -->
+                        <exclude>**/org/springframework/samples/petclinic/dto/**</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -220,10 +230,7 @@
                                     </limits>
                                     </rule>
                             </rules>
-                            <excludes>
-                                 <!-- Generated code -->
-                                 <exclude>org/springframework/samples/petclinic/dto/*</exclude>
-                            </excludes>
+
                         </configuration>
                     </execution>
                     <execution>
@@ -281,7 +288,7 @@
                             <!-- Activating JAVA8 features -->
                             <configOptions>
                                 <performBeanValidation>true</performBeanValidation>
-                                <dateLibrary>legacy</dateLibrary>
+                                <dateLibrary>java8</dateLibrary>
                                 <java8>true</java8>
                                 <openApiNullable>false</openApiNullable>
                                 <serializationLibrary>jackson</serializationLibrary>

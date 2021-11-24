@@ -15,12 +15,11 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Simple JavaBean domain object representing a visit.
@@ -34,11 +33,8 @@ public class Visit extends BaseEntity {
     /**
      * Holds value of property date.
      */
-    @Column(name = "visit_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy/MM/dd")
-    private Date date;
+    @Column(name = "visit_date", columnDefinition = "DATE")
+    private LocalDate date;
 
     /**
      * Holds value of property description.
@@ -59,7 +55,7 @@ public class Visit extends BaseEntity {
      * Creates a new instance of Visit for the current date
      */
     public Visit() {
-        this.date = new Date();
+        this.date = LocalDate.now();
     }
 
 
@@ -68,7 +64,7 @@ public class Visit extends BaseEntity {
      *
      * @return Value of property date.
      */
-    public Date getDate() {
+    public LocalDate getDate() {
         return this.date;
     }
 
@@ -77,7 +73,7 @@ public class Visit extends BaseEntity {
      *
      * @param date New value of property date.
      */
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
