@@ -83,30 +83,27 @@ public class PetRestControllerTests {
         pets = new ArrayList<>();
 
         OwnerDto owner = new OwnerDto();
-        owner.setId(1);
-        owner.setFirstName("Eduardo");
-        owner.setLastName("Rodriquez");
-        owner.setAddress("2693 Commerce St.");
-        owner.setCity("McFarland");
-        owner.setTelephone("6085558763");
+        owner.id(1).firstName("Eduardo")
+        .lastName("Rodriquez")
+        .address("2693 Commerce St.")
+        .city("McFarland")
+        .telephone("6085558763");
 
         PetTypeDto petType = new PetTypeDto();
-        petType.setId(2);
-        petType.setName("dog");
+        petType.id(2)
+                .name("dog");
 
         PetDto pet = new PetDto();
-        pet.setId(3);
-        pet.setName("Rosy");
-        pet.setBirthDate(LocalDate.now());
-        pet.setType(petType);
-        pets.add(pet);
+        pets.add(pet.id(3)
+            .name("Rosy")
+            .birthDate(LocalDate.now())
+            .type(petType));
 
         pet = new PetDto();
-        pet.setId(4);
-        pet.setName("Jewel");
-        pet.setBirthDate(LocalDate.now());
-        pet.setType(petType);
-        pets.add(pet);
+        pets.add(pet.id(4)
+            .name("Jewel")
+            .birthDate(LocalDate.now())
+            .type(petType));
     }
 
     @Test

@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.service.clinicService;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.*;
@@ -85,7 +86,7 @@ public abstract class AbstractClinicServiceTests {
         owner.setTelephone("4444444444");
         this.clinicService.saveOwner(owner);
         assertThat(owner.getId().longValue()).isNotEqualTo(0);
-
+        assertThat(owner.getPet("null value")).isNull();
         owners = this.clinicService.findOwnerByLastName("Schultz");
         assertThat(owners.size()).isEqualTo(found + 1);
     }

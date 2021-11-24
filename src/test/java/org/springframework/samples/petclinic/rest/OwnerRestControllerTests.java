@@ -46,8 +46,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 /**
@@ -82,62 +88,25 @@ public class OwnerRestControllerTests {
         owners = new ArrayList<OwnerDto>();
 
         OwnerDto ownerWithPet = new OwnerDto();
-        ownerWithPet.setId(1);
-        ownerWithPet.setFirstName("George");
-        ownerWithPet.setLastName("Franklin");
-        ownerWithPet.setAddress("110 W. Liberty St.");
-        ownerWithPet.setCity("Madison");
-        ownerWithPet.setTelephone("6085551023");
-        ownerWithPet.addPetsItem(getTestPetWithIdAndName(ownerWithPet, 1, "Rosy"));
-        owners.add(ownerWithPet);
-
+        owners.add(ownerWithPet.id(1).firstName("George").lastName("Franklin").address("110 W. Liberty St.").city("Madison").telephone("6085551023").addPetsItem(getTestPetWithIdAndName(ownerWithPet, 1, "Rosy")));
         OwnerDto owner = new OwnerDto();
-        owner.setId(2);
-        owner.setFirstName("Betty");
-        owner.setLastName("Davis");
-        owner.setAddress("638 Cardinal Ave.");
-        owner.setCity("Sun Prairie");
-        owner.setTelephone("6085551749");
-        owners.add(owner);
-
+        owners.add(owner.id(2).firstName("Betty").lastName("Davis").address("638 Cardinal Ave.").city("Sun Prairie").telephone("6085551749"));
         owner = new OwnerDto();
-        owner.setId(3);
-        owner.setFirstName("Eduardo");
-        owner.setLastName("Rodriquez");
-        owner.setAddress("2693 Commerce St.");
-        owner.setCity("McFarland");
-        owner.setTelephone("6085558763");
-        owners.add(owner);
-
+        owners.add(owner.id(3).firstName("Eduardo").lastName("Rodriquez").address("2693 Commerce St.").city("McFarland").telephone("6085558763"));
         owner = new OwnerDto();
-        owner.setId(4);
-        owner.setFirstName("Harold");
-        owner.setLastName("Davis");
-        owner.setAddress("563 Friendly St.");
-        owner.setCity("Windsor");
-        owner.setTelephone("6085553198");
-        owners.add(owner);
+        owners.add(owner.id(4).firstName("Harold").lastName("Davis").address("563 Friendly St.").city("Windsor").telephone("6085553198"));
     }
 
     private PetDto getTestPetWithIdAndName(final OwnerDto owner, final int id, final String name) {
         PetTypeDto petType = new PetTypeDto();
-        petType.setId(2);
-        petType.setName("dog");
         PetDto pet = new PetDto();
-        pet.setId(id);
-        pet.setName(name);
-        pet.setBirthDate(LocalDate.now());
-        pet.setType(petType);
-        pet.addVisitsItem(getTestVisitForPet(pet, 1));
+        pet.id(id).name(name).birthDate(LocalDate.now()).type(petType.id(2).name("dog")).addVisitsItem(getTestVisitForPet(pet, 1));
         return pet;
     }
 
     private VisitDto getTestVisitForPet(final PetDto pet, final int id) {
         VisitDto visit = new VisitDto();
-        visit.setId(id);
-        visit.setDate(LocalDate.now());
-        visit.setDescription("test" + id);
-        return visit;
+        return visit.id(id).date(LocalDate.now()).description("test" + id);
     }
 
     @Test
