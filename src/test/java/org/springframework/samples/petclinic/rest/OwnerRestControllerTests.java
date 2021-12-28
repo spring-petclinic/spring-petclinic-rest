@@ -19,9 +19,8 @@ package org.springframework.samples.petclinic.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,7 +35,6 @@ import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -46,14 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 /**
@@ -62,10 +54,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Vitaliy Fedoriv
  */
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ApplicationTestConfig.class)
 @WebAppConfiguration
-public class OwnerRestControllerTests {
+class OwnerRestControllerTests {
 
     @Autowired
     private OwnerRestController ownerRestController;
@@ -80,8 +71,8 @@ public class OwnerRestControllerTests {
 
     private List<OwnerDto> owners;
 
-    @Before
-    public void initOwners() {
+    @BeforeEach
+    void initOwners() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(ownerRestController)
             .setControllerAdvice(new ExceptionControllerAdvice())
             .build();
@@ -111,7 +102,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testGetOwnerSuccess() throws Exception {
+    void testGetOwnerSuccess() throws Exception {
         given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
         this.mockMvc.perform(get("/api/owners/1")
                 .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -123,7 +114,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testGetOwnerNotFound() throws Exception {
+    void testGetOwnerNotFound() throws Exception {
         given(this.clinicService.findOwnerById(-1)).willReturn(null);
         this.mockMvc.perform(get("/api/owners/-1")
                 .accept(MediaType.APPLICATION_JSON))
@@ -132,7 +123,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testGetOwnersListSuccess() throws Exception {
+    void testGetOwnersListSuccess() throws Exception {
         owners.remove(0);
         owners.remove(1);
         given(this.clinicService.findOwnerByLastName("Davis")).willReturn(ownerMapper.toOwners(owners));
@@ -148,7 +139,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testGetOwnersListNotFound() throws Exception {
+    void testGetOwnersListNotFound() throws Exception {
         owners.clear();
         given(this.clinicService.findOwnerByLastName("0")).willReturn(ownerMapper.toOwners(owners));
         this.mockMvc.perform(get("/api/owners/?lastName=0")
@@ -158,7 +149,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testGetAllOwnersSuccess() throws Exception {
+    void testGetAllOwnersSuccess() throws Exception {
         owners.remove(0);
         owners.remove(1);
         given(this.clinicService.findAllOwners()).willReturn(ownerMapper.toOwners(owners));
@@ -174,7 +165,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testGetAllOwnersNotFound() throws Exception {
+    void testGetAllOwnersNotFound() throws Exception {
         owners.clear();
         given(this.clinicService.findAllOwners()).willReturn(ownerMapper.toOwners(owners));
         this.mockMvc.perform(get("/api/owners/")
@@ -184,7 +175,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testCreateOwnerSuccess() throws Exception {
+    void testCreateOwnerSuccess() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
         newOwnerDto.setId(null);
         ObjectMapper mapper = new ObjectMapper();
@@ -198,7 +189,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testCreateOwnerErrorIdSpecified() throws Exception {
+    void testCreateOwnerErrorIdSpecified() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
         newOwnerDto.setId(999);
         ObjectMapper mapper = new ObjectMapper();
@@ -214,7 +205,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testCreateOwnerError() throws Exception {
+    void testCreateOwnerError() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
         newOwnerDto.setId(null);
         newOwnerDto.setFirstName(null);
@@ -229,7 +220,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testUpdateOwnerSuccess() throws Exception {
+    void testUpdateOwnerSuccess() throws Exception {
         given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
         int ownerId = owners.get(0).getId();
         OwnerDto updatedOwnerDto = new OwnerDto();
@@ -260,7 +251,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testUpdateOwnerSuccessNoBodyId() throws Exception {
+    void testUpdateOwnerSuccessNoBodyId() throws Exception {
         given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
         int ownerId = owners.get(0).getId();
         OwnerDto updatedOwnerDto = new OwnerDto();
@@ -288,7 +279,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testUpdateOwnerErrorBodyIdMismatchWithPathId() throws Exception {
+    void testUpdateOwnerErrorBodyIdMismatchWithPathId() throws Exception {
         int ownerId = owners.get(0).getId();
         OwnerDto updatedOwnerDto = new OwnerDto();
         // body.id != ownerId
@@ -309,7 +300,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testUpdateOwnerError() throws Exception {
+    void testUpdateOwnerError() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
         newOwnerDto.setFirstName("");
         ObjectMapper mapper = new ObjectMapper();
@@ -321,7 +312,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testDeleteOwnerSuccess() throws Exception {
+    void testDeleteOwnerSuccess() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
         ObjectMapper mapper = new ObjectMapper();
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
@@ -334,7 +325,7 @@ public class OwnerRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testDeleteOwnerError() throws Exception {
+    void testDeleteOwnerError() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
         ObjectMapper mapper = new ObjectMapper();
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);

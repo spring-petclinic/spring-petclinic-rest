@@ -19,9 +19,8 @@ package org.springframework.samples.petclinic.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -35,7 +34,6 @@ import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -60,10 +58,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ApplicationTestConfig.class)
 @WebAppConfiguration
-public class PetRestControllerTests {
+class PetRestControllerTests {
 
     @MockBean
     protected ClinicService clinicService;
@@ -75,8 +72,8 @@ public class PetRestControllerTests {
 
     private List<PetDto> pets;
 
-    @Before
-    public void initPets() {
+    @BeforeEach
+    void initPets() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(petRestController)
             .setControllerAdvice(new ExceptionControllerAdvice())
             .build();
@@ -108,7 +105,7 @@ public class PetRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testGetPetSuccess() throws Exception {
+    void testGetPetSuccess() throws Exception {
         given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
         this.mockMvc.perform(get("/api/pets/3")
             .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -120,7 +117,7 @@ public class PetRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testGetPetNotFound() throws Exception {
+    void testGetPetNotFound() throws Exception {
         given(petMapper.toPetDto(this.clinicService.findPetById(-1))).willReturn(null);
         this.mockMvc.perform(get("/api/pets/-1")
             .accept(MediaType.APPLICATION_JSON))
@@ -129,7 +126,7 @@ public class PetRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testGetAllPetsSuccess() throws Exception {
+    void testGetAllPetsSuccess() throws Exception {
         final Collection<Pet> pets = petMapper.toPets(this.pets);
         System.err.println(pets);
         when(this.clinicService.findAllPets()).thenReturn(pets);
@@ -146,7 +143,7 @@ public class PetRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testGetAllPetsNotFound() throws Exception {
+    void testGetAllPetsNotFound() throws Exception {
         pets.clear();
         given(this.clinicService.findAllPets()).willReturn(petMapper.toPets(pets));
         this.mockMvc.perform(get("/api/pets/")
@@ -156,7 +153,7 @@ public class PetRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testCreatePetSuccess() throws Exception {
+    void testCreatePetSuccess() throws Exception {
         PetDto newPet = pets.get(0);
         newPet.setId(999);
         ObjectMapper mapper = new ObjectMapper();
@@ -172,7 +169,7 @@ public class PetRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testCreatePetError() throws Exception {
+    void testCreatePetError() throws Exception {
         PetDto newPet = pets.get(0);
         newPet.setId(null);
         newPet.setName(null);
@@ -187,7 +184,7 @@ public class PetRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testUpdatePetSuccess() throws Exception {
+    void testUpdatePetSuccess() throws Exception {
         given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
         PetDto newPet = pets.get(0);
         newPet.setName("Rosy I");
@@ -213,7 +210,7 @@ public class PetRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testUpdatePetError() throws Exception {
+    void testUpdatePetError() throws Exception {
         PetDto newPet = pets.get(0);
         newPet.setName(null);
         ObjectMapper mapper = new ObjectMapper();
@@ -228,7 +225,7 @@ public class PetRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testDeletePetSuccess() throws Exception {
+    void testDeletePetSuccess() throws Exception {
         PetDto newPet = pets.get(0);
         ObjectMapper mapper = new ObjectMapper();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
@@ -240,7 +237,7 @@ public class PetRestControllerTests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
-    public void testDeletePetError() throws Exception {
+    void testDeletePetError() throws Exception {
         PetDto newPet = pets.get(0);
         ObjectMapper mapper = new ObjectMapper();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
