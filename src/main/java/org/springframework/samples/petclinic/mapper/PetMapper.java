@@ -1,8 +1,8 @@
 package org.springframework.samples.petclinic.mapper;
 
 import org.mapstruct.Mapper;
-import org.springframework.samples.petclinic.dto.PetDto;
-import org.springframework.samples.petclinic.dto.PetTypeDto;
+import org.springframework.samples.petclinic.rest.dto.PetDto;
+import org.springframework.samples.petclinic.rest.dto.PetTypeDto;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 

@@ -1,7 +1,7 @@
 package org.springframework.samples.petclinic.mapper;
 
 import org.mapstruct.Mapper;
-import org.springframework.samples.petclinic.dto.VetDto;
+import org.springframework.samples.petclinic.rest.dto.VetDto;
 import org.springframework.samples.petclinic.model.Vet;
 
 import java.util.Collection;

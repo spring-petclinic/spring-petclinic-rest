@@ -27,12 +27,6 @@ paths:
       operationId: failingRequest
       summary: Always fails
       description: Produces sample error response.
-      parameters:
-        - name: If-None-Match
-          in: header
-          description: A list of ETags of the responses the client has cached.
-          schema:
-            type: string
       responses:
         200:
           description: Never returned.
@@ -58,7 +52,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /owner:
+  /owners:
     post:
       tags:
         - owner
@@ -105,11 +99,6 @@ paths:
           schema:
             type: string
             example: Davis
-        - name: If-None-Match
-          in: header
-          description: A list of ETags of the responses the client has cached.
-          schema:
-            type: string
       responses:
         200:
           description: Owner details found and returned.
@@ -137,7 +126,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /owner/{ownerId}:
+  /owners/{ownerId}:
     get:
       tags:
         - owner
@@ -154,11 +143,6 @@ paths:
             format: int32
             minimum: 0
             example: 1
-        - name: If-None-Match
-          in: header
-          description: A list of ETags of the responses the client has cached.
-          schema:
-            type: string
       responses:
         200:
           description: Owner details found and returned.
@@ -244,7 +228,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /owner/{ownerId}/pet:
+  /owners/{ownerId}/pet:
     post:
       tags:
         - pet
@@ -289,7 +273,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /owner/{ownerId}/pet/{petId}:
+  /owners/{ownerId}/pet/{petId}:
     get:
       tags:
         - pet
@@ -315,11 +299,6 @@ paths:
             format: int32
             minimum: 0
             example: 1
-        - name: If-None-Match
-          in: header
-          description: A list of ETags of the responses the client has cached.
-          schema:
-            type: string
       responses:
         200:
           description: Pet details found and returned.
@@ -410,7 +389,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /owner/{ownerId}/pet/{petId}/visit:
+  /owners/{ownerId}/pet/{petId}/visit:
     post:
       tags:
         - visit
@@ -464,19 +443,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /pet-type:
+  /pettypes:
     get:
       tags:
         - pet
       operationId: listPetTypes
       summary: Lists pet types
       description: Returns an array of pet types.
-      parameters:
-        - name: If-None-Match
-          in: header
-          description: A list of ETags of the responses the client has cached.
-          schema:
-            type: string
       responses:
         200:
           description: Pet types found and returned.
@@ -504,19 +477,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /vet:
+  /vets:
     get:
       tags:
         - vet
       operationId: listVets
       summary: Lists vets
       description: Returns an array of vets.
-      parameters:
-        - name: If-None-Match
-          in: header
-          description: A list of ETags of the responses the client has cached.
-          schema:
-            type: string
       responses:
         200:
           description: Vets found and returned.
@@ -569,7 +536,7 @@ components:
           description: The path of the URL for this request.
           type: string
           format: uri
-          example: '/api/owner'
+          example: '/api/owners'
           readOnly: true
         timestamp:
           title: Timestamp
