@@ -176,6 +176,7 @@ class PetRestControllerTests {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.registerModule(new JavaTimeModule());
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         this.mockMvc.perform(post("/api/pets/")
             .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -214,6 +215,7 @@ class PetRestControllerTests {
         PetDto newPet = pets.get(0);
         newPet.setName(null);
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         String newPetAsJSON = mapper.writeValueAsString(newPet);
@@ -228,6 +230,7 @@ class PetRestControllerTests {
     void testDeletePetSuccess() throws Exception {
         PetDto newPet = pets.get(0);
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
         this.mockMvc.perform(delete("/api/pets/3")
@@ -240,6 +243,7 @@ class PetRestControllerTests {
     void testDeletePetError() throws Exception {
         PetDto newPet = pets.get(0);
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         given(this.clinicService.findPetById(-1)).willReturn(null);
         this.mockMvc.perform(delete("/api/pets/-1")

@@ -225,6 +225,7 @@ class VisitRestControllerTests {
     void testDeleteVisitSuccess() throws Exception {
     	Visit newVisit = visits.get(0);
     	ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
     	this.mockMvc.perform(delete("/api/visits/2")
@@ -237,6 +238,7 @@ class VisitRestControllerTests {
     void testDeleteVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
     	ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	given(this.clinicService.findVisitById(-1)).willReturn(null);
     	this.mockMvc.perform(delete("/api/visits/-1")
