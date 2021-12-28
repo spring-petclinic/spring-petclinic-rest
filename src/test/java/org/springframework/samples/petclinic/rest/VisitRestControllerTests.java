@@ -19,9 +19,8 @@ package org.springframework.samples.petclinic.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -35,7 +34,6 @@ import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -54,10 +52,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Vitaliy Fedoriv
  */
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes=ApplicationTestConfig.class)
 @WebAppConfiguration
-public class VisitRestControllerTests {
+class VisitRestControllerTests {
 
     @Autowired
     private VisitRestController visitRestController;
@@ -72,8 +69,8 @@ public class VisitRestControllerTests {
 
     private List<Visit> visits;
 
-    @Before
-    public void initVisits(){
+    @BeforeEach
+    void initVisits(){
     	this.mockMvc = MockMvcBuilders.standaloneSetup(visitRestController)
     			.setControllerAdvice(new ExceptionControllerAdvice())
     			.build();
@@ -119,7 +116,7 @@ public class VisitRestControllerTests {
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
-    public void testGetVisitSuccess() throws Exception {
+    void testGetVisitSuccess() throws Exception {
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
         this.mockMvc.perform(get("/api/visits/2")
         	.accept(MediaType.APPLICATION_JSON_VALUE))
@@ -131,7 +128,7 @@ public class VisitRestControllerTests {
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
-    public void testGetVisitNotFound() throws Exception {
+    void testGetVisitNotFound() throws Exception {
     	given(this.clinicService.findVisitById(-1)).willReturn(null);
         this.mockMvc.perform(get("/api/visits/-1")
         	.accept(MediaType.APPLICATION_JSON))
@@ -140,7 +137,7 @@ public class VisitRestControllerTests {
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
-    public void testGetAllVisitsSuccess() throws Exception {
+    void testGetAllVisitsSuccess() throws Exception {
     	given(this.clinicService.findAllVisits()).willReturn(visits);
         this.mockMvc.perform(get("/api/visits/")
         	.accept(MediaType.APPLICATION_JSON))
@@ -154,7 +151,7 @@ public class VisitRestControllerTests {
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
-    public void testGetAllVisitsNotFound() throws Exception {
+    void testGetAllVisitsNotFound() throws Exception {
     	visits.clear();
     	given(this.clinicService.findAllVisits()).willReturn(visits);
         this.mockMvc.perform(get("/api/visits/")
@@ -164,7 +161,7 @@ public class VisitRestControllerTests {
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
-    public void testCreateVisitSuccess() throws Exception {
+    void testCreateVisitSuccess() throws Exception {
     	Visit newVisit = visits.get(0);
     	newVisit.setId(999);
     	ObjectMapper mapper = new ObjectMapper();
@@ -178,7 +175,7 @@ public class VisitRestControllerTests {
     }
 
     @WithMockUser(roles="OWNER_ADMIN")
-    public void testCreateVisitError() throws Exception {
+    void testCreateVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
     	newVisit.setId(null);
         newVisit.setDescription(null);
@@ -191,7 +188,7 @@ public class VisitRestControllerTests {
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
-    public void testUpdateVisitSuccess() throws Exception {
+    void testUpdateVisitSuccess() throws Exception {
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
     	Visit newVisit = visits.get(0);
     	newVisit.setDescription("rabies shot test");
@@ -213,7 +210,7 @@ public class VisitRestControllerTests {
     }
 
     @WithMockUser(roles="OWNER_ADMIN")
-    public void testUpdateVisitError() throws Exception {
+    void testUpdateVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
         newVisit.setDescription(null);
     	ObjectMapper mapper = new ObjectMapper();
@@ -225,7 +222,7 @@ public class VisitRestControllerTests {
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
-    public void testDeleteVisitSuccess() throws Exception {
+    void testDeleteVisitSuccess() throws Exception {
     	Visit newVisit = visits.get(0);
     	ObjectMapper mapper = new ObjectMapper();
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
@@ -237,7 +234,7 @@ public class VisitRestControllerTests {
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
-    public void testDeleteVisitError() throws Exception {
+    void testDeleteVisitError() throws Exception {
     	Visit newVisit = visits.get(0);
     	ObjectMapper mapper = new ObjectMapper();
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));

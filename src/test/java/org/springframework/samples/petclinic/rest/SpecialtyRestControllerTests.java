@@ -17,9 +17,8 @@
 package org.springframework.samples.petclinic.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,7 +29,6 @@ import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -48,10 +46,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Vitaliy Fedoriv
  */
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes=ApplicationTestConfig.class)
 @WebAppConfiguration
-public class SpecialtyRestControllerTests {
+class SpecialtyRestControllerTests {
 
     @Autowired
     private SpecialtyRestController specialtyRestController;
@@ -66,8 +63,8 @@ public class SpecialtyRestControllerTests {
 
     private List<Specialty> specialties;
 
-    @Before
-    public void initSpecialtys(){
+    @BeforeEach
+    void initSpecialtys(){
     	this.mockMvc = MockMvcBuilders.standaloneSetup(specialtyRestController)
     			.setControllerAdvice(new ExceptionControllerAdvice())
     			.build();
@@ -92,7 +89,7 @@ public class SpecialtyRestControllerTests {
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    public void testGetSpecialtySuccess() throws Exception {
+    void testGetSpecialtySuccess() throws Exception {
     	given(this.clinicService.findSpecialtyById(1)).willReturn(specialties.get(0));
         this.mockMvc.perform(get("/api/specialties/1")
         	.accept(MediaType.APPLICATION_JSON_VALUE))
@@ -104,7 +101,7 @@ public class SpecialtyRestControllerTests {
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    public void testGetSpecialtyNotFound() throws Exception {
+    void testGetSpecialtyNotFound() throws Exception {
     	given(this.clinicService.findSpecialtyById(-1)).willReturn(null);
         this.mockMvc.perform(get("/api/specialties/-1")
         	.accept(MediaType.APPLICATION_JSON))
@@ -113,7 +110,7 @@ public class SpecialtyRestControllerTests {
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    public void testGetAllSpecialtysSuccess() throws Exception {
+    void testGetAllSpecialtysSuccess() throws Exception {
     	specialties.remove(0);
     	given(this.clinicService.findAllSpecialties()).willReturn(specialties);
         this.mockMvc.perform(get("/api/specialties/")
@@ -128,7 +125,7 @@ public class SpecialtyRestControllerTests {
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    public void testGetAllSpecialtysNotFound() throws Exception {
+    void testGetAllSpecialtysNotFound() throws Exception {
     	specialties.clear();
     	given(this.clinicService.findAllSpecialties()).willReturn(specialties);
         this.mockMvc.perform(get("/api/specialties/")
@@ -138,7 +135,7 @@ public class SpecialtyRestControllerTests {
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    public void testCreateSpecialtySuccess() throws Exception {
+    void testCreateSpecialtySuccess() throws Exception {
     	Specialty newSpecialty = specialties.get(0);
     	newSpecialty.setId(999);
     	ObjectMapper mapper = new ObjectMapper();
@@ -150,7 +147,7 @@ public class SpecialtyRestControllerTests {
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    public void testCreateSpecialtyError() throws Exception {
+    void testCreateSpecialtyError() throws Exception {
     	Specialty newSpecialty = specialties.get(0);
     	newSpecialty.setId(null);
     	newSpecialty.setName(null);
@@ -163,7 +160,7 @@ public class SpecialtyRestControllerTests {
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    public void testUpdateSpecialtySuccess() throws Exception {
+    void testUpdateSpecialtySuccess() throws Exception {
     	given(this.clinicService.findSpecialtyById(2)).willReturn(specialties.get(1));
     	Specialty newSpecialty = specialties.get(1);
     	newSpecialty.setName("surgery I");
@@ -184,7 +181,7 @@ public class SpecialtyRestControllerTests {
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    public void testUpdateSpecialtyError() throws Exception {
+    void testUpdateSpecialtyError() throws Exception {
     	Specialty newSpecialty = specialties.get(0);
     	newSpecialty.setName("");
     	ObjectMapper mapper = new ObjectMapper();
@@ -196,7 +193,7 @@ public class SpecialtyRestControllerTests {
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    public void testDeleteSpecialtySuccess() throws Exception {
+    void testDeleteSpecialtySuccess() throws Exception {
     	Specialty newSpecialty = specialties.get(0);
     	ObjectMapper mapper = new ObjectMapper();
         String newSpecialtyAsJSON = mapper.writeValueAsString(specialtyMapper.toSpecialtyDto(newSpecialty));
@@ -208,7 +205,7 @@ public class SpecialtyRestControllerTests {
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    public void testDeleteSpecialtyError() throws Exception {
+    void testDeleteSpecialtyError() throws Exception {
     	Specialty newSpecialty = specialties.get(0);
     	ObjectMapper mapper = new ObjectMapper();
         String newSpecialtyAsJSON = mapper.writeValueAsString(specialtyMapper.toSpecialtyDto(newSpecialty));
