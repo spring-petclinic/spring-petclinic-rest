@@ -733,19 +733,11 @@ components:
             - id
             - type
             - visits
-    Vet:
-      title: Vet
-      description: A veterinarian.
+    VetFields:
+      title: VetFields
+      description: Editable fields of a veterinarian.
       type: object
       properties:
-        id:
-          title: ID
-          description: The ID of the vet.
-          type: integer
-          format: int32
-          minimum: 0
-          example: 1
-          readOnly: true
         firstName:
           title: First name
           description: The first name of the vet.
@@ -768,6 +760,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Specialty'
+      required:
+        - firstName
+        - lastName
+        - specialties
+    Vet:
+      title: Vet
+      description: A veterinarian.
+      allOf:
+        - $ref: '#/components/schemas/VetFields'
+        - type: object
+          properties:
+            id:
+              title: ID
+              description: The ID of the vet.
+              type: integer
+              format: int32
+              minimum: 0
+              example: 1
+              readOnly: true
       required:
         - id
         - firstName
