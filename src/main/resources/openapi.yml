@@ -810,19 +810,11 @@ components:
               readOnly: true
           required:
             - id
-    PetType:
-      title: Pet type
-      description: A pet type.
+    PetTypeFields:
+      title: PetType fields
+      description: Editable fields of a pet type.
       type: object
       properties:
-        id:
-          title: ID
-          description: The ID of the pet type.
-          type: integer
-          format: int32
-          minimum: 0
-          example: 1
-          readOnly: true
         name:
           title: Name
           description: The name of the pet type.
@@ -831,7 +823,24 @@ components:
           minLength: 1
           example: cat
       required:
-        - id
+        - name
+    PetType:
+      title: Pet type
+      description: A pet type.
+      allOf:
+        - $ref: '#/components/schemas/PetTypeFields'
+        - type: object
+          properties:
+            id:
+              title: ID
+              description: The ID of the pet type.
+              type: integer
+              format: int32
+              minimum: 0
+              example: 1
+              readOnly: true
+          required:
+            - id
     User:
       title: User
       description: An user.
