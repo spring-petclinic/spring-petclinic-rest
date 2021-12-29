@@ -38,8 +38,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +74,8 @@ class OwnerRestControllerTests {
 
     private List<OwnerDto> owners;
 
+    private List<PetDto> pets;
+
     @BeforeEach
     void initOwners() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(ownerRestController)
@@ -87,6 +91,23 @@ class OwnerRestControllerTests {
         owners.add(owner.id(3).firstName("Eduardo").lastName("Rodriquez").address("2693 Commerce St.").city("McFarland").telephone("6085558763"));
         owner = new OwnerDto();
         owners.add(owner.id(4).firstName("Harold").lastName("Davis").address("563 Friendly St.").city("Windsor").telephone("6085553198"));
+
+        PetTypeDto petType = new PetTypeDto();
+        petType.id(2)
+            .name("dog");
+
+        pets = new ArrayList<>();
+        PetDto pet = new PetDto();
+        pets.add(pet.id(3)
+            .name("Rosy")
+            .birthDate(LocalDate.now())
+            .type(petType));
+
+        pet = new PetDto();
+        pets.add(pet.id(4)
+            .name("Jewel")
+            .birthDate(LocalDate.now())
+            .type(petType));
     }
 
     private PetDto getTestPetWithIdAndName(final OwnerDto owner, final int id, final String name) {
@@ -300,6 +321,38 @@ class OwnerRestControllerTests {
         this.mockMvc.perform(delete("/api/owners/-1")
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetSuccess() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(999);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        System.err.println("--> newPetAsJSON=" + newPetAsJSON);
+        this.mockMvc.perform(post("/api/owners/1/pets/")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetError() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        newPet.setName(null);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.registerModule(new JavaTimeModule());
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        this.mockMvc.perform(post("/api/owners/1/pets/")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
     }
 
 }

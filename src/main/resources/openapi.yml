@@ -228,7 +228,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /owners/{ownerId}/pet:
+  /owners/{ownerId}/pets:
     post:
       tags:
         - pet
@@ -255,6 +255,10 @@ paths:
       responses:
         201:
           description: The pet was sucessfully added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
         400:
           description: Bad request.
           content:
@@ -273,7 +277,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /owners/{ownerId}/pet/{petId}:
+  /owners/{ownerId}/pets/{petId}:
     get:
       tags:
         - pet
@@ -697,8 +701,12 @@ components:
           type: string
           format: date
           example: '2010-09-07'
+        type:
+          $ref: '#/components/schemas/PetType'
       required:
         - name
+        - birthDate
+        - type
     Pet:
       title: Pet
       description: A pet.
@@ -714,8 +722,6 @@ components:
               minimum: 0
               example: 1
               readOnly: true
-            type:
-              $ref: '#/components/schemas/PetType'
             visits:
               title: Visits
               description: Vet visit bookings for this pet.

@@ -20,10 +20,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.mapper.OwnerMapper;
+import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.rest.api.OwnersApi;
 import org.springframework.samples.petclinic.rest.dto.OwnerDto;
 import org.springframework.samples.petclinic.rest.dto.OwnerFieldsDto;
+import org.springframework.samples.petclinic.rest.dto.PetDto;
+import org.springframework.samples.petclinic.rest.dto.PetFieldsDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -43,11 +47,15 @@ import java.util.List;
 public class OwnerRestController implements OwnersApi {
 
     private final ClinicService clinicService;
+
     private final OwnerMapper ownerMapper;
 
-    public OwnerRestController(ClinicService clinicService, OwnerMapper ownerMapper) {
+    private final PetMapper petMapper;
+
+    public OwnerRestController(ClinicService clinicService, OwnerMapper ownerMapper, PetMapper petMapper) {
         this.clinicService = clinicService;
         this.ownerMapper = ownerMapper;
+        this.petMapper = petMapper;
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
@@ -113,6 +121,21 @@ public class OwnerRestController implements OwnersApi {
         }
         this.clinicService.deleteOwner(owner);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @Override
+    public ResponseEntity<PetDto> addPet(Integer ownerId, PetFieldsDto petFieldsDto) {
+        HttpHeaders headers = new HttpHeaders();
+        Pet pet = petMapper.toPet(petFieldsDto);
+        Owner owner = new Owner();
+        owner.setId(ownerId);
+        pet.setOwner(owner);
+        this.clinicService.savePet(pet);
+        PetDto petDto = petMapper.toPetDto(pet);
+        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/pets/{id}")
+            .buildAndExpand(pet.getId()).toUri());
+        return new ResponseEntity<>(petDto, headers, HttpStatus.CREATED);
     }
 
 }
