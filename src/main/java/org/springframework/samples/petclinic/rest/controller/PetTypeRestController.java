@@ -23,6 +23,7 @@ import org.springframework.samples.petclinic.rest.api.PettypesApi;
 import org.springframework.samples.petclinic.rest.dto.PetTypeDto;
 import org.springframework.samples.petclinic.mapper.PetTypeMapper;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.rest.dto.PetTypeFieldsDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -71,17 +72,17 @@ public class PetTypeRestController implements PettypesApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @RequestMapping(value = "/pettypes", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<PetTypeDto> addPetType(@RequestBody @Valid PetTypeDto petType, BindingResult bindingResult, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<PetTypeDto> addPetType(@RequestBody @Valid PetTypeFieldsDto petTypeFields, BindingResult bindingResult, UriComponentsBuilder ucBuilder) {
         BindingErrorsResponse errors = new BindingErrorsResponse();
         HttpHeaders headers = new HttpHeaders();
-        if (bindingResult.hasErrors() || (petType == null)) {
+        if (bindingResult.hasErrors() || (petTypeFields == null)) {
             errors.addAllErrors(bindingResult);
             headers.add("errors", errors.toJSON());
             return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
         }
-        final PetType type = petTypeMapper.toPetType(petType);
+        final PetType type = petTypeMapper.toPetType(petTypeFields);
         this.clinicService.savePetType(type);
-        headers.setLocation(ucBuilder.path("/api/pettypes/{id}").buildAndExpand(petType.getId()).toUri());
+        headers.setLocation(ucBuilder.path("/api/pettypes/{id}").buildAndExpand(type.getId()).toUri());
         return new ResponseEntity<>(petTypeMapper.toPetTypeDto(type), headers, HttpStatus.CREATED);
     }
 
