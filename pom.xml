@@ -218,12 +218,11 @@
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.67</minimum>
+                                            <minimum>0.66</minimum>
                                         </limit>
                                     </limits>
                                     </rule>
                             </rules>
-
                         </configuration>
                     </execution>
                     <execution>

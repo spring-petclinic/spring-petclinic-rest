@@ -697,12 +697,6 @@ components:
           type: string
           format: date
           example: '2010-09-07'
-        typeId:
-          title: Type
-          description: The type of the pet.
-          type: integer
-          format: int32
-          example: 1
       required:
         - name
     Pet:
