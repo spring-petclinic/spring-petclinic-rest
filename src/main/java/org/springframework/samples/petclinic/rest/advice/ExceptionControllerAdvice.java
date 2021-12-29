@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.rest;
+package org.springframework.samples.petclinic.rest.advice;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -43,7 +43,7 @@ public class ExceptionControllerAdvice {
 		}
 		return ResponseEntity.badRequest().body(respJSONstring);
 	}
-	
+
 	private class ErrorInfo {
 	    public final String className;
 	    public final String exMessage;

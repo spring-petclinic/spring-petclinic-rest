@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.rest;
+package org.springframework.samples.petclinic.rest.controller;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.dto.VetDto;
+import org.springframework.samples.petclinic.rest.api.VetsApi;
+import org.springframework.samples.petclinic.rest.dto.VetDto;
 import org.springframework.samples.petclinic.mapper.SpecialtyMapper;
 import org.springframework.samples.petclinic.mapper.VetMapper;
 import org.springframework.samples.petclinic.model.Specialty;
@@ -32,7 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Vitaliy Fedoriv
@@ -40,8 +41,8 @@ import java.util.Collection;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("api/vets")
-public class VetRestController {
+@RequestMapping("api")
+public class VetRestController implements VetsApi {
 
     private final ClinicService clinicService;
     private final VetMapper vetMapper;
@@ -54,18 +55,18 @@ public class VetRestController {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Collection<VetDto>> getAllVets() {
-        Collection<VetDto> vets = new ArrayList<VetDto>();
+    @Override
+    public ResponseEntity<List<VetDto>> listVets() {
+        List<VetDto> vets = new ArrayList<>();
         vets.addAll(vetMapper.toVetDtos(this.clinicService.findAllVets()));
         if (vets.isEmpty()) {
-            return new ResponseEntity<Collection<VetDto>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<VetDto>>(vets, HttpStatus.OK);
+        return new ResponseEntity<>(vets, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/{vetId}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/vets/{vetId}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<VetDto> getVet(@PathVariable("vetId") int vetId) {
         Vet vet = this.clinicService.findVetById(vetId);
         if (vet == null) {
@@ -75,7 +76,7 @@ public class VetRestController {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/vets", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<VetDto> addVet(@RequestBody @Valid VetDto vetDto, BindingResult bindingResult, UriComponentsBuilder ucBuilder) {
         BindingErrorsResponse errors = new BindingErrorsResponse();
         HttpHeaders headers = new HttpHeaders();
@@ -91,7 +92,7 @@ public class VetRestController {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/{vetId}", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value = "/vets/{vetId}", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<VetDto> updateVet(@PathVariable("vetId") int vetId, @RequestBody @Valid VetDto vetDto, BindingResult bindingResult) {
         BindingErrorsResponse errors = new BindingErrorsResponse();
         HttpHeaders headers = new HttpHeaders();
@@ -115,7 +116,7 @@ public class VetRestController {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/{vetId}", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/vets/{vetId}", method = RequestMethod.DELETE, produces = "application/json")
     @Transactional
     public ResponseEntity<Void> deleteVet(@PathVariable("vetId") int vetId) {
         Vet vet = this.clinicService.findVetById(vetId);
