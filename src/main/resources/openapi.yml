@@ -722,6 +722,14 @@ components:
               minimum: 0
               example: 1
               readOnly: true
+            ownerId:
+              title: Owner ID
+              description: The ID of the pet's owner.
+              type: integer
+              format: int32
+              minimum: 0
+              example: 1
+              readOnly: true
             visits:
               title: Visits
               description: Vet visit bookings for this pet.
