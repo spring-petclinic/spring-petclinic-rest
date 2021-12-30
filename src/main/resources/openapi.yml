@@ -827,6 +827,14 @@ components:
               minimum: 0
               example: 1
               readOnly: true
+            petId:
+              title: Pet ID
+              description: The ID of the pet.
+              type: integer
+              format: int32
+              minimum: 0
+              example: 1
+              readOnly: true
           required:
             - id
     PetTypeFields:
