@@ -393,7 +393,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /owners/{ownerId}/pet/{petId}/visit:
+  /owners/{ownerId}/pets/{petId}/visits:
     post:
       tags:
         - visit
@@ -429,6 +429,10 @@ paths:
       responses:
         201:
           description: The vet visit was sucessfully added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
         400:
           description: Bad request.
           content:

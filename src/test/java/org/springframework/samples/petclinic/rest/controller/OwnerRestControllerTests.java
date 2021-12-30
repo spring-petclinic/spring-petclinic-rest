@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.samples.petclinic.mapper.VisitMapper;
+import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.rest.advice.ExceptionControllerAdvice;
 import org.springframework.samples.petclinic.rest.dto.OwnerDto;
 import org.springframework.samples.petclinic.rest.dto.PetDto;
@@ -65,7 +67,10 @@ class OwnerRestControllerTests {
     private OwnerRestController ownerRestController;
 
     @Autowired
-    OwnerMapper ownerMapper;
+    private OwnerMapper ownerMapper;
+
+    @Autowired
+    private VisitMapper visitMapper;
 
     @MockBean
     private ClinicService clinicService;
@@ -75,6 +80,8 @@ class OwnerRestControllerTests {
     private List<OwnerDto> owners;
 
     private List<PetDto> pets;
+
+    private List<VisitDto> visits;
 
     @BeforeEach
     void initOwners() {
@@ -108,6 +115,21 @@ class OwnerRestControllerTests {
             .name("Jewel")
             .birthDate(LocalDate.now())
             .type(petType));
+
+        visits = new ArrayList<>();
+        VisitDto visit = new VisitDto();
+        visit.setId(2);
+        visit.setPetId(pet.getId());
+        visit.setDate(LocalDate.now());
+        visit.setDescription("rabies shot");
+        visits.add(visit);
+
+        visit = new VisitDto();
+        visit.setId(3);
+        visit.setPetId(pet.getId());
+        visit.setDate(LocalDate.now());
+        visit.setDescription("neutered");
+        visits.add(visit);
     }
 
     private PetDto getTestPetWithIdAndName(final OwnerDto owner, final int id, final String name) {
@@ -353,6 +375,21 @@ class OwnerRestControllerTests {
         this.mockMvc.perform(post("/api/owners/1/pets/")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testCreateVisitSuccess() throws Exception {
+        VisitDto newVisit = visits.get(0);
+        newVisit.setId(999);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisit(newVisit));
+        System.out.println("newVisitAsJSON " + newVisitAsJSON);
+        this.mockMvc.perform(post("/api/owners/1/pets/1/visits")
+                .content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
     }
 
 }
