@@ -21,13 +21,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.mapper.PetMapper;
+import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.rest.api.OwnersApi;
-import org.springframework.samples.petclinic.rest.dto.OwnerDto;
-import org.springframework.samples.petclinic.rest.dto.OwnerFieldsDto;
-import org.springframework.samples.petclinic.rest.dto.PetDto;
-import org.springframework.samples.petclinic.rest.dto.PetFieldsDto;
+import org.springframework.samples.petclinic.rest.dto.*;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -52,10 +51,16 @@ public class OwnerRestController implements OwnersApi {
 
     private final PetMapper petMapper;
 
-    public OwnerRestController(ClinicService clinicService, OwnerMapper ownerMapper, PetMapper petMapper) {
+    private final VisitMapper visitMapper;
+
+    public OwnerRestController(ClinicService clinicService,
+                               OwnerMapper ownerMapper,
+                               PetMapper petMapper,
+                               VisitMapper visitMapper) {
         this.clinicService = clinicService;
         this.ownerMapper = ownerMapper;
         this.petMapper = petMapper;
+        this.visitMapper = visitMapper;
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
@@ -117,7 +122,7 @@ public class OwnerRestController implements OwnersApi {
     public ResponseEntity<Void> deleteOwner(@PathVariable("ownerId") int ownerId) {
         Owner owner = this.clinicService.findOwnerById(ownerId);
         if (owner == null) {
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         this.clinicService.deleteOwner(owner);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -136,6 +141,21 @@ public class OwnerRestController implements OwnersApi {
         headers.setLocation(UriComponentsBuilder.newInstance().path("/api/pets/{id}")
             .buildAndExpand(pet.getId()).toUri());
         return new ResponseEntity<>(petDto, headers, HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @Override
+    public ResponseEntity<VisitDto> addVisit(Integer ownerId, Integer petId, VisitFieldsDto visitFieldsDto) {
+        HttpHeaders headers = new HttpHeaders();
+        Visit visit = visitMapper.toVisit(visitFieldsDto);
+        Pet pet = new Pet();
+        pet.setId(petId);
+        visit.setPet(pet);
+        this.clinicService.saveVisit(visit);
+        VisitDto visitDto = visitMapper.toVisitDto(visit);
+        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/visits/{id}")
+            .buildAndExpand(visit.getId()).toUri());
+        return new ResponseEntity<>(visitDto, headers, HttpStatus.CREATED);
     }
 
 }
