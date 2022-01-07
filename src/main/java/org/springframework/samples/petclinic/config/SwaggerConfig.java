@@ -70,7 +70,7 @@ public class SwaggerConfig {
 
     /**
      * Springfox workaround required by Spring Boot 2.6
-     * See https://github.com/springfox/springfox/issues/346
+     * See https://github.com/springfox/springfox/issues/3462
      */
     @Bean
     public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
