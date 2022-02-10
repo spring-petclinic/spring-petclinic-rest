@@ -543,7 +543,7 @@ paths:
       summary: Get a pet type by ID
       description: Returns the pet type or a 404 error.
       parameters:
-        - name: petType
+        - name: petTypeId
           in: path
           description: The ID of the pet type.
           required: true
@@ -596,7 +596,7 @@ paths:
       summary: Update a pet type by ID
       description: Returns the pet type or a 404 error.
       parameters:
-        - name: petType
+        - name: petTypeId
           in: path
           description: The ID of the pet type.
           required: true
@@ -656,7 +656,7 @@ paths:
       summary: Delete a pet type by ID
       description: Returns the pet type or a 404 error.
       parameters:
-        - name: petType
+        - name: petTypeId
           in: path
           description: The ID of the pet type.
           required: true

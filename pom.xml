@@ -33,6 +33,8 @@
         <!-- Docker -->
         <docker.jib-maven-plugin.version>1.3.0</docker.jib-maven-plugin.version>
         <docker.image.prefix>springcommunity</docker.image.prefix>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <spring-boot-maven-plugin.version>2.6.2</spring-boot-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -164,6 +166,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <!-- Spring Boot Actuator displays build-related information
@@ -221,7 +224,7 @@
                                             <minimum>0.66</minimum>
                                         </limit>
                                     </limits>
-                                    </rule>
+                                </rule>
                             </rules>
                         </configuration>
                     </execution>
@@ -272,8 +275,10 @@
                             <apiPackage>org.springframework.samples.petclinic.rest.api</apiPackage>
                             <generateModels>true</generateModels>
                             <modelPackage>org.springframework.samples.petclinic.rest.dto</modelPackage>
+                            <!--
                             <generateSupportingFiles>true</generateSupportingFiles>
                             <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
+                            -->
                             <generateApis>true</generateApis>
                             <configOptions>
                                 <!-- RestController implementation is provided by Petclinic developers -->
@@ -312,6 +317,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <annotationProcessorPaths>
                         <path>

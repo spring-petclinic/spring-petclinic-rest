@@ -16,6 +16,7 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,8 +63,8 @@ public class PetTypeRestController implements PettypesApi {
     }
 
     @PreAuthorize("hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)")
-    @RequestMapping(value = "/pettypes/{petTypeId}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<PetTypeDto> getPetType(@PathVariable("petTypeId") int petTypeId) {
+    @Override
+    public ResponseEntity<PetTypeDto> getPetType(@Min(0)@ApiParam(value = "The ID of the pet type.",required=true) @PathVariable("petTypeId") Integer petTypeId){
         PetType petType = this.clinicService.findPetTypeById(petTypeId);
         if (petType == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -71,7 +73,7 @@ public class PetTypeRestController implements PettypesApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/pettypes", method = RequestMethod.POST, produces = "application/json")
+    @Override
     public ResponseEntity<PetTypeDto> addPetType(@RequestBody @Valid PetTypeFieldsDto petTypeFields, BindingResult bindingResult, UriComponentsBuilder ucBuilder) {
         BindingErrorsResponse errors = new BindingErrorsResponse();
         HttpHeaders headers = new HttpHeaders();
@@ -87,7 +89,6 @@ public class PetTypeRestController implements PettypesApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/pettypes/{petTypeId}", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<PetTypeDto> updatePetType(@PathVariable("petTypeId") int petTypeId, @RequestBody @Valid PetTypeDto petType, BindingResult bindingResult) {
         BindingErrorsResponse errors = new BindingErrorsResponse();
         HttpHeaders headers = new HttpHeaders();
