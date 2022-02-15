@@ -232,8 +232,8 @@ paths:
     post:
       tags:
         - pet
-      operationId: addPet
-      summary: Adds a pet
+      operationId: addPetToOwner
+      summary: Adds a pet to an owner
       description: Records the details of a new pet.
       parameters:
         - name: ownerId
@@ -281,7 +281,7 @@ paths:
     get:
       tags:
         - pet
-      operationId: getPet
+      operationId: getOwnersPet
       summary: Get a pet by ID
       description: Returns the pet or a 404 error.
       parameters:
@@ -343,7 +343,8 @@ paths:
     put:
       tags:
         - pet
-      operationId: updatePet
+      operationId: updateOwnersPet
+
       summary: Update a pet's details
       description: Updates the pet record with the specified details.
       parameters:
@@ -454,7 +455,7 @@ paths:
   /pettypes:
     get:
       tags:
-        - pet
+        - pettypes
       operationId: listPetTypes
       summary: Lists pet types
       description: Returns an array of pet types.
@@ -677,6 +678,258 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PetType'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+
+  /pets:
+    get:
+      tags:
+        - pet
+      operationId: listPets
+      summary: Lists pet
+      description: Returns an array of pet .
+      responses:
+        200:
+          description: Pet types found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+    post:
+      tags:
+        - petw
+      operationId: addPet
+      summary: Create a pet
+      description: Creates a pet .
+      requestBody:
+        description: The pet
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        required: true
+      responses:
+        200:
+          description: Pet type created successfully.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /pets/{petId}:
+    get:
+      tags:
+        - pet
+      operationId: getPet
+      summary: Get a pet by ID
+      description: Returns the pet  or a 404 error.
+      parameters:
+        - name: petId
+          in: path
+          description: The ID of the pet.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      responses:
+        200:
+          description: Pet details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+    put:
+      tags:
+        - pet
+      operationId: updatePet
+      summary: Update a pet by ID
+      description: Returns the pet or a 404 error.
+      parameters:
+        - name: petId
+          in: path
+          description: The ID of the pet.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      requestBody:
+        description: The pet
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        required: true
+      responses:
+        200:
+          description: Pet details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+    delete:
+      tags:
+        - pet
+      operationId: deletePet
+      summary: Delete a pet by ID
+      description: Returns the pet or a 404 error.
+      parameters:
+        - name: petId
+          in: path
+          description: The ID of the pet.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      responses:
+        200:
+          description: Pet details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
         304:
           description: Not modified.
           headers:

@@ -121,7 +121,7 @@ class PetRestControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetPetNotFound() throws Exception {
         given(petMapper.toPetDto(this.clinicService.findPetById(-1))).willReturn(null);
-        this.mockMvc.perform(get("/api/pets/-1")
+        this.mockMvc.perform(get("/api/pets/999")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -216,7 +216,7 @@ class PetRestControllerTests {
         mapper.registerModule(new JavaTimeModule());
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         given(this.clinicService.findPetById(-1)).willReturn(null);
-        this.mockMvc.perform(delete("/api/pets/-1")
+        this.mockMvc.perform(delete("/api/pets/999")
             .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNotFound());
     }
