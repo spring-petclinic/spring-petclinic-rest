@@ -15,24 +15,24 @@
  */
 package org.springframework.samples.petclinic.rest.controller;
 
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.rest.api.VetsApi;
-import org.springframework.samples.petclinic.rest.dto.VetDto;
 import org.springframework.samples.petclinic.mapper.SpecialtyMapper;
 import org.springframework.samples.petclinic.mapper.VetMapper;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.rest.dto.VetFieldsDto;
+import org.springframework.samples.petclinic.rest.api.VetsApi;
+import org.springframework.samples.petclinic.rest.dto.VetDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,43 +68,33 @@ public class VetRestController implements VetsApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @RequestMapping(value = "/vets/{vetId}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<VetDto> getVet(@PathVariable("vetId") int vetId) {
+    @Override
+    public ResponseEntity<VetDto> getVet(@Min(0)@ApiParam(value = "The ID of the vet.",required=true) @PathVariable("vetId") Integer vetId)  {
         Vet vet = this.clinicService.findVetById(vetId);
         if (vet == null) {
-            return new ResponseEntity<VetDto>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<VetDto>(vetMapper.toVetDto(vet), HttpStatus.OK);
+        return new ResponseEntity<>(vetMapper.toVetDto(vet), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @RequestMapping(value = "/vets", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<VetDto> addVet(@RequestBody @Valid VetFieldsDto vetFieldsDto, BindingResult bindingResult, UriComponentsBuilder ucBuilder) {
-        BindingErrorsResponse errors = new BindingErrorsResponse();
+    @Override
+    public ResponseEntity<VetDto> addVet(@ApiParam(value = "The vet" ,required=true )  @Valid @RequestBody VetDto vetDto) {
         HttpHeaders headers = new HttpHeaders();
-        if (bindingResult.hasErrors() || (vetFieldsDto == null)) {
-            errors.addAllErrors(bindingResult);
-            headers.add("errors", errors.toJSON());
-            return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
-        }
-        Vet vet = vetMapper.toVet(vetFieldsDto);
+        Vet vet = vetMapper.toVet(vetDto);
         this.clinicService.saveVet(vet);
-        headers.setLocation(ucBuilder.path("/api/vets/{id}").buildAndExpand(vet.getId()).toUri());
+        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/vets/{id}").buildAndExpand(vet.getId()).toUri());
         return new ResponseEntity<>(vetMapper.toVetDto(vet), headers, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @RequestMapping(value = "/vets/{vetId}", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<VetDto> updateVet(@PathVariable("vetId") int vetId, @RequestBody @Valid VetDto vetDto, BindingResult bindingResult) {
-        BindingErrorsResponse errors = new BindingErrorsResponse();
-        HttpHeaders headers = new HttpHeaders();
-        if (bindingResult.hasErrors() || (vetDto == null)) {
-            errors.addAllErrors(bindingResult);
-            headers.add("errors", errors.toJSON());
-            return new ResponseEntity<VetDto>(headers, HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<VetDto> updateVet(@Min(0)@ApiParam(value = "The ID of the vet.",required=true) @PathVariable("vetId") Integer vetId,@ApiParam(value = "The vet" ,required=true )  @Valid @RequestBody VetDto vetDto)  {
         Vet currentVet = this.clinicService.findVetById(vetId);
         if (currentVet == null) {
-            return new ResponseEntity<VetDto>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         currentVet.setFirstName(vetDto.getFirstName());
         currentVet.setLastName(vetDto.getLastName());
@@ -113,20 +103,19 @@ public class VetRestController implements VetsApi {
             currentVet.addSpecialty(spec);
         }
         this.clinicService.saveVet(currentVet);
-        return new ResponseEntity<VetDto>(vetMapper.toVetDto(currentVet), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(vetMapper.toVetDto(currentVet), HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @RequestMapping(value = "/vets/{vetId}", method = RequestMethod.DELETE, produces = "application/json")
     @Transactional
-    public ResponseEntity<Void> deleteVet(@PathVariable("vetId") int vetId) {
+    @Override
+    public ResponseEntity<VetDto> deleteVet(@Min(0)@ApiParam(value = "The ID of the vet.",required=true) @PathVariable("vetId") Integer vetId) {
         Vet vet = this.clinicService.findVetById(vetId);
         if (vet == null) {
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         this.clinicService.deleteVet(vet);
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
 }
