@@ -61,7 +61,7 @@ public class PetTypeRestController implements PettypesApi {
 
     @PreAuthorize("hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<PetTypeDto> getPetType(@Min(0) @ApiParam(value = "The ID of the pet type.", required = true) @PathVariable("petTypeId") Integer petTypeId) {
+    public ResponseEntity<PetTypeDto> getPetType(Integer petTypeId) {
         PetType petType = this.clinicService.findPetTypeById(petTypeId);
         if (petType == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -71,7 +71,7 @@ public class PetTypeRestController implements PettypesApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<PetTypeDto> addPetType(@RequestBody @Valid PetTypeDto petTypeDto) {
+    public ResponseEntity<PetTypeDto> addPetType(PetTypeDto petTypeDto) {
         HttpHeaders headers = new HttpHeaders();
         final PetType type = petTypeMapper.toPetType(petTypeDto);
         this.clinicService.savePetType(type);
@@ -81,7 +81,7 @@ public class PetTypeRestController implements PettypesApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<PetTypeDto> updatePetType(@Min(0) @ApiParam(value = "The ID of the pet type.", required = true) @PathVariable("petTypeId") Integer petTypeId, @ApiParam(value = "The pet type", required = true) @Valid @RequestBody PetTypeDto petTypeDto) {
+    public ResponseEntity<PetTypeDto> updatePetType(Integer petTypeId, PetTypeDto petTypeDto) {
         PetType currentPetType = this.clinicService.findPetTypeById(petTypeId);
         if (currentPetType == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -94,7 +94,7 @@ public class PetTypeRestController implements PettypesApi {
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Transactional
     @Override
-    public ResponseEntity<PetTypeDto> deletePetType(@Min(0) @ApiParam(value = "The ID of the pet type.", required = true) @PathVariable("petTypeId") Integer petTypeId) {
+    public ResponseEntity<PetTypeDto> deletePetType(Integer petTypeId) {
         PetType petType = this.clinicService.findPetTypeById(petTypeId);
         if (petType == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

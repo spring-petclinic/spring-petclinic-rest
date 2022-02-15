@@ -124,7 +124,7 @@ public class OwnerRestController implements OwnersApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Transactional
     @Override
-    public ResponseEntity<OwnerDto> deleteOwner(@Min(0) @ApiParam(value = "The ID of the owner.", required = true) @PathVariable("ownerId") Integer ownerId) {
+    public ResponseEntity<OwnerDto> deleteOwner(Integer ownerId) {
         Owner owner = this.clinicService.findOwnerById(ownerId);
         if (owner == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

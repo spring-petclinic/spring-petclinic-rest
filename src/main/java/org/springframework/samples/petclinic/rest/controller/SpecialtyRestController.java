@@ -66,7 +66,7 @@ public class SpecialtyRestController implements SpecialtiesApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<SpecialtyDto> getSpecialty(@Min(0) @ApiParam(value = "The ID of the pet.", required = true) @PathVariable("specialtyId") Integer specialtyId) {
+    public ResponseEntity<SpecialtyDto> getSpecialty(Integer specialtyId) {
         Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
         if (specialty == null) {
             return new ResponseEntity<SpecialtyDto>(HttpStatus.NOT_FOUND);
@@ -76,7 +76,7 @@ public class SpecialtyRestController implements SpecialtiesApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<SpecialtyDto> addSpecialty(@ApiParam(value = "The specialty", required = true) @Valid @RequestBody SpecialtyDto specialtyDto) {
+    public ResponseEntity<SpecialtyDto> addSpecialty(SpecialtyDto specialtyDto) {
         HttpHeaders headers = new HttpHeaders();
         Specialty specialty = specialtyMapper.toSpecialty(specialtyDto);
         this.clinicService.saveSpecialty(specialty);
@@ -86,7 +86,7 @@ public class SpecialtyRestController implements SpecialtiesApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<SpecialtyDto> updateSpecialty(@Min(0) @ApiParam(value = "The ID of the specialty.", required = true) @PathVariable("specialtyId") Integer specialtyId, @ApiParam(value = "The pet", required = true) @Valid @RequestBody SpecialtyDto specialtyDto) {
+    public ResponseEntity<SpecialtyDto> updateSpecialty(Integer specialtyId, SpecialtyDto specialtyDto) {
         Specialty currentSpecialty = this.clinicService.findSpecialtyById(specialtyId);
         if (currentSpecialty == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -99,7 +99,7 @@ public class SpecialtyRestController implements SpecialtiesApi {
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Transactional
     @Override
-    public ResponseEntity<SpecialtyDto> deleteSpecialty(@Min(0) @ApiParam(value = "The ID of the specialty.", required = true) @PathVariable("specialtyId") Integer specialtyId) {
+    public ResponseEntity<SpecialtyDto> deleteSpecialty(Integer specialtyId) {
         Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
         if (specialty == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -34,7 +34,6 @@
         <docker.jib-maven-plugin.version>1.3.0</docker.jib-maven-plugin.version>
         <docker.image.prefix>springcommunity</docker.image.prefix>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <spring-boot-maven-plugin.version>2.6.2</spring-boot-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -166,7 +165,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <!-- Spring Boot Actuator displays build-related information

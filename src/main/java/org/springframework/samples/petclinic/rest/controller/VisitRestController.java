@@ -66,7 +66,7 @@ public class VisitRestController implements VisitsApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<VisitDto> getVisit(@Min(0) @ApiParam(value = "The ID of the visit.", required = true) @PathVariable("visitId") Integer visitId) {
+    public ResponseEntity<VisitDto> getVisit( Integer visitId) {
         Visit visit = this.clinicService.findVisitById(visitId);
         if (visit == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -76,7 +76,7 @@ public class VisitRestController implements VisitsApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<VisitDto> addVisit(@ApiParam(value = "The visit", required = true) @Valid @RequestBody VisitDto visitDto) {
+    public ResponseEntity<VisitDto> addVisit(VisitDto visitDto) {
         HttpHeaders headers = new HttpHeaders();
         Visit visit = visitMapper.toVisit(visitDto);
         this.clinicService.saveVisit(visit);
@@ -87,7 +87,7 @@ public class VisitRestController implements VisitsApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<VisitDto> updateVisit(@Min(0) @ApiParam(value = "The ID of the visit.", required = true) @PathVariable("visitId") Integer visitId, @ApiParam(value = "The visit", required = true) @Valid @RequestBody VisitDto visitDto) {
+    public ResponseEntity<VisitDto> updateVisit(Integer visitId, VisitDto visitDto) {
         Visit currentVisit = this.clinicService.findVisitById(visitId);
         if (currentVisit == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -101,7 +101,7 @@ public class VisitRestController implements VisitsApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Transactional
     @Override
-    public ResponseEntity<VisitDto> deleteVisit(@Min(0) @ApiParam(value = "The ID of the visit.", required = true) @PathVariable("visitId") Integer visitId) {
+    public ResponseEntity<VisitDto> deleteVisit(Integer visitId) {
         Visit visit = this.clinicService.findVisitById(visitId);
         if (visit == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -53,7 +53,7 @@ public class PetRestController implements PetsApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<PetDto> getPet(@Min(0) @ApiParam(value = "The ID of the pet.", required = true) @PathVariable("petId") Integer petId) {
+    public ResponseEntity<PetDto> getPet(Integer petId) {
         PetDto pet = petMapper.toPetDto(this.clinicService.findPetById(petId));
         if (pet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -74,7 +74,7 @@ public class PetRestController implements PetsApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<PetDto> updatePet(@Min(0) @ApiParam(value = "The ID of the pet.", required = true) @PathVariable("petId") Integer petId, @ApiParam(value = "The pet", required = true) @Valid @RequestBody PetDto petDto) {
+    public ResponseEntity<PetDto> updatePet(Integer petId, PetDto petDto) {
         Pet currentPet = this.clinicService.findPetById(petId);
         if (currentPet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -89,7 +89,7 @@ public class PetRestController implements PetsApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Transactional
     @Override
-    public ResponseEntity<PetDto> deletePet(@Min(0) @ApiParam(value = "The ID of the pet.", required = true) @PathVariable("petId") Integer petId) {
+    public ResponseEntity<PetDto> deletePet(Integer petId) {
         Pet pet = this.clinicService.findPetById(petId);
         if (pet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

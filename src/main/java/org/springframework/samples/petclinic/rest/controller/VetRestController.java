@@ -68,7 +68,7 @@ public class VetRestController implements VetsApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<VetDto> getVet(@Min(0)@ApiParam(value = "The ID of the vet.",required=true) @PathVariable("vetId") Integer vetId)  {
+    public ResponseEntity<VetDto> getVet(Integer vetId)  {
         Vet vet = this.clinicService.findVetById(vetId);
         if (vet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -78,7 +78,7 @@ public class VetRestController implements VetsApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<VetDto> addVet(@ApiParam(value = "The vet" ,required=true )  @Valid @RequestBody VetDto vetDto) {
+    public ResponseEntity<VetDto> addVet(VetDto vetDto) {
         HttpHeaders headers = new HttpHeaders();
         Vet vet = vetMapper.toVet(vetDto);
         this.clinicService.saveVet(vet);
@@ -88,7 +88,7 @@ public class VetRestController implements VetsApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<VetDto> updateVet(@Min(0)@ApiParam(value = "The ID of the vet.",required=true) @PathVariable("vetId") Integer vetId,@ApiParam(value = "The vet" ,required=true )  @Valid @RequestBody VetDto vetDto)  {
+    public ResponseEntity<VetDto> updateVet(Integer vetId,VetDto vetDto)  {
         Vet currentVet = this.clinicService.findVetById(vetId);
         if (currentVet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -106,7 +106,7 @@ public class VetRestController implements VetsApi {
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Transactional
     @Override
-    public ResponseEntity<VetDto> deleteVet(@Min(0)@ApiParam(value = "The ID of the vet.",required=true) @PathVariable("vetId") Integer vetId) {
+    public ResponseEntity<VetDto> deleteVet(Integer vetId) {
         Vet vet = this.clinicService.findVetById(vetId);
         if (vet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
