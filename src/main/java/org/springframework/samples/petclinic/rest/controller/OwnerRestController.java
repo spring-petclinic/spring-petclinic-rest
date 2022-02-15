@@ -16,6 +16,7 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +30,14 @@ import org.springframework.samples.petclinic.rest.api.OwnersApi;
 import org.springframework.samples.petclinic.rest.dto.*;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.Min;
 import java.util.Collection;
 import java.util.List;
 
@@ -117,9 +122,9 @@ public class OwnerRestController implements OwnersApi {
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @RequestMapping(value = "/owners/{ownerId}", method = RequestMethod.DELETE, produces = "application/json")
     @Transactional
-    public ResponseEntity<Void> deleteOwner(@PathVariable("ownerId") int ownerId) {
+    @Override
+    public ResponseEntity<OwnerDto> deleteOwner(@Min(0) @ApiParam(value = "The ID of the owner.", required = true) @PathVariable("ownerId") Integer ownerId) {
         Owner owner = this.clinicService.findOwnerById(ownerId);
         if (owner == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -145,7 +150,7 @@ public class OwnerRestController implements OwnersApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<VisitDto> addVisit(Integer ownerId, Integer petId, VisitFieldsDto visitFieldsDto) {
+    public ResponseEntity<VisitDto> addVisitToOwner(Integer ownerId, Integer petId, VisitFieldsDto visitFieldsDto) {
         HttpHeaders headers = new HttpHeaders();
         Visit visit = visitMapper.toVisit(visitFieldsDto);
         Pet pet = new Pet();

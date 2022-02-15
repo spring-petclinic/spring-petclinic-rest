@@ -67,7 +67,6 @@ public class VetRestController implements VetsApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/vets/{vetId}", method = RequestMethod.GET, produces = "application/json")
     @Override
     public ResponseEntity<VetDto> getVet(@Min(0)@ApiParam(value = "The ID of the vet.",required=true) @PathVariable("vetId") Integer vetId)  {
         Vet vet = this.clinicService.findVetById(vetId);
@@ -78,7 +77,6 @@ public class VetRestController implements VetsApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/vets", method = RequestMethod.POST, produces = "application/json")
     @Override
     public ResponseEntity<VetDto> addVet(@ApiParam(value = "The vet" ,required=true )  @Valid @RequestBody VetDto vetDto) {
         HttpHeaders headers = new HttpHeaders();
@@ -89,7 +87,6 @@ public class VetRestController implements VetsApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/vets/{vetId}", method = RequestMethod.PUT, produces = "application/json")
     @Override
     public ResponseEntity<VetDto> updateVet(@Min(0)@ApiParam(value = "The ID of the vet.",required=true) @PathVariable("vetId") Integer vetId,@ApiParam(value = "The vet" ,required=true )  @Valid @RequestBody VetDto vetDto)  {
         Vet currentVet = this.clinicService.findVetById(vetId);
@@ -107,7 +104,6 @@ public class VetRestController implements VetsApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/vets/{vetId}", method = RequestMethod.DELETE, produces = "application/json")
     @Transactional
     @Override
     public ResponseEntity<VetDto> deleteVet(@Min(0)@ApiParam(value = "The ID of the vet.",required=true) @PathVariable("vetId") Integer vetId) {

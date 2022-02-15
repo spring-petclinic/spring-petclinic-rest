@@ -230,6 +230,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
+
+    delete:
+      tags:
+        - owner
+      operationId: deleteOwner
+      summary: Delete an owner by ID
+      description: Returns the owner or a 404 error.
+      parameters:
+        - name: ownerId
+          in: path
+          description: The ID of the owner.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      responses:
+        200:
+          description: Owner details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Owner  not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
   /owners/{ownerId}/pets:
     post:
       tags:
@@ -268,7 +322,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Pet not found.
           content:
             application/json:
               schema:
@@ -331,7 +385,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Pet not found.
           content:
             application/json:
               schema:
@@ -400,7 +454,7 @@ paths:
     post:
       tags:
         - visit
-      operationId: addVisit
+      operationId: addVisitToOwner
       summary: Adds a vet visit
       description: Records the details of a new vet visit.
       parameters:
@@ -694,7 +748,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Pet type not found.
           content:
             application/json:
               schema:
@@ -779,7 +833,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Pet not found.
           content:
             application/json:
               schema:
@@ -833,7 +887,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Pet not found.
           content:
             application/json:
               schema:
@@ -893,7 +947,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Pet not found.
           content:
             application/json:
               schema:
@@ -946,7 +1000,258 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Pet not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /visits:
+    get:
+      tags:
+        - visit
+      operationId: listVisits
+      summary: Lists visits
+      description: Returns an array of visit .
+      responses:
+        200:
+          description: visits found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Visit'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+    post:
+      tags:
+        - visit
+      operationId: addVisit
+      summary: Create a visit
+      description: Creates a visit.
+      requestBody:
+        description: The visit
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Visit'
+        required: true
+      responses:
+        200:
+          description: visit created successfully.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Visit not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /visits/{visitId}:
+    get:
+      tags:
+        - visit
+      operationId: getVisit
+      summary: Get a visit by ID
+      description: Returns the visit or a 404 error.
+      parameters:
+        - name: visitId
+          in: path
+          description: The ID of the visit.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      responses:
+        200:
+          description: Visit details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Visit not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+    put:
+      tags:
+        - visit
+      operationId: updateVisit
+      summary: Update a visit by ID
+      description: Returns the visit or a 404 error.
+      parameters:
+        - name: visitId
+          in: path
+          description: The ID of the visit.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      requestBody:
+        description: The visit
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Visit'
+        required: true
+      responses:
+        200:
+          description: Visit details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Visit not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+    delete:
+      tags:
+        - visit
+      operationId: deleteVisit
+      summary: Delete a visit by ID
+      description: Returns the visit or a 404 error.
+      parameters:
+        - name: visitId
+          in: path
+          description: The ID of the visit.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      responses:
+        200:
+          description: Visit details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Visit not found.
           content:
             application/json:
               schema:
@@ -1030,7 +1335,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Specialty not found.
           content:
             application/json:
               schema:
@@ -1282,7 +1587,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Vet not found.
           content:
             application/json:
               schema:
@@ -1336,7 +1641,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Vet not found.
           content:
             application/json:
               schema:
@@ -1396,7 +1701,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Vet not found.
           content:
             application/json:
               schema:
@@ -1449,7 +1754,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Owner not found.
+          description: Vet not found.
           content:
             application/json:
               schema:

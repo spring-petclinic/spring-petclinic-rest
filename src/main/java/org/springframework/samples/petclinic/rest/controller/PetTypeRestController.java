@@ -52,8 +52,7 @@ public class PetTypeRestController implements PettypesApi {
     @PreAuthorize("hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)")
     @Override
     public ResponseEntity<List<PetTypeDto>> listPetTypes() {
-        List<PetType> petTypes = new ArrayList<>();
-        petTypes.addAll(this.clinicService.findAllPetTypes());
+        List<PetType> petTypes = new ArrayList<>(this.clinicService.findAllPetTypes());
         if (petTypes.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -83,7 +82,6 @@ public class PetTypeRestController implements PettypesApi {
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
     public ResponseEntity<PetTypeDto> updatePetType(@Min(0) @ApiParam(value = "The ID of the pet type.", required = true) @PathVariable("petTypeId") Integer petTypeId, @ApiParam(value = "The pet type", required = true) @Valid @RequestBody PetTypeDto petTypeDto) {
-
         PetType currentPetType = this.clinicService.findPetTypeById(petTypeId);
         if (currentPetType == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -94,7 +92,6 @@ public class PetTypeRestController implements PettypesApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/pettypes/{petTypeId}", method = RequestMethod.DELETE, produces = "application/json")
     @Transactional
     @Override
     public ResponseEntity<PetTypeDto> deletePetType(@Min(0) @ApiParam(value = "The ID of the pet type.", required = true) @PathVariable("petTypeId") Integer petTypeId) {

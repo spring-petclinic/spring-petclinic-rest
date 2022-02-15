@@ -16,22 +16,24 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.rest.dto.VisitDto;
 import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.rest.api.VisitsApi;
+import org.springframework.samples.petclinic.rest.dto.VisitDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Vitaliy Fedoriv
@@ -39,8 +41,8 @@ import java.util.Collection;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("api/visits")
-public class VisitRestController {
+@RequestMapping("api")
+public class VisitRestController implements VisitsApi {
 
     private final ClinicService clinicService;
 
@@ -53,54 +55,39 @@ public class VisitRestController {
 
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Collection<VisitDto>> getAllVisitDtos() {
-        Collection<Visit> visits = new ArrayList<>();
-
-        visits.addAll(this.clinicService.findAllVisits());
+    @Override
+    public ResponseEntity<List<VisitDto>> listVisits() {
+        List<Visit> visits = new ArrayList<>(this.clinicService.findAllVisits());
         if (visits.isEmpty()) {
-            return new ResponseEntity<Collection<VisitDto>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<VisitDto>>(visitMapper.toVisitsDto(visits), HttpStatus.OK);
+        return new ResponseEntity<>(new ArrayList<>(visitMapper.toVisitsDto(visits)), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @RequestMapping(value = "/{visitId}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<VisitDto> getVisitDto(@PathVariable("visitId") int visitId) {
+    @Override
+    public ResponseEntity<VisitDto> getVisit(@Min(0) @ApiParam(value = "The ID of the visit.", required = true) @PathVariable("visitId") Integer visitId) {
         Visit visit = this.clinicService.findVisitById(visitId);
         if (visit == null) {
-            return new ResponseEntity<VisitDto>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<VisitDto>(visitMapper.toVisitDto(visit), HttpStatus.OK);
+        return new ResponseEntity<>(visitMapper.toVisitDto(visit), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<VisitDto> addVisit(@RequestBody @Valid VisitDto visitDto, BindingResult bindingResult, UriComponentsBuilder ucBuilder) {
-        BindingErrorsResponse errors = new BindingErrorsResponse();
+    @Override
+    public ResponseEntity<VisitDto> addVisit(@ApiParam(value = "The visit", required = true) @Valid @RequestBody VisitDto visitDto) {
         HttpHeaders headers = new HttpHeaders();
-        if (bindingResult.hasErrors() || (visitDto == null)) {
-            errors.addAllErrors(bindingResult);
-            headers.add("errors", errors.toJSON());
-            return new ResponseEntity<VisitDto>(headers, HttpStatus.BAD_REQUEST);
-        }
         Visit visit = visitMapper.toVisit(visitDto);
         this.clinicService.saveVisit(visit);
         visitDto = visitMapper.toVisitDto(visit);
-        headers.setLocation(ucBuilder.path("/api/visits/{id}").buildAndExpand(visit.getId()).toUri());
+        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/visits/{id}").buildAndExpand(visit.getId()).toUri());
         return new ResponseEntity<>(visitDto, headers, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @RequestMapping(value = "/{visitId}", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<VisitDto> updateVisit(@PathVariable("visitId") int visitId, @RequestBody @Valid VisitDto visitDto, BindingResult bindingResult) {
-        BindingErrorsResponse errors = new BindingErrorsResponse();
-        HttpHeaders headers = new HttpHeaders();
-        if (bindingResult.hasErrors() || (visitDto == null)) {
-            errors.addAllErrors(bindingResult);
-            headers.add("errors", errors.toJSON());
-            return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<VisitDto> updateVisit(@Min(0) @ApiParam(value = "The ID of the visit.", required = true) @PathVariable("visitId") Integer visitId, @ApiParam(value = "The visit", required = true) @Valid @RequestBody VisitDto visitDto) {
         Visit currentVisit = this.clinicService.findVisitById(visitId);
         if (currentVisit == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -112,12 +99,12 @@ public class VisitRestController {
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @RequestMapping(value = "/{visitId}", method = RequestMethod.DELETE, produces = "application/json")
     @Transactional
-    public ResponseEntity<Void> deleteVisit(@PathVariable("visitId") int visitId) {
+    @Override
+    public ResponseEntity<VisitDto> deleteVisit(@Min(0) @ApiParam(value = "The ID of the visit.", required = true) @PathVariable("visitId") Integer visitId) {
         Visit visit = this.clinicService.findVisitById(visitId);
         if (visit == null) {
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         this.clinicService.deleteVisit(visit);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

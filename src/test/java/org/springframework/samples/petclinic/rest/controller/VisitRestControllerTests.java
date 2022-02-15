@@ -31,7 +31,6 @@ import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.rest.advice.ExceptionControllerAdvice;
-import org.springframework.samples.petclinic.rest.controller.VisitRestController;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -131,8 +130,8 @@ class VisitRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetVisitNotFound() throws Exception {
-    	given(this.clinicService.findVisitById(-1)).willReturn(null);
-        this.mockMvc.perform(get("/api/visits/-1")
+        given(this.clinicService.findVisitById(999)).willReturn(null);
+        this.mockMvc.perform(get("/api/visits/999")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -246,8 +245,8 @@ class VisitRestControllerTests {
     	ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
-    	given(this.clinicService.findVisitById(-1)).willReturn(null);
-    	this.mockMvc.perform(delete("/api/visits/-1")
+        given(this.clinicService.findVisitById(999)).willReturn(null);
+        this.mockMvc.perform(delete("/api/visits/999")
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNotFound());
     }

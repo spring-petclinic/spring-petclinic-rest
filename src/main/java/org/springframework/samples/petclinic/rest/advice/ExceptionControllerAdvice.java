@@ -52,10 +52,17 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.badRequest().body(respJSONstring);
     }
 
+    /**
+     * Handles exception thrown by Bean Validation on controller methods parameters
+     *
+     * @param ex      The thrown exception
+     * @param request the current web request
+     * @return an empty response entity
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
-    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
+    public ResponseEntity<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
         BindingErrorsResponse errors = new BindingErrorsResponse();
         BindingResult bindingResult = ex.getBindingResult();
         HttpHeaders headers = new HttpHeaders();

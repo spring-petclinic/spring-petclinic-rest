@@ -41,7 +41,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("api/specialties")
+@RequestMapping("api")
 public class SpecialtyRestController implements SpecialtiesApi {
 
     private final ClinicService clinicService;
@@ -54,7 +54,6 @@ public class SpecialtyRestController implements SpecialtiesApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
     @Override
     public ResponseEntity<List<SpecialtyDto>> listSpecialties() {
         List<SpecialtyDto> specialties = new ArrayList<SpecialtyDto>();
@@ -66,7 +65,6 @@ public class SpecialtyRestController implements SpecialtiesApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/{specialtyId}", method = RequestMethod.GET, produces = "application/json")
     @Override
     public ResponseEntity<SpecialtyDto> getSpecialty(@Min(0) @ApiParam(value = "The ID of the pet.", required = true) @PathVariable("specialtyId") Integer specialtyId) {
         Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
@@ -77,10 +75,8 @@ public class SpecialtyRestController implements SpecialtiesApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
     @Override
     public ResponseEntity<SpecialtyDto> addSpecialty(@ApiParam(value = "The specialty", required = true) @Valid @RequestBody SpecialtyDto specialtyDto) {
-        BindingErrorsResponse errors = new BindingErrorsResponse();
         HttpHeaders headers = new HttpHeaders();
         Specialty specialty = specialtyMapper.toSpecialty(specialtyDto);
         this.clinicService.saveSpecialty(specialty);
@@ -89,7 +85,6 @@ public class SpecialtyRestController implements SpecialtiesApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/{specialtyId}", method = RequestMethod.PUT, produces = "application/json")
     @Override
     public ResponseEntity<SpecialtyDto> updateSpecialty(@Min(0) @ApiParam(value = "The ID of the specialty.", required = true) @PathVariable("specialtyId") Integer specialtyId, @ApiParam(value = "The pet", required = true) @Valid @RequestBody SpecialtyDto specialtyDto) {
         Specialty currentSpecialty = this.clinicService.findSpecialtyById(specialtyId);
@@ -102,7 +97,6 @@ public class SpecialtyRestController implements SpecialtiesApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @RequestMapping(value = "/{specialtyId}", method = RequestMethod.DELETE, produces = "application/json")
     @Transactional
     @Override
     public ResponseEntity<SpecialtyDto> deleteSpecialty(@Min(0) @ApiParam(value = "The ID of the specialty.", required = true) @PathVariable("specialtyId") Integer specialtyId) {
