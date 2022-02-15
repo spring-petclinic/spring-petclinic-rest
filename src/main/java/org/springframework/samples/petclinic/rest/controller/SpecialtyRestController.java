@@ -16,22 +16,24 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.rest.dto.SpecialtyDto;
 import org.springframework.samples.petclinic.mapper.SpecialtyMapper;
 import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.rest.api.SpecialtiesApi;
+import org.springframework.samples.petclinic.rest.dto.SpecialtyDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Vitaliy Fedoriv
@@ -40,7 +42,7 @@ import java.util.Collection;
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("api/specialties")
-public class SpecialtyRestController {
+public class SpecialtyRestController implements SpecialtiesApi {
 
     private final ClinicService clinicService;
 
@@ -53,18 +55,20 @@ public class SpecialtyRestController {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Collection<SpecialtyDto>> getAllSpecialtys() {
-        Collection<SpecialtyDto> specialties = new ArrayList<SpecialtyDto>();
+    @Override
+    public ResponseEntity<List<SpecialtyDto>> listSpecialties() {
+        List<SpecialtyDto> specialties = new ArrayList<SpecialtyDto>();
         specialties.addAll(specialtyMapper.toSpecialtyDtos(this.clinicService.findAllSpecialties()));
         if (specialties.isEmpty()) {
-            return new ResponseEntity<Collection<SpecialtyDto>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<SpecialtyDto>>(specialties, HttpStatus.OK);
+        return new ResponseEntity<>(specialties, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @RequestMapping(value = "/{specialtyId}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<SpecialtyDto> getSpecialty(@PathVariable("specialtyId") int specialtyId) {
+    @Override
+    public ResponseEntity<SpecialtyDto> getSpecialty(@Min(0) @ApiParam(value = "The ID of the pet.", required = true) @PathVariable("specialtyId") Integer specialtyId) {
         Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
         if (specialty == null) {
             return new ResponseEntity<SpecialtyDto>(HttpStatus.NOT_FOUND);
@@ -74,49 +78,40 @@ public class SpecialtyRestController {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<SpecialtyDto> addSpecialty(@RequestBody @Valid SpecialtyDto specialtyDto, BindingResult bindingResult, UriComponentsBuilder ucBuilder) {
+    @Override
+    public ResponseEntity<SpecialtyDto> addSpecialty(@ApiParam(value = "The specialty", required = true) @Valid @RequestBody SpecialtyDto specialtyDto) {
         BindingErrorsResponse errors = new BindingErrorsResponse();
         HttpHeaders headers = new HttpHeaders();
-        if (bindingResult.hasErrors() || (specialtyDto == null)) {
-            errors.addAllErrors(bindingResult);
-            headers.add("errors", errors.toJSON());
-            return new ResponseEntity<SpecialtyDto>(headers, HttpStatus.BAD_REQUEST);
-        }
         Specialty specialty = specialtyMapper.toSpecialty(specialtyDto);
         this.clinicService.saveSpecialty(specialty);
-        headers.setLocation(ucBuilder.path("/api/specialtys/{id}").buildAndExpand(specialty.getId()).toUri());
+        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/specialtys/{id}").buildAndExpand(specialty.getId()).toUri());
         return new ResponseEntity<SpecialtyDto>(specialtyMapper.toSpecialtyDto(specialty), headers, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @RequestMapping(value = "/{specialtyId}", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<SpecialtyDto> updateSpecialty(@PathVariable("specialtyId") int specialtyId, @RequestBody @Valid SpecialtyDto specialtyDto, BindingResult bindingResult) {
-        BindingErrorsResponse errors = new BindingErrorsResponse();
-        HttpHeaders headers = new HttpHeaders();
-        if (bindingResult.hasErrors() || (specialtyDto == null)) {
-            errors.addAllErrors(bindingResult);
-            headers.add("errors", errors.toJSON());
-            return new ResponseEntity<SpecialtyDto>(headers, HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<SpecialtyDto> updateSpecialty(@Min(0) @ApiParam(value = "The ID of the specialty.", required = true) @PathVariable("specialtyId") Integer specialtyId, @ApiParam(value = "The pet", required = true) @Valid @RequestBody SpecialtyDto specialtyDto) {
         Specialty currentSpecialty = this.clinicService.findSpecialtyById(specialtyId);
         if (currentSpecialty == null) {
-            return new ResponseEntity<SpecialtyDto>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         currentSpecialty.setName(specialtyDto.getName());
         this.clinicService.saveSpecialty(currentSpecialty);
-        return new ResponseEntity<SpecialtyDto>(specialtyMapper.toSpecialtyDto(currentSpecialty), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(specialtyMapper.toSpecialtyDto(currentSpecialty), HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @RequestMapping(value = "/{specialtyId}", method = RequestMethod.DELETE, produces = "application/json")
     @Transactional
-    public ResponseEntity<Void> deleteSpecialty(@PathVariable("specialtyId") int specialtyId) {
+    @Override
+    public ResponseEntity<SpecialtyDto> deleteSpecialty(@Min(0) @ApiParam(value = "The ID of the specialty.", required = true) @PathVariable("specialtyId") Integer specialtyId) {
         Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
         if (specialty == null) {
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         this.clinicService.deleteSpecialty(specialty);
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
