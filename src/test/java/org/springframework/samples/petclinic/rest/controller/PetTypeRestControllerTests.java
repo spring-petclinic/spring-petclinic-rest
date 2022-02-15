@@ -121,8 +121,8 @@ class PetTypeRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetPetTypeNotFound() throws Exception {
-    	given(this.clinicService.findPetTypeById(-1)).willReturn(null);
-        this.mockMvc.perform(get("/api/pettypes/-1")
+    	given(this.clinicService.findPetTypeById(999)).willReturn(null);
+        this.mockMvc.perform(get("/api/pettypes/999")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -245,8 +245,8 @@ class PetTypeRestControllerTests {
     	PetType newPetType = petTypes.get(0);
     	ObjectMapper mapper = new ObjectMapper();
         String newPetTypeAsJSON = mapper.writeValueAsString(petTypeMapper.toPetTypeDto(newPetType));
-    	given(this.clinicService.findPetTypeById(-1)).willReturn(null);
-    	this.mockMvc.perform(delete("/api/pettypes/-1")
+    	given(this.clinicService.findPetTypeById(999)).willReturn(null);
+    	this.mockMvc.perform(delete("/api/pettypes/999")
     		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNotFound());
     }
