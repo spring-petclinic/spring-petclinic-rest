@@ -13,6 +13,8 @@ tags:
     description: Endpoint which always returns an error.
   - name: owner
     description: Endpoints related to pet owners.
+  - name: user
+    description: Endpoints related to users.
   - name: pet
     description: Endpoints related to pets.
   - name: vet
@@ -1448,6 +1450,57 @@ paths:
                 $ref: '#/components/schemas/RestError'
         404:
           description: Owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /users:
+    post:
+      tags:
+        - user
+      operationId: addUser
+      summary: Create a user
+      description: Creates a user.
+      requestBody:
+        description: The user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        200:
+          description: User created successfully.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: User not found.
           content:
             application/json:
               schema:
