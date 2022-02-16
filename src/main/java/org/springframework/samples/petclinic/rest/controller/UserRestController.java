@@ -19,20 +19,23 @@ package org.springframework.samples.petclinic.rest.controller;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.rest.dto.UserDto;
 import org.springframework.samples.petclinic.mapper.UserMapper;
 import org.springframework.samples.petclinic.model.User;
+import org.springframework.samples.petclinic.rest.api.UsersApi;
+import org.springframework.samples.petclinic.rest.dto.UserDto;
 import org.springframework.samples.petclinic.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("api/users")
-public class UserRestController {
+@RequestMapping("api")
+public class UserRestController implements UsersApi {
 
     private final UserService userService;
     private final UserMapper userMapper;
@@ -44,17 +47,11 @@ public class UserRestController {
 
 
     @PreAuthorize( "hasRole(@roles.ADMIN)" )
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<UserDto> addOwner(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) throws Exception {
-        BindingErrorsResponse errors = new BindingErrorsResponse();
+    @Override
+    public ResponseEntity<UserDto> addUser(UserDto userDto) {
         HttpHeaders headers = new HttpHeaders();
-        if (bindingResult.hasErrors() || (userDto == null)) {
-            errors.addAllErrors(bindingResult);
-            headers.add("errors", errors.toJSON());
-            return new ResponseEntity<UserDto>(userDto, headers, HttpStatus.BAD_REQUEST);
-        }
         User user = userMapper.toUser(userDto);
         this.userService.saveUser(user);
-        return new ResponseEntity<UserDto>(userMapper.toUserDto(user), headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(userMapper.toUserDto(user), headers, HttpStatus.CREATED);
     }
 }
