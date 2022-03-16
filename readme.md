@@ -115,7 +115,10 @@ Here are the generated file types:
 
 The whole configuration of the generation is handled by [OpenAPI Generator maven plugin](https://github.com/OpenAPITools/openapi-generator/) and is located in the [pom.xml](./pom.xml) file.
 
-To run this plugin and by this way generate the classes, you have to run the following command:
+Besides of that, the mapping between the DTOs and entities are done using [MapStruct](https://mapstruct.org/). 
+The mapper generation is done automatically during the build time.
+
+To run both and by this way generate the classes, you have to run the following command:
 
 ```jshelllanguage
 mvn clean install
