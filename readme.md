@@ -101,6 +101,27 @@ You may also start a Postgres database with docker:
 ```
 docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0
 ```
+## API First Approach
+
+This API is built following some [API First approach principles](https://swagger.io/resources/articles/adopting-an-api-first-approach/).
+
+It is specified through the [OpenAPI](https://oai.github.io/Documentation/).
+It is specified in this [file](./src/main/resources/openapi.yml).
+
+Some of the required classes are generated during the build time. 
+Here are the generated file types:
+* DTOs
+* API template interfaces specifying methods to override in the controllers
+
+The whole configuration of the generation is handled by [OpenAPI Generator maven plugin](https://github.com/OpenAPITools/openapi-generator/) and is located in the [pom.xml](./pom.xml) file.
+
+To run this plugin and by this way generate the classes, you have to run the following command:
+
+```jshelllanguage
+mvn clean install
+```
+
+You could then find all the generated source code in the ``target/generated-sources/openapi`` folder.
 
 ## Security configuration
 In its default configuration, Petclinic doesn't have authentication and authorization enabled.
