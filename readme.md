@@ -113,18 +113,27 @@ Here are the generated file types:
 * DTOs
 * API template interfaces specifying methods to override in the controllers
 
-The whole configuration of the generation is handled by [OpenAPI Generator maven plugin](https://github.com/OpenAPITools/openapi-generator/) and is located in the [pom.xml](./pom.xml) file.
+To see how to get them generated you can read the next chapter. 
 
-Besides of that, the mapping between the DTOs and entities are done using [MapStruct](https://mapstruct.org/). 
-The mapper generation is done automatically during the build time.
+## Generated code
 
-To run both and by this way generate the classes, you have to run the following command:
+Some of the required classes are generated during the build time using maven or any IDE (e.g., IntelliJ Idea or Eclipse).
+
+All of these classes are generated into the ``target/generated-sources`` folder.
+
+Here is a list of the generated packages and the corresponding tooling:
+
+| Package name                                   | Tool             |
+|------------------------------------------------|------------------|
+| org.springframework.samples.petclinic.mapper   | [MapStruct](https://mapstruct.org/)        |
+| org.springframework.samples.petclinic.rest.dto | [OpenAPI Generator maven plugin](https://github.com/OpenAPITools/openapi-generator/) |
+
+
+To get both, you have to run the following command:
 
 ```jshelllanguage
 mvn clean install
 ```
-
-You could then find all the generated source code in the ``target/generated-sources/openapi`` folder.
 
 ## Security configuration
 In its default configuration, Petclinic doesn't have authentication and authorization enabled.
