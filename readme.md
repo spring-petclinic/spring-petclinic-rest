@@ -101,6 +101,39 @@ You may also start a Postgres database with docker:
 ```
 docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0
 ```
+## API First Approach
+
+This API is built following some [API First approach principles](https://swagger.io/resources/articles/adopting-an-api-first-approach/).
+
+It is specified through the [OpenAPI](https://oai.github.io/Documentation/).
+It is specified in this [file](./src/main/resources/openapi.yml).
+
+Some of the required classes are generated during the build time. 
+Here are the generated file types:
+* DTOs
+* API template interfaces specifying methods to override in the controllers
+
+To see how to get them generated you can read the next chapter. 
+
+## Generated code
+
+Some of the required classes are generated during the build time using maven or any IDE (e.g., IntelliJ Idea or Eclipse).
+
+All of these classes are generated into the ``target/generated-sources`` folder.
+
+Here is a list of the generated packages and the corresponding tooling:
+
+| Package name                                   | Tool             |
+|------------------------------------------------|------------------|
+| org.springframework.samples.petclinic.mapper   | [MapStruct](https://mapstruct.org/)        |
+| org.springframework.samples.petclinic.rest.dto | [OpenAPI Generator maven plugin](https://github.com/OpenAPITools/openapi-generator/) |
+
+
+To get both, you have to run the following command:
+
+```jshelllanguage
+mvn clean install
+```
 
 ## Security configuration
 In its default configuration, Petclinic doesn't have authentication and authorization enabled.
@@ -141,7 +174,7 @@ The following items should be installed in your system:
 
 Note: when m2e is available, there is an m2 icon in Help -> About dialog.
 If m2e is not there, just follow the install process here: http://eclipse.org/m2e/download/
-
+* Eclipse with the [mapstruct plugin](https://mapstruct.org/documentation/ide-support/) installed.
 
 ### Steps:
 
