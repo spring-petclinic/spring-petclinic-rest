@@ -1,0 +1,8 @@
+name: pipeline-java-poc
+squad: Jarvis
+tribe: Identity
+version: 1.3.0
+# buildType: maven
+# language: java
+# languageVersion: 11
+# channel: devops-setup-tools-chapter
