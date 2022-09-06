@@ -15,7 +15,11 @@
  */
 package org.springframework.samples.petclinic.rest.controller;
 
-import io.swagger.annotations.ApiParam;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +31,10 @@ import org.springframework.samples.petclinic.rest.api.VetsApi;
 import org.springframework.samples.petclinic.rest.dto.VetDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Vitaliy Fedoriv

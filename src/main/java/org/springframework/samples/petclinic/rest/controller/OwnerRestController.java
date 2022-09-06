@@ -16,7 +16,11 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
-import io.swagger.annotations.ApiParam;
+import java.util.Collection;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,19 +31,18 @@ import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.rest.api.OwnersApi;
-import org.springframework.samples.petclinic.rest.dto.*;
+import org.springframework.samples.petclinic.rest.dto.OwnerDto;
+import org.springframework.samples.petclinic.rest.dto.OwnerFieldsDto;
+import org.springframework.samples.petclinic.rest.dto.PetDto;
+import org.springframework.samples.petclinic.rest.dto.PetFieldsDto;
+import org.springframework.samples.petclinic.rest.dto.VisitDto;
+import org.springframework.samples.petclinic.rest.dto.VisitFieldsDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import javax.transaction.Transactional;
-import javax.validation.constraints.Min;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Vitaliy Fedoriv
