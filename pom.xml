@@ -5,6 +5,8 @@
 
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-petclinic-rest</artifactId>
+    <version>2.6.2</version>
+
     <description>REST version of the Spring Petclinic sample application</description>
     <url>https://spring-petclinic.github.io/</url>
 
@@ -18,7 +20,6 @@
     <properties>
         <!-- Third librairies -->
         <spring-data-jdbc.version>1.2.1.RELEASE</spring-data-jdbc.version>
-        <!-- <springfox-swagger.version>3.0.0</springfox-swagger.version> -->
         <springdoc-openapi-ui.version>1.6.11</springdoc-openapi-ui.version>
         <jackson-databind-nullable.version>0.2.1</jackson-databind-nullable.version>
         <mapstruct.version>1.4.1.Final</mapstruct.version>
@@ -120,17 +121,11 @@
             <artifactId>json-path</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${springfox-swagger.version}</version>
-        </dependency> -->
-        
-      	<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>${springdoc-openapi-ui.version}</version>
-   		</dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi-ui.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.openapitools</groupId>
@@ -161,7 +156,8 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            </dependency>
+            <version>${jaxb-api.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -271,7 +267,7 @@
                             <inputSpec>${project.basedir}/src/main/resources/openapi.yml</inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
-							
+
                             <!-- Only enabling model andopenapi-generator-maven-plugin API generation -->
                             <modelNameSuffix>Dto</modelNameSuffix>
                             <apiPackage>org.springframework.samples.petclinic.rest.api</apiPackage>
@@ -302,6 +298,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>add-source</id>
@@ -320,6 +317,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
