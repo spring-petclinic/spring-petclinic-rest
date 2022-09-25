@@ -207,6 +207,11 @@ into the [Docker Hub](https://cloud.docker.com/u/springcommunity/repository/dock
 repository.
 The [pom.xml](pom.xml) has been configured to publish the image with a the `springcommunity/spring-petclinic-rest`image name.
 
+Command line to run:
+```
+mvn compile jib:build -X -DjibSerialize=true -Djib.to.auth.username=xxx -Djib.to.auth.password=xxxxx
+```
+
 ## Interesting Spring Petclinic forks
 
 The Spring Petclinic master branch in the main [spring-projects](https://github.com/spring-projects/spring-petclinic)
