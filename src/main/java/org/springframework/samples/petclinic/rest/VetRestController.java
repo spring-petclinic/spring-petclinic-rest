@@ -51,7 +51,7 @@ public class VetRestController {
 	@Autowired
 	private ClinicService clinicService;
 	
-	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Vet>> getAllVets(){
 		Collection<Vet> vets = new ArrayList<Vet>();
 		vets.addAll(this.clinicService.findAllVets());
@@ -61,7 +61,7 @@ public class VetRestController {
 		return new ResponseEntity<Collection<Vet>>(vets, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{vetId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{vetId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Vet> getVet(@PathVariable("vetId") int vetId){
 		Vet vet = this.clinicService.findVetById(vetId);
 		if(vet == null){
@@ -71,7 +71,7 @@ public class VetRestController {
 	}
 	
 	
-	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Vet> addVet(@RequestBody @Valid Vet vet, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
 		HttpHeaders headers = new HttpHeaders();
@@ -85,7 +85,7 @@ public class VetRestController {
 		return new ResponseEntity<Vet>(vet, headers, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value = "/{vetId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{vetId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Vet> updateVet(@PathVariable("vetId") int vetId, @RequestBody @Valid Vet vet, BindingResult bindingResult){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
 		HttpHeaders headers = new HttpHeaders();
@@ -108,7 +108,7 @@ public class VetRestController {
 		return new ResponseEntity<Vet>(currentVet, HttpStatus.NO_CONTENT);
 	}
 	
-	@RequestMapping(value = "/{vetId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{vetId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
 	public ResponseEntity<Void> deleteVet(@PathVariable("vetId") int vetId){
 		Vet vet = this.clinicService.findVetById(vetId);
