@@ -51,7 +51,7 @@ public class SpecialtyRestController {
 	@Autowired
 	private ClinicService clinicService;
 	
-	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Specialty>> getAllSpecialtys(){
 		Collection<Specialty> specialties = new ArrayList<Specialty>();
 		specialties.addAll(this.clinicService.findAllSpecialties());
@@ -61,7 +61,7 @@ public class SpecialtyRestController {
 		return new ResponseEntity<Collection<Specialty>>(specialties, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{specialtyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{specialtyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Specialty> getSpecialty(@PathVariable("specialtyId") int specialtyId){
 		Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
 		if(specialty == null){
@@ -71,7 +71,7 @@ public class SpecialtyRestController {
 	}
 	
 	
-	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Specialty> addSpecialty(@RequestBody @Valid Specialty specialty, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
 		HttpHeaders headers = new HttpHeaders();
@@ -85,7 +85,7 @@ public class SpecialtyRestController {
 		return new ResponseEntity<Specialty>(specialty, headers, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value = "/{specialtyId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{specialtyId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Specialty> updateSpecialty(@PathVariable("specialtyId") int specialtyId, @RequestBody @Valid Specialty specialty, BindingResult bindingResult){
 		BindingErrorsResponse errors = new BindingErrorsResponse();
 		HttpHeaders headers = new HttpHeaders();
@@ -103,7 +103,7 @@ public class SpecialtyRestController {
 		return new ResponseEntity<Specialty>(currentSpecialty, HttpStatus.NO_CONTENT);
 	}
 	
-	@RequestMapping(value = "/{specialtyId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{specialtyId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
 	public ResponseEntity<Void> deleteSpecialty(@PathVariable("specialtyId") int specialtyId){
 		Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
