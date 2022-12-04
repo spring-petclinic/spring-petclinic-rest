@@ -15,9 +15,10 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import org.hibernate.search.annotations.Field;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-
 import javax.validation.constraints.NotEmpty;
 
 /**
@@ -30,10 +31,12 @@ public class Person extends BaseEntity {
 
     @Column(name = "first_name")
     @NotEmpty
+    @Field
     protected String firstName;
 
     @Column(name = "last_name")
     @NotEmpty
+    @Field
     protected String lastName;
 
     public String getFirstName() {

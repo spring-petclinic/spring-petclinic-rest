@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -53,6 +54,7 @@ public class ClinicServiceImpl implements ClinicService {
     private VisitRepository visitRepository;
     private SpecialtyRepository specialtyRepository;
 	private PetTypeRepository petTypeRepository;
+
 
     @Autowired
      public ClinicServiceImpl(
@@ -212,7 +214,13 @@ public class ClinicServiceImpl implements ClinicService {
 		specialtyRepository.delete(specialty);
 	}
 
-	@Override
+    @Override
+    @Transactional
+    public List<Owner> getByKeywords(String lastName) throws DataAccessException {
+        return ownerRepository.getByKeywords(lastName);
+    }
+
+    @Override
 	@Transactional(readOnly = true)
 	public Collection<PetType> findPetTypes() throws DataAccessException {
 		return petRepository.findPetTypes();
