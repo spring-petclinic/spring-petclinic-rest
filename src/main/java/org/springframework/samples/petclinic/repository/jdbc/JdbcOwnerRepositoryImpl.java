@@ -157,7 +157,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
             loadPetsAndVisits(owner);
         }
     }
-    
+
 	@Override
 	public Collection<Owner> findAll() throws DataAccessException {
 		List<Owner> owners = this.namedParameterJdbcTemplate.query(
@@ -191,6 +191,11 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
         }
         this.namedParameterJdbcTemplate.update("DELETE FROM owners WHERE id=:id", owner_params);
 	}
+
+    @Override
+    public List<Owner> getByKeywords(String keywords) {
+        return null;
+    }
 
 
 }
