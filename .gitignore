@@ -7,6 +7,7 @@ target/*
 /target
 
 generated/
+data/*
 
 # Easier branch switching
 springboot-petclinic-client/

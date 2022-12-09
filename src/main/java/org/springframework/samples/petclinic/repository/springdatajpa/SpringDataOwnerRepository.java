@@ -30,7 +30,6 @@ import java.util.Collection;
  * @author Michael Isvy
  * @since 15.1.2013
  */
-
 @Profile("spring-data-jpa")
 public interface SpringDataOwnerRepository extends OwnerRepository, Repository<Owner, Integer>, OwnerRepositoryOverride {
 

@@ -1,22 +1,26 @@
 package org.springframework.samples.petclinic.service;
 
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
 
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
+import org.hibernate.search.mapper.orm.session.SearchSession;
+
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 
 public class LuceneIndexServiceBean {
-
-    private FullTextEntityManager fullTextEntityManager;
+    private EntityManager entityManager;
 
     public LuceneIndexServiceBean(EntityManagerFactory entityManagerFactory) {
-        fullTextEntityManager = Search.getFullTextEntityManager(entityManagerFactory.createEntityManager());
+        entityManager = entityManagerFactory.createEntityManager();
     }
 
     public void triggerIndexing() {
         try {
-            fullTextEntityManager.createIndexer().startAndWait();
+            SearchSession searchSession = Search.session(entityManager);
+            MassIndexer indexer = searchSession.massIndexer().threadsToLoadObjects(7);
+            indexer.startAndWait();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
