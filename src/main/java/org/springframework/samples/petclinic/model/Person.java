@@ -15,13 +15,15 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-
 import javax.validation.constraints.NotEmpty;
 
 /**
- * Simple JavaBean domain object representing an person.
+ * Simple JavaBean domain object representing a person.
  *
  * @author Ken Krebs
  */
@@ -30,10 +32,12 @@ public class Person extends BaseEntity {
 
     @Column(name = "first_name")
     @NotEmpty
+    @FullTextField(analyzer = "autocomplete_indexing", searchAnalyzer = "autocomplete_search")
     protected String firstName;
 
     @Column(name = "last_name")
     @NotEmpty
+    @FullTextField(analyzer = "autocomplete_indexing", searchAnalyzer = "autocomplete_search")
     protected String lastName;
 
     public String getFirstName() {
