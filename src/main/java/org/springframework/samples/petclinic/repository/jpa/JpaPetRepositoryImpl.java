@@ -39,7 +39,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @Profile("jpa")
-public class JpaPetRepositoryImpl implements PetRepository {
+public abstract class JpaPetRepositoryImpl implements PetRepository {
 
     @PersistenceContext
     private EntityManager em;

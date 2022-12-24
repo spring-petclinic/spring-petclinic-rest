@@ -53,7 +53,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @Profile("jdbc")
-public class JdbcPetRepositoryImpl implements PetRepository {
+public abstract class JdbcPetRepositoryImpl implements PetRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -126,7 +126,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             .addValue("type_id", pet.getType().getId())
             .addValue("owner_id", pet.getOwner().getId());
     }
-    
+
 	@Override
 	public Collection<Pet> findAll() throws DataAccessException {
 		Map<String, Object> params = new HashMap<>();
