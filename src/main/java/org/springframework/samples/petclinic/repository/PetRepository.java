@@ -75,5 +75,5 @@ public interface PetRepository {
      */
     void delete(Pet pet) throws DataAccessException;
 
-    List<Pet> getByKeywords(String keywords);
+    List<Pet> getPetByKeywords(String keywords);
 }

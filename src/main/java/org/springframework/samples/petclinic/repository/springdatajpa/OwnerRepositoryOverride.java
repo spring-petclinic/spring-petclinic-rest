@@ -7,5 +7,5 @@ import java.util.List;
 
 @Profile("spring-data-jpa")
 public interface OwnerRepositoryOverride {
-    List<Owner> getByKeywords(String lastName);
+    List<Owner> getOwnerByKeywords(String lastName);
 }

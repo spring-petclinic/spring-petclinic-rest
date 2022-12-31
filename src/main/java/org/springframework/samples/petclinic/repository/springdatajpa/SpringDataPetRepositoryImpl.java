@@ -50,10 +50,7 @@ public class SpringDataPetRepositoryImpl implements PetRepositoryOverride {
 	}
 
     @Override
-    public List<Pet> getByKeywords(String keyword) {
-        if (keyword.isEmpty()) {
-            return Collections.emptyList();
-        }
+    public List<Pet> getPetByKeywords(String keyword) {
         SearchSession searchSession = Search.session(em);
         return searchSession.search(Pet.class)
             .where(f -> f.simpleQueryString().fields("name").matching(keyword))

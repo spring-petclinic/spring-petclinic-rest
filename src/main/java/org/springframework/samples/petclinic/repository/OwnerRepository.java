@@ -83,5 +83,5 @@ public interface OwnerRepository {
      * @param keywords the <code>String</code> of keywords to search with
      * @return a <code>List</code> of <code>Owner</code>s (or an empty <code>List</code> if none found)
      */
-    List<Owner> getByKeywords(String keywords);
+    List<Owner> getOwnerByKeywords(String keywords);
 }
