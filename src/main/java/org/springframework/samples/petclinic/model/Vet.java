@@ -16,9 +16,12 @@
 package org.springframework.samples.petclinic.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.engine.backend.types.ObjectStructure;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.AssociationInverseSide;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 
@@ -29,7 +32,7 @@ import java.util.*;
 /**
  * Simple JavaBean domain object representing a veterinarian.
  *
- * @author Ken Krebs<
+ * @author Ken Krebs
  * @author Juergen Hoeller
  * @author Sam Brannen
  * @author Arjen Poutsma
@@ -39,10 +42,11 @@ import java.util.*;
 @Table(name = "vets")
 public class Vet extends Person {
 
+    @IndexedEmbedded(structure = ObjectStructure.NESTED)
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     @ManyToMany(fetch = FetchType.EAGER)
-    //@FullTextField(analyzer = "autocomplete_indexing", searchAnalyzer = "autocomplete_search")
     @JoinTable(name = "vet_specialties", joinColumns = @JoinColumn(name = "vet_id"),
-        inverseJoinColumns = @JoinColumn(name = "specialty_id"))
+      inverseJoinColumns = @JoinColumn(name = "specialty_id"))
     private Set<Specialty> specialties;
 
     @JsonIgnore

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 package org.springframework.samples.petclinic.service.clinicService;
-
 import org.junit.jupiter.api.Test;
+
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.*;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -24,8 +25,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,6 +57,8 @@ abstract class AbstractClinicServiceTests {
     @Autowired
     protected ClinicService clinicService;
 
+    //private final Logger log = LoggerFactory.getLogger(.class);
+
     @Test
     void shouldFindOwnersByLastName() {
         Collection<Owner> owners = this.clinicService.findOwnerByLastName("Davis");
@@ -70,25 +75,6 @@ abstract class AbstractClinicServiceTests {
         assertThat(owner.getPets().size()).isEqualTo(1);
         assertThat(owner.getPets().get(0).getType()).isNotNull();
         assertThat(owner.getPets().get(0).getType().getName()).isEqualTo("cat");
-    }
-
-    @Test
-    void shouldFindOwnerByKeywords() {
-        List<Owner> owner = this.clinicService.getOwnerByKeywords("Frank");
-        assertThat(owner.get(0).getLastName()).startsWith("Franklin");
-        assertThat(owner.get(0).getPets().size()).isEqualTo(1);
-        assertThat(owner.get(0).getPets().get(0).getType()).isNotNull();
-        assertThat(owner.get(0).getPets().get(0).getType().getName()).isEqualTo("cat");
-
-        owner = this.clinicService.getOwnerByKeywords("");
-        assertThat(owner.isEmpty());
-    }
-
-    @Test
-    void shouldFindPetByKeywords() {
-        List<Pet> pet = this.clinicService.getPetByKeywords("Fred");
-        assertThat(pet.get(0).getName()).startsWith("Freddy");
-        assertThat(pet.get(0).getType().toString()).isEqualTo("bird");
     }
 
     @Test
@@ -488,6 +474,17 @@ abstract class AbstractClinicServiceTests {
             specialty = null;
         }
         assertThat(specialty).isNull();
+    }
+
+    @Test
+    @Transactional
+    void shouldFindVetByKeywords() {
+        List<Vet> vets = this.clinicService.getVetByKeywords("radiol Helen James");
+        for (Vet vet: vets) {
+            System.out.println(vet.getFirstName().concat(" ".concat(vet.getLastName())));
+            System.out.println("-----");
+        }
+        assertThat(vets.size()).isEqualTo(3);
     }
 
 

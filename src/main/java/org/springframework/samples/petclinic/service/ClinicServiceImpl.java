@@ -140,7 +140,12 @@ public class ClinicServiceImpl implements ClinicService {
 		vetRepository.delete(vet);
 	}
 
-	@Override
+    @Override
+    public List<Vet> getVetByKeywords(String keyword) throws DataAccessException {
+        return vetRepository.getVetByKeywords(keyword);
+    }
+
+    @Override
 	@Transactional(readOnly = true)
 	public Collection<Owner> findAllOwners() throws DataAccessException {
 		return ownerRepository.findAll();
