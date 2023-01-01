@@ -216,8 +216,14 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional
-    public List<Owner> getByKeywords(String lastName) throws DataAccessException {
-        return ownerRepository.getByKeywords(lastName);
+    public List<Owner> getOwnerByKeywords(String lastName) throws DataAccessException {
+        return ownerRepository.getOwnerByKeywords(lastName);
+    }
+
+    @Override
+    @Transactional
+    public List<Pet> getPetByKeywords(String lastName) throws DataAccessException {
+        return petRepository.getPetByKeywords(lastName);
     }
 
     @Override

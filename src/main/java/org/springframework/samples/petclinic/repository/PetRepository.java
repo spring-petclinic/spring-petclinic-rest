@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.BaseEntity;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 
@@ -65,14 +66,14 @@ public interface PetRepository {
      * @return a <code>Collection</code> of <code>Pet</code>s (or an empty <code>Collection</code> if none
      * found)
      */
-	Collection<Pet> findAll() throws DataAccessException;
+    Collection<Pet> findAll() throws DataAccessException;
 
     /**
      * Delete an <code>Pet</code> to the data store by <code>Pet</code>.
      *
      * @param pet the <code>Pet</code> to delete
-     *
      */
-	void delete(Pet pet) throws DataAccessException;
+    void delete(Pet pet) throws DataAccessException;
 
+    List<Pet> getPetByKeywords(String keywords);
 }

@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,6 +33,7 @@ import java.util.*;
  * @author Sam Brannen
  */
 @Entity
+@Indexed
 @Table(name = "pets")
 public class Pet extends NamedEntity {
 

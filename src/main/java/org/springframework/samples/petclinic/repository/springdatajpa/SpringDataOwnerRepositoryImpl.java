@@ -16,10 +16,7 @@ public class SpringDataOwnerRepositoryImpl implements OwnerRepositoryOverride {
     private EntityManager entityManager;
 
     @Override
-    public List<Owner> getByKeywords(String keyword) {
-        if (keyword.isEmpty()) {
-            return Collections.emptyList();
-        }
+    public List<Owner> getOwnerByKeywords(String keyword) {
         SearchSession searchSession = Search.session(entityManager);
         return searchSession.search(Owner.class)
             .where(f -> f.simpleQueryString().fields("lastName", "firstName", "address", "city", "telephone").matching(keyword))

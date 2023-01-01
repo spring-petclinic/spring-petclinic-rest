@@ -14,8 +14,6 @@ import java.util.Collection;
 public interface VetMapper {
     Vet toVet(VetDto vetDto);
 
-    Vet toVet(VetFieldsDto vetFieldsDto);
-
     VetDto toVetDto(Vet vet);
 
     Collection<VetDto> toVetDtos(Collection<Vet> vets);

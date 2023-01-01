@@ -15,6 +15,8 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
@@ -33,6 +35,7 @@ public class NamedEntity extends BaseEntity {
 
     @Column(name = "name")
     @NotEmpty
+    @FullTextField(analyzer = "autocomplete_indexing", searchAnalyzer = "autocomplete_search")
     private String name;
 
     public String getName() {

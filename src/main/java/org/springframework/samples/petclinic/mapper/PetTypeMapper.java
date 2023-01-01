@@ -16,8 +16,6 @@ public interface PetTypeMapper {
 
     PetType toPetType(PetTypeDto petTypeDto);
 
-    PetType toPetType(PetTypeFieldsDto petTypeFieldsDto);
-
     PetTypeDto toPetTypeDto(PetType petType);
 
     List<PetTypeDto> toPetTypeDtos(Collection<PetType> petTypes);

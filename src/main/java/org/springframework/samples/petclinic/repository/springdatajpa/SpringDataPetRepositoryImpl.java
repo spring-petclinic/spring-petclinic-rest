@@ -19,8 +19,14 @@ package org.springframework.samples.petclinic.repository.springdatajpa;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.context.annotation.Profile;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Vitaliy Fedoriv
@@ -29,7 +35,7 @@ import org.springframework.samples.petclinic.model.Pet;
 
 @Profile("spring-data-jpa")
 public class SpringDataPetRepositoryImpl implements PetRepositoryOverride {
-	
+
 	@PersistenceContext
     private EntityManager em;
 
@@ -42,5 +48,13 @@ public class SpringDataPetRepositoryImpl implements PetRepositoryOverride {
             em.remove(pet);
         }
 	}
+
+    @Override
+    public List<Pet> getPetByKeywords(String keyword) {
+        SearchSession searchSession = Search.session(em);
+        return searchSession.search(Pet.class)
+            .where(f -> f.simpleQueryString().fields("name").matching(keyword))
+            .fetchAllHits();
+    }
 
 }
