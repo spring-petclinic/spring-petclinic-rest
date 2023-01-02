@@ -504,5 +504,16 @@ abstract class AbstractClinicServiceTests {
         assertThat(vets.size()).isEqualTo(3);
     }
 
+    @Test
+    void shouldFindVisitByKeywords() {
+        List<Visit> visits = this.clinicService.getVisitByKeywords("rabies");
+        for (Visit visit: visits) {
+            System.out.println(visit.getPet());
+            System.out.println(visit.getDescription());
+            System.out.println("-----");
+        }
+        assertThat(visits.size()).isEqualTo(2);
+    }
+
 
 }

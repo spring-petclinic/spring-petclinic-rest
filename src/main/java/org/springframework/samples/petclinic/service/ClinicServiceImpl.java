@@ -109,7 +109,13 @@ public class ClinicServiceImpl implements ClinicService {
 		visitRepository.delete(visit);
 	}
 
-	@Override
+    @Override
+    @Transactional
+    public List<Visit> getVisitByKeywords(String keyword) throws DataAccessException {
+        return visitRepository.getVisitByKeywords(keyword);
+    }
+
+    @Override
 	@Transactional(readOnly = true)
 	public Vet findVetById(int id) throws DataAccessException {
 		Vet vet = null;
