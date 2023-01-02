@@ -15,10 +15,13 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * Models a {@link Vet Vet's} specialty (for example, dentistry).
@@ -28,5 +31,4 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "specialties")
 public class Specialty extends NamedEntity {
-
 }
