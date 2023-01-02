@@ -141,6 +141,7 @@ public class ClinicServiceImpl implements ClinicService {
 	}
 
     @Override
+    @Transactional
     public List<Vet> getVetByKeywords(String keyword) throws DataAccessException {
         return vetRepository.getVetByKeywords(keyword);
     }

@@ -477,7 +477,24 @@ abstract class AbstractClinicServiceTests {
     }
 
     @Test
-    @Transactional
+    void shouldFindOwnerByKeywords() {
+        List<Owner> owner = this.clinicService.getOwnerByKeywords("Frank");
+        assertThat(owner.get(0).getLastName()).startsWith("Franklin");
+        assertThat(owner.get(0).getPets().size()).isEqualTo(1);
+        assertThat(owner.get(0).getPets().get(0).getType()).isNotNull();
+        assertThat(owner.get(0).getPets().get(0).getType().getName()).isEqualTo("cat");
+
+        owner = this.clinicService.getOwnerByKeywords("");
+        assertThat(owner.isEmpty());
+    }
+
+    @Test
+    void shouldFindPetByKeywords() {
+        List<Pet> pet = this.clinicService.getPetByKeywords("Fred");
+        assertThat(pet.get(0).getName()).startsWith("Freddy");
+        assertThat(pet.get(0).getType().toString()).isEqualTo("bird");
+    }
+    @Test
     void shouldFindVetByKeywords() {
         List<Vet> vets = this.clinicService.getVetByKeywords("radiol Helen James");
         for (Vet vet: vets) {
