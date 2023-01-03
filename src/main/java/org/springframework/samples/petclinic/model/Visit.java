@@ -15,7 +15,8 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -27,6 +28,7 @@ import java.time.LocalDate;
  * @author Ken Krebs
  */
 @Entity
+@Indexed
 @Table(name = "visits")
 public class Visit extends BaseEntity {
 
@@ -41,6 +43,7 @@ public class Visit extends BaseEntity {
      */
     @NotEmpty
     @Column(name = "description")
+    @FullTextField(analyzer = "autocomplete_indexing", searchAnalyzer = "autocomplete_search")
     private String description;
 
     /**
