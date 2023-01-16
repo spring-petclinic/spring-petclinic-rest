@@ -20,10 +20,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.mapper.SpecialtyMapper;
 import org.springframework.samples.petclinic.mapper.VetMapper;
+import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
+import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.rest.api.VetsApi;
 import org.springframework.samples.petclinic.rest.dto.VetDto;
+import org.springframework.samples.petclinic.rest.dto.VisitDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -46,10 +50,13 @@ public class VetRestController implements VetsApi {
     private final VetMapper vetMapper;
     private final SpecialtyMapper specialtyMapper;
 
-    public VetRestController(ClinicService clinicService, VetMapper vetMapper, SpecialtyMapper specialtyMapper) {
+    private final VisitMapper visitMapper;
+
+    public VetRestController(ClinicService clinicService, VetMapper vetMapper, SpecialtyMapper specialtyMapper, VisitMapper visitMapper) {
         this.clinicService = clinicService;
         this.vetMapper = vetMapper;
         this.specialtyMapper = specialtyMapper;
+        this.visitMapper = visitMapper;
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
@@ -110,5 +117,16 @@ public class VetRestController implements VetsApi {
         }
         this.clinicService.deleteVet(vet);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @GetMapping(value = "/visits/vet/{vetId}")
+    public ResponseEntity<List<VisitDto>> getVisitsByVetId(@PathVariable("vetId") Integer vetId) {
+        Collection<Visit> visits = this.clinicService.findByVetId(vetId);
+        System.out.println(visits.size());
+        if (visits.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ArrayList<>(visitMapper.toVisitsDto(visits)), HttpStatus.OK);
     }
 }

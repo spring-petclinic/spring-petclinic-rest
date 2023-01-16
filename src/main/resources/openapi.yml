@@ -450,7 +450,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /owners/{ownerId}/pets/{petId}/visits:
+  /owners/{ownerId}/pets/{petId}/visits/{vetId}:
     post:
       tags:
         - visit
@@ -468,6 +468,15 @@ paths:
             minimum: 0
             example: 1
         - name: petId
+          in: path
+          description: The ID of the pet.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+        - name: vetId
           in: path
           description: The ID of the pet.
           required: true
@@ -2088,6 +2097,13 @@ components:
               minimum: 0
               example: 1
               readOnly: true
+            visits:
+              title: Visits
+              description: Vet visit bookings for this pet.
+              type: array
+              items:
+                $ref: '#/components/schemas/Visit'
+              readOnly: true
       required:
         - id
         - firstName
@@ -2129,6 +2145,14 @@ components:
               example: 1
               readOnly: true
             petId:
+              title: Pet ID
+              description: The ID of the pet.
+              type: integer
+              format: int32
+              minimum: 0
+              example: 1
+              readOnly: true
+            vetId:
               title: Pet ID
               description: The ID of the pet.
               type: integer
