@@ -50,10 +50,10 @@ resource "local_file" "inventory" {
  filename = "./inventory/hosts.ini"
  content = <<EOF
 [docker_worker]
-${aws_instance.docker_worker[0].public_ip}
-${aws_instance.docker_worker[1].public_ip}
+${aws_instance.docker_worker[0].private_ip}
+${aws_instance.docker_worker[1].private_ip}
 [jenkins-instance]
-${aws_instance.jenkins-instance.public_ip}
+${aws_instance.jenkins-instance.private_ip}
 EOF
 }
 
