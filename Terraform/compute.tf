@@ -20,7 +20,7 @@ resource "aws_instance" "jenkins-instance" {
   instance_type   = "t2.medium"
   key_name        = "${var.keyname}"
   #vpc_id          = aws_vpc.new_vpc.id
-  security_groups = aws_security_group.sg_allow_ssh_jenkins.name
+  security_groups = [aws_security_group.sg_allow_ssh_jenkins.name]
   #aws_security_group.sg_allow_ssh_jenkins.id
   #subnet_id          = aws_subnet.new_public_subnet.id
   #name            = "${var.name}"
