@@ -11,3 +11,9 @@ generated/
 # Easier branch switching
 springboot-petclinic-client/
 springboot-petclinic-server/
+Terraform/.terraform.lock.hcl
+Terraform/terraform.tfstate
+Terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/4.50.0/windows_386/terraform-provider-aws_v4.50.0_x5.exe
+Terraform/inventory/hosts.ini
+Terraform/.terraform/providers/registry.terraform.io/hashicorp/local/2.3.0/windows_386/terraform-provider-local_v2.3.0_x5.exe
+Terraform/terraform.tfstate.backup

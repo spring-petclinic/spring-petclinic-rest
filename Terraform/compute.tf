@@ -14,7 +14,7 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-
+# Creating Jenkins machine
 resource "aws_instance" "jenkins-instance" {
   ami             = data.aws_ami.ubuntu.id
   instance_type   = "t2.medium"
@@ -32,7 +32,32 @@ resource "aws_instance" "jenkins-instance" {
   }
 }
 
+#Create two Docker Swarm servers
+resource "aws_instance" "docker_worker" {
+  count = 2
+  ami = data.aws_ami.ubuntu.id
+  instance_type = "t2.micro"
+  key_name = "${var.keyname}"
+  # subnet_id = “subnet-09149e40dc4b5066b”
+  vpc_security_group_ids = [aws_security_group.sg_allow_ssh_jenkins.name]
+  tags = {
+    Name = "Docker Worker"
+    }
+}
+
+# Generate inventory file
+resource "local_file" "inventory" {
+ filename = "./inventory/hosts.ini"
+ content = <<EOF
+[docker_worker]
+${aws_instance.docker_worker[0].public_ip}
+${aws_instance.docker_worker[1].public_ip}
+[jenkins-instance]
+${aws_instance.jenkins-instance.public_ip}
+EOF
+}
+
 
 output "jenkins_ip_address" {
-  value = "${aws_instance.jenkins-instance.public_dns}"
+  value = "${aws_instance.jenkins-instance.public_ip}"
 }
