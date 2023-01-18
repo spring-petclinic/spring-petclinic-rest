@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 package org.springframework.samples.petclinic.service.clinicService;
-import org.junit.jupiter.api.Test;
 
-import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.*;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -25,10 +24,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -154,7 +151,7 @@ abstract class AbstractClinicServiceTests {
 
     @Test
     @Transactional
-    void shouldUpdatePetName() throws Exception {
+    void shouldUpdatePetName() {
         Pet pet7 = this.clinicService.findPetById(7);
         String oldName = pet7.getName();
 
@@ -184,6 +181,7 @@ abstract class AbstractClinicServiceTests {
         int found = pet7.getVisits().size();
         Visit visit = new Visit();
         pet7.addVisit(visit);
+        visit.setVet(clinicService.findVetById(1));
         visit.setDescription("test");
         this.clinicService.saveVisit(visit);
         this.clinicService.savePet(pet7);
@@ -194,7 +192,7 @@ abstract class AbstractClinicServiceTests {
     }
 
     @Test
-    void shouldFindVisitsByPetId() throws Exception {
+    void shouldFindVisitsByPetId() {
         Collection<Visit> visits = this.clinicService.findVisitsByPetId(7);
         assertThat(visits.size()).isEqualTo(2);
         Visit[] visitArr = visits.toArray(new Visit[visits.size()]);
@@ -248,9 +246,10 @@ abstract class AbstractClinicServiceTests {
         int found = visits.size();
 
         Pet pet = this.clinicService.findPetById(1);
-
+        Vet vet = this.clinicService.findVetById(1);
         Visit visit = new Visit();
         visit.setPet(pet);
+        visit.setVet(vet);
         visit.setDate(LocalDate.now());
         visit.setDescription("new visit");
 
@@ -483,9 +482,6 @@ abstract class AbstractClinicServiceTests {
         assertThat(owner.get(0).getPets().size()).isEqualTo(1);
         assertThat(owner.get(0).getPets().get(0).getType()).isNotNull();
         assertThat(owner.get(0).getPets().get(0).getType().getName()).isEqualTo("cat");
-
-        owner = this.clinicService.getOwnerByKeywords("");
-        assertThat(owner.isEmpty());
     }
 
     @Test
@@ -515,5 +511,15 @@ abstract class AbstractClinicServiceTests {
         assertThat(visits.size()).isEqualTo(2);
     }
 
+    @Test
+    void shouldFindVisitByVetId() {
+        Collection<Visit> visits = this.clinicService.findByVetId(1);
+        for (Visit visit: visits) {
+            System.out.println(visit.getPet());
+            System.out.println(visit.getDescription());
+            System.out.println("-----");
+        }
+        assertThat(visits.size()).isEqualTo(2);
+    }
 
 }

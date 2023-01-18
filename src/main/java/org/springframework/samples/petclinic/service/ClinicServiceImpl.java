@@ -48,12 +48,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ClinicServiceImpl implements ClinicService {
 
-    private PetRepository petRepository;
-    private VetRepository vetRepository;
-    private OwnerRepository ownerRepository;
-    private VisitRepository visitRepository;
-    private SpecialtyRepository specialtyRepository;
-	private PetTypeRepository petTypeRepository;
+    private final PetRepository petRepository;
+    private final VetRepository vetRepository;
+    private final OwnerRepository ownerRepository;
+    private final VisitRepository visitRepository;
+    private final SpecialtyRepository specialtyRepository;
+	private final PetTypeRepository petTypeRepository;
 
 
     @Autowired
@@ -113,6 +113,11 @@ public class ClinicServiceImpl implements ClinicService {
     @Transactional
     public List<Visit> getVisitByKeywords(String keyword) throws DataAccessException {
         return visitRepository.getVisitByKeywords(keyword);
+    }
+
+    @Override
+    public Collection<Visit> findByVetId(int vetId) throws DataAccessException {
+        return visitRepository.findByVetId(vetId);
     }
 
     @Override
