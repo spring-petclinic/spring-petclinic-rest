@@ -1,0 +1,846 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>spring-petclinic-angular documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">spring-petclinic-angular documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>VisitEditComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/visits/visit-edit/visit-edit.component.ts</code>
+</p>
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-visit-edit</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./visit-edit.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./visit-edit.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#currentOwner">currentOwner</a>
+                            </li>
+                            <li>
+                                <a href="#currentPet">currentPet</a>
+                            </li>
+                            <li>
+                                <a href="#currentPetType">currentPetType</a>
+                            </li>
+                            <li>
+                                <a href="#errorMessage">errorMessage</a>
+                            </li>
+                            <li>
+                                <a href="#updateSuccess">updateSuccess</a>
+                            </li>
+                            <li>
+                                <a href="#visit">visit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#gotoOwnerDetail">gotoOwnerDetail</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit">ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onSubmit">onSubmit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(visitService: <a href="../injectables/VisitService.html">VisitService</a>, route: <a href="https://angular.io/api/router/ActivatedRoute" target="_blank">ActivatedRoute</a>, router: <a href="https://angular.io/api/router/Router" target="_blank">Router</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/visits/visit-edit/visit-edit.component.ts:44</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>visitService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/VisitService.html" target="_self" >VisitService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>route</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/router/ActivatedRoute" target="_blank" >ActivatedRoute</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/router/Router" target="_blank" >Router</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="gotoOwnerDetail"></a>
+                    <span class="name">
+                        <b>
+                            gotoOwnerDetail
+                        </b>
+                        <a href="#gotoOwnerDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>gotoOwnerDetail()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="78"
+                            class="link-to-prism">src/app/visits/visit-edit/visit-edit.component.ts:78</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <b>
+                            ngOnInit
+                        </b>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="53"
+                            class="link-to-prism">src/app/visits/visit-edit/visit-edit.component.ts:53</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSubmit"></a>
+                    <span class="name">
+                        <b>
+                            onSubmit
+                        </b>
+                        <a href="#onSubmit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onSubmit(visit: <a href="../interfaces/Visit.html">Visit</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">src/app/visits/visit-edit/visit-edit.component.ts:66</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>visit</td>
+                                    <td>
+                                                <code><a href="../interfaces/Visit.html" target="_self" >Visit</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="currentOwner"></a>
+                        <span class="name">
+                            <b>
+                            currentOwner</b>
+                            <a href="#currentOwner"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/Owner.html" target="_self" >Owner</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/visits/visit-edit/visit-edit.component.ts:41</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="currentPet"></a>
+                        <span class="name">
+                            <b>
+                            currentPet</b>
+                            <a href="#currentPet"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/Pet.html" target="_self" >Pet</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/visits/visit-edit/visit-edit.component.ts:40</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="currentPetType"></a>
+                        <span class="name">
+                            <b>
+                            currentPetType</b>
+                            <a href="#currentPetType"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/PetType.html" target="_self" >PetType</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/visits/visit-edit/visit-edit.component.ts:42</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="errorMessage"></a>
+                        <span class="name">
+                            <b>
+                            errorMessage</b>
+                            <a href="#errorMessage"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/visits/visit-edit/visit-edit.component.ts:44</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="updateSuccess"></a>
+                        <span class="name">
+                            <b>
+                            updateSuccess</b>
+                            <a href="#updateSuccess"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>false</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/visits/visit-edit/visit-edit.component.ts:43</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="visit"></a>
+                        <span class="name">
+                            <b>
+                            visit</b>
+                            <a href="#visit"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/Visit.html" target="_self" >Visit</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/visits/visit-edit/visit-edit.component.ts:39</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Component, OnInit} from &#x27;@angular/core&#x27;;
+import {Visit} from &#x27;../visit&#x27;;
+import {Pet} from &#x27;../../pets/pet&#x27;;
+import {Owner} from &#x27;../../owners/owner&#x27;;
+import {PetType} from &#x27;../../pettypes/pettype&#x27;;
+import {VisitService} from &#x27;../visit.service&#x27;;
+import {ActivatedRoute, Router} from &#x27;@angular/router&#x27;;
+
+import * as moment from &#x27;moment&#x27;;
+
+@Component({
+  selector: &#x27;app-visit-edit&#x27;,
+  templateUrl: &#x27;./visit-edit.component.html&#x27;,
+  styleUrls: [&#x27;./visit-edit.component.css&#x27;]
+})
+export class VisitEditComponent implements OnInit {
+  visit: Visit;
+  currentPet: Pet;
+  currentOwner: Owner;
+  currentPetType: PetType;
+  updateSuccess &#x3D; false;
+  errorMessage: string;
+
+  constructor(private visitService: VisitService, private route: ActivatedRoute, private router: Router) {
+    this.visit &#x3D; {} as Visit;
+    this.currentPet &#x3D; {} as Pet;
+    this.currentOwner &#x3D; {} as Owner;
+    this.currentPetType &#x3D; {} as PetType;
+  }
+
+  ngOnInit() {
+    const visitId &#x3D; this.route.snapshot.params.id;
+    this.visitService.getVisitById(visitId).subscribe(
+      response &#x3D;&gt; {
+        this.visit &#x3D; response;
+
+        this.currentPet &#x3D; this.visit.pet;
+        this.currentPetType &#x3D; this.currentPet.type;
+        this.currentOwner &#x3D; this.currentPet.owner;
+      },
+      error &#x3D;&gt; this.errorMessage &#x3D; error as any);
+  }
+
+  onSubmit(visit: Visit) {
+    visit.pet &#x3D; this.currentPet;
+
+    // format output from datepicker to short string yyyy/mm/dd format
+    visit.date &#x3D; moment(visit.date).format(&#x27;YYYY/MM/DD&#x27;);
+
+    this.visitService.updateVisit(visit.id.toString(), visit).subscribe(
+      res &#x3D;&gt; this.gotoOwnerDetail(),
+      error &#x3D;&gt; this.errorMessage &#x3D; error as any);
+
+  }
+
+  gotoOwnerDetail() {
+    this.router.navigate([&#x27;/owners&#x27;, this.currentOwner.id]);
+  }
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!--
+  ~ /*
+  ~  * Copyright 2016-2017 the original author or authors.
+  ~  *
+  ~  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *
+  ~  *      http://www.apache.org/licenses/LICENSE-2.0
+  ~  *
+  ~  * Unless required by applicable law or agreed to in writing, software
+  ~  * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  * limitations under the License.
+  ~  */
+  --&gt;
+
+&lt;div class&#x3D;&quot;container-fluid&quot;&gt;
+  &lt;div class&#x3D;&quot;container xd-container&quot;&gt;
+
+    &lt;h2&gt;Edit Visit&lt;/h2&gt;
+
+    &lt;b&gt;Pet&lt;/b&gt;
+    &lt;table class&#x3D;&quot;table table-striped&quot;&gt;
+      &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Name&lt;/th&gt;
+        &lt;th&gt;Birth Date&lt;/th&gt;
+        &lt;th&gt;Type&lt;/th&gt;
+        &lt;th&gt;Owner&lt;/th&gt;
+      &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tr&gt;
+        &lt;td&gt;{{ currentPet.name }}&lt;/td&gt;
+        &lt;td&gt;{{ currentPet.birthDate }}&lt;/td&gt;
+        &lt;td&gt;{{ currentPetType.name }}&lt;/td&gt;
+        &lt;td&gt;{{ currentOwner.firstName }} {{ currentOwner.lastName }}&lt;/td&gt;
+      &lt;/tr&gt;
+
+    &lt;/table&gt;
+
+    &lt;form id&#x3D;&quot;visit&quot; class&#x3D;&quot;form-horizontal&quot; (ngSubmit)&#x3D;&quot;onSubmit(visitForm.value)&quot; #visitForm&#x3D;&quot;ngForm&quot;&gt;
+
+      &lt;div class&#x3D;&quot;form-group has-feedback&quot;&gt;
+
+        &lt;div class&#x3D;&quot;form-group &quot;&gt;
+          &lt;label class&#x3D;&quot;col-sm-2 control-label&quot;&gt;Date&lt;/label&gt;
+          &lt;div class&#x3D;&quot;col-sm-10&quot;&gt;
+            &lt;input matInput [matDatepicker]&#x3D;&quot;visitDateDatepicker&quot; [ngModel]&#x3D;&quot;visit.date | date:&#x27;yyyy-MM-dd&#x27;&quot; name&#x3D;&quot;date&quot;&gt;
+            &lt;mat-datepicker-toggle matSuffix [for]&#x3D;&quot;visitDateDatepicker&quot;&gt;&lt;/mat-datepicker-toggle&gt;
+            &lt;mat-datepicker #visitDateDatepicker&gt;&lt;/mat-datepicker&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;form-group &quot;&gt;
+          &lt;label class&#x3D;&quot;col-sm-2 control-label&quot;&gt;Description&lt;/label&gt;
+          &lt;div class&#x3D;&quot;col-sm-10&quot;&gt;
+            &lt;input id&#x3D;&quot;description&quot; name&#x3D;&quot;description&quot; class&#x3D;&quot;form-control&quot; type&#x3D;&quot;text&quot;
+                   [(ngModel)]&#x3D;&quot;visit.description&quot;/&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;div class&#x3D;&quot;col-sm-offset-2 col-sm-10&quot;&gt;
+          &lt;input type&#x3D;&quot;hidden&quot; name&#x3D;&quot;id&quot; id&#x3D;&quot;id&quot; [(ngModel)]&#x3D;&quot;visit.id&quot;/&gt;
+          &lt;input type&#x3D;&quot;hidden&quot; name&#x3D;&quot;pet&quot; id&#x3D;&quot;pet&quot; [(ngModel)]&#x3D;&quot;visit.pet&quot;/&gt;
+          &lt;button class&#x3D;&quot;btn btn-default&quot; type&#x3D;&quot;button&quot; (click)&#x3D;&quot;gotoOwnerDetail()&quot;&gt;Back&lt;/button&gt;
+          &lt;button class&#x3D;&quot;btn btn-default&quot; type&#x3D;&quot;submit&quot;&gt;Update Visit&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./visit-edit.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">/*
+ *
+ *  * Copyright 2016-2017 the original author or authors.
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!--  ~ /*  ~  * Copyright 2016-2017 the original author or authors.  ~  *  ~  * Licensed under the Apache License, Version 2.0 (the "License");  ~  * you may not use this file except in compliance with the License.  ~  * You may obtain a copy of the License at  ~  *  ~  *      http://www.apache.org/licenses/LICENSE-2.0  ~  *  ~  * Unless required by applicable law or agreed to in writing, software  ~  * distributed under the License is distributed on an "AS IS" BASIS,  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  ~  * See the License for the specific language governing permissions and  ~  * limitations under the License.  ~  */  --><div class="container-fluid">  <div class="container xd-container">    <h2>Edit Visit</h2>    <b>Pet</b>    <table class="table table-striped">      <thead>      <tr>        <th>Name</th>        <th>Birth Date</th>        <th>Type</th>        <th>Owner</th>      </tr>      </thead>      <tr>        <td>{{ currentPet.name }}</td>        <td>{{ currentPet.birthDate }}</td>        <td>{{ currentPetType.name }}</td>        <td>{{ currentOwner.firstName }} {{ currentOwner.lastName }}</td>      </tr>    </table>    <form id="visit" class="form-horizontal" (ngSubmit)="onSubmit(visitForm.value)" #visitForm="ngForm">      <div class="form-group has-feedback">        <div class="form-group ">          <label class="col-sm-2 control-label">Date</label>          <div class="col-sm-10">            <input matInput [matDatepicker]="visitDateDatepicker" [ngModel]="visit.date | date:\'yyyy-MM-dd\'" name="date">            <mat-datepicker-toggle matSuffix [for]="visitDateDatepicker"></mat-datepicker-toggle>            <mat-datepicker #visitDateDatepicker></mat-datepicker>          </div>        </div>        <div class="form-group ">          <label class="col-sm-2 control-label">Description</label>          <div class="col-sm-10">            <input id="description" name="description" class="form-control" type="text"                   [(ngModel)]="visit.description"/>          </div>        </div>      </div>      <div class="form-group">        <div class="col-sm-offset-2 col-sm-10">          <input type="hidden" name="id" id="id" [(ngModel)]="visit.id"/>          <input type="hidden" name="pet" id="pet" [(ngModel)]="visit.pet"/>          <button class="btn btn-default" type="button" (click)="gotoOwnerDetail()">Back</button>          <button class="btn btn-default" type="submit">Update Visit</button>        </div>      </div>    </form>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'DummyComponent', 'selector': ''},{'name': 'OwnerAddComponent', 'selector': 'app-owner-add'},{'name': 'OwnerDetailComponent', 'selector': 'app-owner-detail'},{'name': 'OwnerEditComponent', 'selector': 'app-owner-edit'},{'name': 'OwnerListComponent', 'selector': 'app-owner-list'},{'name': 'PageNotFoundComponent', 'selector': 'app-page-not-found'},{'name': 'PetAddComponent', 'selector': 'app-pet-add'},{'name': 'PetEditComponent', 'selector': 'app-pet-edit'},{'name': 'PetListComponent', 'selector': 'app-pet-list'},{'name': 'PettypeAddComponent', 'selector': 'app-pettype-add'},{'name': 'PettypeEditComponent', 'selector': 'app-pettype-edit'},{'name': 'PettypeListComponent', 'selector': 'app-pettype-list'},{'name': 'RouterOutletStubComponent', 'selector': 'app-router-outlet'},{'name': 'SpecialtyAddComponent', 'selector': 'app-specialty-add'},{'name': 'SpecialtyEditComponent', 'selector': 'app-specialty-edit'},{'name': 'SpecialtyListComponent', 'selector': 'app-specialty-list'},{'name': 'VetAddComponent', 'selector': 'app-vet-add'},{'name': 'VetEditComponent', 'selector': 'app-vet-edit'},{'name': 'VetListComponent', 'selector': 'app-vet-list'},{'name': 'VisitAddComponent', 'selector': 'app-visit-add'},{'name': 'VisitEditComponent', 'selector': 'app-visit-edit'},{'name': 'VisitListComponent', 'selector': 'app-visit-list'},{'name': 'WelcomeComponent', 'selector': 'app-welcome'}];
+    var DIRECTIVES = [{'name': 'RouterLinkStubDirective', 'selector': '[appRouterLink]'}];
+    var ACTUAL_COMPONENT = {'name': 'VisitEditComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'VisitEditComponent.html';
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

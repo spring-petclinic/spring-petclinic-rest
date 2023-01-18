@@ -1,0 +1,616 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>spring-petclinic-angular documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">spring-petclinic-angular documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li>PettypeAddComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pettypes/pettype-add/pettype-add.component.ts</code>
+</p>
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-pettype-add</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./pettype-add.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./pettype-add.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#errorMessage">errorMessage</a>
+                            </li>
+                            <li>
+                                <a href="#pettype">pettype</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#ngOnInit">ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onSubmit">onSubmit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#newPetType">newPetType</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(pettypeService: <a href="../injectables/PetTypeService.html">PetTypeService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/pettypes/pettype-add/pettype-add.component.ts:13</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>pettypeService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PetTypeService.html" target="_self" >PetTypeService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="newPetType"></a>
+                        <b>newPetType</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://angular.io/api/core/EventEmitter" target="_blank" >EventEmitter</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/pettypes/pettype-add/pettype-add.component.ts:13</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <b>
+                            ngOnInit
+                        </b>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="19"
+                            class="link-to-prism">src/app/pettypes/pettype-add/pettype-add.component.ts:19</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSubmit"></a>
+                    <span class="name">
+                        <b>
+                            onSubmit
+                        </b>
+                        <a href="#onSubmit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onSubmit(pettype: <a href="../interfaces/PetType.html">PetType</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="22"
+                            class="link-to-prism">src/app/pettypes/pettype-add/pettype-add.component.ts:22</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>pettype</td>
+                                    <td>
+                                                <code><a href="../interfaces/PetType.html" target="_self" >PetType</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="errorMessage"></a>
+                        <span class="name">
+                            <b>
+                            errorMessage</b>
+                            <a href="#errorMessage"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/pettypes/pettype-add/pettype-add.component.ts:12</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="pettype"></a>
+                        <span class="name">
+                            <b>
+                            pettype</b>
+                            <a href="#pettype"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/PetType.html" target="_self" >PetType</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/app/pettypes/pettype-add/pettype-add.component.ts:11</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Component, EventEmitter, OnInit, Output} from &#x27;@angular/core&#x27;;
+import {PetType} from &#x27;../pettype&#x27;;
+import {PetTypeService} from &#x27;../pettype.service&#x27;;
+
+@Component({
+  selector: &#x27;app-pettype-add&#x27;,
+  templateUrl: &#x27;./pettype-add.component.html&#x27;,
+  styleUrls: [&#x27;./pettype-add.component.css&#x27;]
+})
+export class PettypeAddComponent implements OnInit {
+  pettype: PetType;
+  errorMessage: string;
+  @Output() newPetType &#x3D; new EventEmitter&lt;PetType&gt;();
+
+  constructor(private pettypeService: PetTypeService) {
+    this.pettype &#x3D; {} as PetType;
+  }
+
+  ngOnInit() {
+  }
+
+  onSubmit(pettype: PetType) {
+    pettype.id &#x3D; null;
+    this.pettypeService.addPetType(pettype).subscribe(
+      newPettype &#x3D;&gt; {
+        this.pettype &#x3D; newPettype;
+        this.newPetType.emit(this.pettype);
+      },
+      error &#x3D;&gt; this.errorMessage &#x3D; error as any
+    );
+  }
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!--
+  ~ /*
+  ~  * Copyright 2016-2017 the original author or authors.
+  ~  *
+  ~  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *
+  ~  *      http://www.apache.org/licenses/LICENSE-2.0
+  ~  *
+  ~  * Unless required by applicable law or agreed to in writing, software
+  ~  * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  * limitations under the License.
+  ~  */
+  --&gt;
+
+&lt;div class&#x3D;&quot;container-fluid&quot;&gt;
+  &lt;div class&#x3D;&quot;container xd-container&quot;&gt;
+    &lt;h2&gt;New Pet Type&lt;/h2&gt;
+    &lt;form id&#x3D;&quot;pettype&quot; class&#x3D;&quot;form-horizontal&quot; (ngSubmit)&#x3D;&quot;onSubmit(pettypeForm.value)&quot; #pettypeForm&#x3D;&quot;ngForm&quot;&gt;
+      &lt;div class&#x3D;&quot;form-group&quot; hidden&#x3D;&quot;true&quot;&gt;
+        &lt;input type&#x3D;&quot;text&quot; hidden&#x3D;&quot;true&quot; class&#x3D;&quot;form-control&quot; id&#x3D;&quot;id&quot; [(ngModel)]&#x3D;&quot;pettype.id&quot; name&#x3D;&quot;id&quot;/&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;form-group has-feedback&quot;&gt;
+        &lt;div class&#x3D;&quot;form-group &quot;&gt;
+          &lt;label class&#x3D;&quot;col-sm-1 control-label&quot;&gt;Name&lt;/label&gt;
+          &lt;div class&#x3D;&quot;col-sm-6&quot;&gt;
+            &lt;input id&#x3D;&quot;name&quot; name&#x3D;&quot;name&quot; class&#x3D;&quot;form-control&quot; type&#x3D;&quot;text&quot; [(ngModel)]&#x3D;&quot;pettype.name&quot;/&gt;
+          &lt;/div&gt;
+          &lt;button class&#x3D;&quot;btn btn-default&quot; type&#x3D;&quot;submit&quot;&gt;Save&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./pettype-add.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss"></code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!--  ~ /*  ~  * Copyright 2016-2017 the original author or authors.  ~  *  ~  * Licensed under the Apache License, Version 2.0 (the "License");  ~  * you may not use this file except in compliance with the License.  ~  * You may obtain a copy of the License at  ~  *  ~  *      http://www.apache.org/licenses/LICENSE-2.0  ~  *  ~  * Unless required by applicable law or agreed to in writing, software  ~  * distributed under the License is distributed on an "AS IS" BASIS,  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  ~  * See the License for the specific language governing permissions and  ~  * limitations under the License.  ~  */  --><div class="container-fluid">  <div class="container xd-container">    <h2>New Pet Type</h2>    <form id="pettype" class="form-horizontal" (ngSubmit)="onSubmit(pettypeForm.value)" #pettypeForm="ngForm">      <div class="form-group" hidden="true">        <input type="text" hidden="true" class="form-control" id="id" [(ngModel)]="pettype.id" name="id"/>      </div>      <div class="form-group has-feedback">        <div class="form-group ">          <label class="col-sm-1 control-label">Name</label>          <div class="col-sm-6">            <input id="name" name="name" class="form-control" type="text" [(ngModel)]="pettype.name"/>          </div>          <button class="btn btn-default" type="submit">Save</button>        </div>      </div>    </form>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'DummyComponent', 'selector': ''},{'name': 'OwnerAddComponent', 'selector': 'app-owner-add'},{'name': 'OwnerDetailComponent', 'selector': 'app-owner-detail'},{'name': 'OwnerEditComponent', 'selector': 'app-owner-edit'},{'name': 'OwnerListComponent', 'selector': 'app-owner-list'},{'name': 'PageNotFoundComponent', 'selector': 'app-page-not-found'},{'name': 'PetAddComponent', 'selector': 'app-pet-add'},{'name': 'PetEditComponent', 'selector': 'app-pet-edit'},{'name': 'PetListComponent', 'selector': 'app-pet-list'},{'name': 'PettypeAddComponent', 'selector': 'app-pettype-add'},{'name': 'PettypeEditComponent', 'selector': 'app-pettype-edit'},{'name': 'PettypeListComponent', 'selector': 'app-pettype-list'},{'name': 'RouterOutletStubComponent', 'selector': 'app-router-outlet'},{'name': 'SpecialtyAddComponent', 'selector': 'app-specialty-add'},{'name': 'SpecialtyEditComponent', 'selector': 'app-specialty-edit'},{'name': 'SpecialtyListComponent', 'selector': 'app-specialty-list'},{'name': 'VetAddComponent', 'selector': 'app-vet-add'},{'name': 'VetEditComponent', 'selector': 'app-vet-edit'},{'name': 'VetListComponent', 'selector': 'app-vet-list'},{'name': 'VisitAddComponent', 'selector': 'app-visit-add'},{'name': 'VisitEditComponent', 'selector': 'app-visit-edit'},{'name': 'VisitListComponent', 'selector': 'app-visit-list'},{'name': 'WelcomeComponent', 'selector': 'app-welcome'}];
+    var DIRECTIVES = [{'name': 'RouterLinkStubDirective', 'selector': '[appRouterLink]'}];
+    var ACTUAL_COMPONENT = {'name': 'PettypeAddComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'PettypeAddComponent.html';
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

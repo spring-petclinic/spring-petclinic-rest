@@ -1,0 +1,82 @@
+<!--
+  ~ /*
+  ~  * Copyright 2016-2017 the original author or authors.
+  ~  *
+  ~  * Licensed under the Apache License, Version 2.0 (the "License");
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *
+  ~  *      http://www.apache.org/licenses/LICENSE-2.0
+  ~  *
+  ~  * Unless required by applicable law or agreed to in writing, software
+  ~  * distributed under the License is distributed on an "AS IS" BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  * limitations under the License.
+  ~  */
+  -->
+
+
+
+<div class="container-fluid">
+  <div class="container xd-container">
+    <h2>
+      New Owner
+    </h2>
+    <form (ngSubmit)="onSubmit(ownerForm.value)" #ownerForm="ngForm" class="form-horizontal">
+      <div class="form-group" hidden="true">
+        <input type="text" hidden="true" class="form-control" id="id" [(ngModel)]="owner.id" name="id"/>
+      </div>
+      <div class="form-group has-feedback" [class.has-success]="firstName.dirty && firstName.valid" [class.has-error]="firstName.dirty &&  !firstName.valid">
+        <label for="firstName" class="col-sm-2 control-label">First Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="firstName" [(ngModel)]="owner.firstName" minlength="2" required name="firstName" #firstName="ngModel"/>
+          <span class="glyphicon form-control-feedback" [class.glyphicon-ok]="firstName.valid" [class.glyphicon-remove]="!firstName.valid" aria-hidden="true"></span>
+          <span class="help-block" *ngIf="firstName.dirty && firstName.hasError('required')">First name is required</span>
+          <span class="help-block" *ngIf="firstName.dirty && firstName.hasError('minlength')">First name must be at least 2 characters long</span>
+        </div>
+      </div>
+      <div class="form-group has-feedback" [class.has-success]="lastName.dirty && lastName.valid" [class.has-error]="lastName.dirty && !lastName.valid">
+        <label for="lastName" class="col-sm-2 control-label">Last Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="lastName" [(ngModel)]="owner.lastName" name="lastName" minlength="2" required #lastName="ngModel"/>
+          <span class="glyphicon form-control-feedback" [class.glyphicon-ok]="lastName.valid" [class.glyphicon-remove]="!lastName.valid" aria-hidden="true"></span>
+          <span class="help-block" *ngIf="lastName.dirty && lastName.hasError('required')">Last name is required</span>
+          <span class="help-block" *ngIf="lastName.dirty && lastName.hasError('minlength')">Last name must be at least 2 characters long</span>
+        </div>
+      </div>
+      <div class="form-group has-feedback" [class.has-success]="address.dirty && address.valid" [class.has-error]="address.dirty && !address.valid">
+        <label for="address" class="col-sm-2 control-label">Address</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="address" [(ngModel)]="owner.address" name="address" required #address="ngModel"/>
+          <span class="glyphicon form-control-feedback" [class.glyphicon-ok]="address.valid" [class.glyphicon-remove]="!address.valid" aria-hidden="true"></span>
+          <span class="help-block" *ngIf="address.dirty && address.hasError('required')">Address is required</span>
+        </div>
+      </div>
+      <div class="form-group has-feedback" [class.has-success]="city.dirty && city.valid" [class.has-error]="city.dirty && !city.valid">
+        <label for="city" class="col-sm-2 control-label">City</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="city" [(ngModel)]="owner.city" name="city" required #city="ngModel"/>
+          <span class="glyphicon form-control-feedback" [class.glyphicon-ok]="city.valid" [class.glyphicon-remove]="!city.valid" aria-hidden="true"></span>
+          <span class="help-block" *ngIf="city.dirty && city.hasError('required')">City is required</span>
+        </div>
+      </div>
+      <div class="form-group has-feedback" [class.has-success]="telephone.dirty && telephone.valid" [class.has-error]="telephone.dirty && !telephone.valid">
+        <label for="telephone" class="col-sm-2 control-label">Telephone</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="telephone" [(ngModel)]="owner.telephone" name="telephone" required maxlength="10" pattern="^[0-9]{0,10}$" #telephone="ngModel"/>
+          <span class="glyphicon form-control-feedback" [class.glyphicon-ok]="telephone.valid" [class.glyphicon-remove]="!telephone.valid" aria-hidden="true"></span>
+          <span class="help-block" *ngIf="telephone.dirty && telephone.hasError('required')">Phone number is required</span>
+          <span class="help-block" *ngIf="telephone.dirty && telephone.hasError('maxlength')">Phone number cannot be more than 10 digits long</span>
+          <span class="help-block" *ngIf="telephone.dirty && telephone.hasError('pattern')" >Phone number only accept digits</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button class="btn btn-default" type="button" (click)="gotoOwnersList()">Back</button>
+          <button class="btn btn-default" type="submit" [disabled]="!ownerForm.valid">Add Owner</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

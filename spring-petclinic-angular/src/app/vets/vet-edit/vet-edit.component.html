@@ -1,0 +1,65 @@
+<!--
+  ~ /*
+  ~  * Copyright 2016-2018 the original author or authors.
+  ~  *
+  ~  * Licensed under the Apache License, Version 2.0 (the "License");
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *
+  ~  *      http://www.apache.org/licenses/LICENSE-2.0
+  ~  *
+  ~  * Unless required by applicable law or agreed to in writing, software
+  ~  * distributed under the License is distributed on an "AS IS" BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  * limitations under the License.
+  ~  */
+  -->
+
+<div class="container-fluid">
+  <div class="container xd-container">
+    <h2>Edit Veterinarian</h2>
+    <form id="vet_form" class="form-horizontal" (ngSubmit)="onSubmit(vetEditForm.value)" [formGroup]="vetEditForm">
+      <div class="form-group" hidden="true">
+        <input type="text" hidden="true" class="form-control" id="id" name="id" formControlName="id"/>
+      </div>
+      <div class="form-group has-feedback" [class.has-success]="firstNameCtrl.dirty && firstNameCtrl.valid" [class.has-error]="firstNameCtrl.dirty &&  !firstNameCtrl.valid">
+        <label for="firstName" class="col-sm-2 control-label">First Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName"/>
+          <span class="glyphicon form-control-feedback" [class.glyphicon-ok]="firstNameCtrl.valid" [class.glyphicon-remove]="!firstNameCtrl.valid" aria-hidden="true"></span>
+          <span class="help-block" *ngIf="firstNameCtrl.dirty && firstNameCtrl.hasError('required')">First name is required</span>
+          <span class="help-block" *ngIf="firstNameCtrl.dirty && firstNameCtrl.hasError('minlength')">First name must be at least 2 characters long</span>
+        </div>
+      </div>
+      <div class="form-group has-feedback" [class.has-success]="lastNameCtrl.dirty && lastNameCtrl.valid" [class.has-error]="lastNameCtrl.dirty && !lastNameCtrl.valid">
+        <label for="lastName" class="col-sm-2 control-label">Last Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName"/>
+          <span class="glyphicon form-control-feedback" [class.glyphicon-ok]="lastNameCtrl.valid" [class.glyphicon-remove]="!lastNameCtrl.valid" aria-hidden="true"></span>
+          <span class="help-block" *ngIf="lastNameCtrl.dirty && lastNameCtrl.hasError('required')">Last name is required</span>
+          <span class="help-block" *ngIf="lastNameCtrl.dirty && lastNameCtrl.hasError('minlength')">Last name must be at least 2 characters long</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="form-group ">
+          <label for="spec" class="col-sm-2 control-label">Specialties</label>
+            <mat-form-field class="col-sm-10">
+              <mat-select  [compareWith]="compareSpecFn" id="spec" name="specialties" formControlName="specialties" multiple>
+                <mat-option *ngFor="let specialty of specList" [value]="specialty">
+                  {{ specialty.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <br/>
+          <button class="btn btn-default" type="button" (click)="gotoVetList()">< Back</button>
+          <button class="btn btn-default" type="submit" [disabled]="vetEditForm.invalid">Save Vet</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

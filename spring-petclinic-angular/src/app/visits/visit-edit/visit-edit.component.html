@@ -1,0 +1,79 @@
+<!--
+  ~ /*
+  ~  * Copyright 2016-2017 the original author or authors.
+  ~  *
+  ~  * Licensed under the Apache License, Version 2.0 (the "License");
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *
+  ~  *      http://www.apache.org/licenses/LICENSE-2.0
+  ~  *
+  ~  * Unless required by applicable law or agreed to in writing, software
+  ~  * distributed under the License is distributed on an "AS IS" BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  * limitations under the License.
+  ~  */
+  -->
+
+<div class="container-fluid">
+  <div class="container xd-container">
+
+    <h2>Edit Visit</h2>
+
+    <b>Pet</b>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Birth Date</th>
+        <th>Type</th>
+        <th>Owner</th>
+      </tr>
+      </thead>
+      <tr>
+        <td>{{ currentPet.name }}</td>
+        <td>{{ currentPet.birthDate }}</td>
+        <td>{{ currentPetType.name }}</td>
+        <td>{{ currentOwner.firstName }} {{ currentOwner.lastName }}</td>
+      </tr>
+
+    </table>
+
+    <form id="visit" class="form-horizontal" (ngSubmit)="onSubmit(visitForm.value)" #visitForm="ngForm">
+
+      <div class="form-group has-feedback">
+
+        <div class="form-group has-feedback" [class.has-success]="date.dirty && date.valid" [class.has-error]="date.dirty && !date.valid">
+          <label class="col-sm-2 control-label">Date</label>
+          <div class="col-sm-10">
+            <input matInput [matDatepicker]="visitDateDatepicker" required [ngModel]="visit.date | date:'yyyy-MM-dd'" name="date" #date="ngModel">
+            <mat-datepicker-toggle matSuffix [for]="visitDateDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker #visitDateDatepicker></mat-datepicker>
+            <span class="glyphicon form-control-feedback" [class.glyphicon-ok]="date.valid" [class.glyphicon-remove]="!date.valid" aria-hidden="true"></span>
+            <span class="help-block" *ngIf="date.dirty && date.hasError('required')">Date is required</span>
+          </div>
+        </div>
+        <div class="form-group has-feedback " [class.has-success]="description.dirty && description.valid" [class.has-error]="description.dirty && !description.valid">
+          <label class="col-sm-2 control-label">Description</label>
+          <div class="col-sm-10">
+            <input id="description" name="description" class="form-control" type="text" required
+                   [(ngModel)]="visit.description" #description="ngModel"/>
+            <span class="glyphicon form-control-feedback" [class.glyphicon-ok]="description.valid" [class.glyphicon-remove]="!description.valid" aria-hidden="true"></span>
+            <span class="help-block" *ngIf="description.dirty && description.hasError('required')">Description is required</span>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <input type="hidden" name="id" id="id" [(ngModel)]="visit.id"/>
+          <input type="hidden" name="pet" id="pet" [(ngModel)]="visit.pet"/>
+          <button class="btn btn-default" type="button" (click)="gotoOwnerDetail()">Back</button>
+          <button class="btn btn-default" type="submit">Update Visit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
