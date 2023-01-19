@@ -11,14 +11,14 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...          
-      - docker build -t backend-image .
-      - docker tag team-magenta-group-two:backend $AWS_ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/team-magenta-group-two:backend     
+      - docker build -t backend .
+      - docker tag team-magenta-group-two:latest $AWS_ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/team-magenta-group-two:latest     
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:backend
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest
       - echo Writing image definitions file...
-      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $REPOSITORY_URI:backend > imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $REPOSITORY_URI:latest > imagedefinitions.json
 artifacts:
     files: imagedefinitions.json
