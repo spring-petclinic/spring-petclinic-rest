@@ -5,9 +5,9 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - docker login --username $DOCKERHUB_USERNAME --password-stdin $DOCKERHUB_PASS
-      - docker login -u AWS -p $(aws ecr get-login-password --region $AWS_DEFAULT_REGION) $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin  $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT.amazonaws.com
   build:
     commands:
       - echo Build started on `date`
