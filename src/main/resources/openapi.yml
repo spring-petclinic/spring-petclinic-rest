@@ -1356,7 +1356,7 @@ paths:
       parameters:
         - name: specialtyId
           in: path
-          description: The ID of the pet.
+          description: The ID of the speciality.
           required: true
           schema:
             type: integer
