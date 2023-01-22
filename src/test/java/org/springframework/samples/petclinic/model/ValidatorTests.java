@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
@@ -133,9 +134,10 @@ class ValidatorTests {
 
         Validator validator = createValidator();
         Set<ConstraintViolation<Owner>> constraintViolations = validator.validate(owner);
-
-        assertThat(constraintViolations.size()).isEqualTo(2); // warum 2????
-        ConstraintViolation<Owner> violation = constraintViolations.iterator().next();
+        assertThat(constraintViolations.size()).isEqualTo(2);
+        Iterator<ConstraintViolation<Owner>> iterator = constraintViolations.iterator();
+        ConstraintViolation<Owner> violation1 = iterator.next();
+        ConstraintViolation<Owner> violation = iterator.next();
         assertThat(violation.getPropertyPath().toString()).isEqualTo("telephone");
         assertThat(violation1.getPropertyPath().toString()).isEqualTo("telephone");
 
