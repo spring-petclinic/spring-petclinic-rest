@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -98,6 +97,7 @@ class ValidatorTests {
         assertThat(violation.getPropertyPath().toString()).isEqualTo("address");
         assertThat(violation.getMessage()).isEqualTo("must not be empty");
     }
+
     @Test
     void shouldNotValidateWhenOwnerCityEmpty()
     {
@@ -137,9 +137,16 @@ class ValidatorTests {
         assertThat(constraintViolations.size()).isEqualTo(2); // warum 2????
         ConstraintViolation<Owner> violation = constraintViolations.iterator().next();
         assertThat(violation.getPropertyPath().toString()).isEqualTo("telephone");
-        // Manchmal gibt der out of bounds Fehlergabe, mal not empty??
-        //assertThat(violation.getMessage()).isEqualTo("numeric value out of bounds (<10 digits>.<0 digits> expected)");
-        assertThat(violation.getMessage()).isEqualTo("must not be empty");
+        assertThat(violation1.getPropertyPath().toString()).isEqualTo("telephone");
+
+        if (violation.getMessage().equals("must not be empty"))
+        {
+            assertThat(violation1.getMessage()).isEqualTo("numeric value out of bounds (<10 digits>.<0 digits> expected)");
+        }
+        else if (violation.getMessage().equals("numeric value out of bounds (<10 digits>.<0 digits> expected)"))
+        {
+            assertThat(violation1.getMessage()).isEqualTo("must not be empty");
+        }
     }
 
     @Test
