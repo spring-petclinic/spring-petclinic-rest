@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.springframework.samples.petclinic.service.clinicService;
-
+// Pets, Vets, Owner, Speacialties, Visits, Pettype
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.*;
@@ -75,6 +75,50 @@ abstract class AbstractClinicServiceTests {
     }
 
     @Test
+    void shouldNotFindOwnerAddress() {
+        List<Owner> owner = this.clinicService.getOwnerByKeywords("Libeyrty");
+        System.out.println(owner.size());
+        assertThat(owner.isEmpty()).isTrue();
+    }
+
+    @Test
+    void shouldFindOwnerAddress() {
+        List<Owner> owner = this.clinicService.getOwnerByKeywords("Liberty St.");
+        assertThat(owner.get(0).getLastName()).startsWith("Franklin");
+        assertThat(owner.get(0).getPets().size()).isEqualTo(1);
+        assertThat(owner.get(0).getPets().get(0).getType()).isNotNull();
+        assertThat(owner.get(0).getPets().get(0).getType().getName()).isEqualTo("cat");
+    }
+
+    @Test
+    void shouldNotFindOwnerCity() {
+        List<Owner> owner = this.clinicService.getOwnerByKeywords("Cardinal");
+        assertThat(owner.size()).isEqualTo(1);
+        assertThat(owner.get(0).getCity()).doesNotContain("Cardinal");
+    }
+
+    @Test
+    void shouldFindOwnerCity() {
+        List<Owner> owner = this.clinicService.getOwnerByKeywords("Sun Prairie");
+        assertThat(owner.size()).isEqualTo(1);
+        assertThat(owner.get(0).getCity()).isEqualTo("Sun Prairie");
+    }
+
+    @Test
+    void shouldNotFindOwnerTelephone() {
+        List<Owner> owner = this.clinicService.getOwnerByKeywords("900110");
+        assertThat(owner.size()).isEqualTo(0);
+    }
+
+    @Test
+    void shouldFindOwnerTelephone() {
+        List<Owner> owner = this.clinicService.getOwnerByKeywords("6085559435");
+        assertThat(owner.size()).isEqualTo(1);
+        assertThat(owner.get(0).getTelephone()).isEqualTo("6085559435");
+    }
+
+
+    @Test
     @Transactional
     void shouldInsertOwner() {
         Collection<Owner> owners = this.clinicService.findOwnerByLastName("Schultz");
@@ -115,16 +159,6 @@ abstract class AbstractClinicServiceTests {
         assertThat(pet7.getOwner().getFirstName()).isEqualTo("Jean");
 
     }
-
-//    @Test
-//    void shouldFindAllPetTypes() {
-//        Collection<PetType> petTypes = this.clinicService.findPetTypes();
-//
-//        PetType petType1 = EntityUtils.getById(petTypes, PetType.class, 1);
-//        assertThat(petType1.getName()).isEqualTo("cat");
-//        PetType petType4 = EntityUtils.getById(petTypes, PetType.class, 4);
-//        assertThat(petType4.getName()).isEqualTo("snake");
-//    }
 
     @Test
     @Transactional
@@ -173,6 +207,20 @@ abstract class AbstractClinicServiceTests {
         assertThat(vet.getSpecialties().get(0).getName()).isEqualTo("dentistry");
         assertThat(vet.getSpecialties().get(1).getName()).isEqualTo("surgery");
     }
+
+    @Test
+    void shouldNotFindVetFirstName() {
+        List<Vet> vet = this.clinicService.getVetByKeywords("Lafael");
+        assertThat(vet.size()).isEqualTo(0);
+    }
+
+    @Test
+    void shouldNotFindVetLastName() {
+        List<Vet> vet = this.clinicService.getVetByKeywords("Linda");
+        assertThat(vet.size()).isEqualTo(1);
+        assertThat(vet.get(0).getLastName()).doesNotContain("Linda");
+    }
+
 
     @Test
     @Transactional
@@ -521,5 +569,7 @@ abstract class AbstractClinicServiceTests {
         }
         assertThat(visits.size()).isEqualTo(2);
     }
+
+
 
 }
