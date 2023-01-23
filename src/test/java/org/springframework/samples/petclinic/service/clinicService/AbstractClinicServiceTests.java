@@ -272,7 +272,7 @@ abstract class AbstractClinicServiceTests {
     }
 
     @Test
-    void shouldFindVisitDyId() {
+    void shouldFindVisitById() {
         Visit visit = this.clinicService.findVisitById(1);
         assertThat(visit.getId()).isEqualTo(1);
         assertThat(visit.getPet().getName()).isEqualTo("Samantha");
@@ -333,9 +333,14 @@ abstract class AbstractClinicServiceTests {
         }
         assertThat(visit).isNull();
     }
+    @Test
+    void shouldNotFindVisitDescription(){
+        List<Visit> visits = this.clinicService.getVisitByKeywords("lol");
+        assertThat(visits.size()).isEqualTo(0);
+    }
 
     @Test
-    void shouldFindVetDyId() {
+    void shouldFindVetById() {
         Vet vet = this.clinicService.findVetById(1);
         assertThat(vet.getFirstName()).isEqualTo("James");
         assertThat(vet.getLastName()).isEqualTo("Carter");
@@ -524,6 +529,12 @@ abstract class AbstractClinicServiceTests {
     }
 
     @Test
+    void shouldNotFindVetSpecialty(){
+        Specialty specialty = this.clinicService.findSpecialtyById(4);
+        assertThat(specialty).isNull();
+    }
+
+    @Test
     void shouldFindOwnerByKeywords() {
         List<Owner> owner = this.clinicService.getOwnerByKeywords("Frank");
         assertThat(owner.get(0).getLastName()).startsWith("Franklin");
@@ -569,6 +580,7 @@ abstract class AbstractClinicServiceTests {
         }
         assertThat(visits.size()).isEqualTo(2);
     }
+
 
 
 
