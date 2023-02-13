@@ -18,8 +18,8 @@ package org.springframework.samples.petclinic.repository.jpa;
 
 import java.util.Collection;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
@@ -35,7 +35,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Profile("jpa")
 public class JpaSpecialtyRepositoryImpl implements SpecialtyRepository {
-	
+
     @PersistenceContext
     private EntityManager em;
 

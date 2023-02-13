@@ -16,8 +16,8 @@
 
 package org.springframework.samples.petclinic.repository.springdatajpa;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.samples.petclinic.model.Specialty;
@@ -29,7 +29,7 @@ import org.springframework.samples.petclinic.model.Specialty;
 
 @Profile("spring-data-jpa")
 public class SpringDataSpecialtyRepositoryImpl implements SpecialtyRepositoryOverride {
-	
+
 	@PersistenceContext
     private EntityManager em;
 

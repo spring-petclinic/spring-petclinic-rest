@@ -19,8 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlElement;
 import java.util.*;
 
 /**

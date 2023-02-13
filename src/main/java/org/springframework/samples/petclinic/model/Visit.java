@@ -17,8 +17,8 @@ package org.springframework.samples.petclinic.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 /**
@@ -47,7 +47,7 @@ public class Visit extends BaseEntity {
      * Holds value of property pet.
      */
     @ManyToOne
-    @JoinColumn(name = "pet_id")
+//    @JoinColumn(name = "pet_id")
     private Pet pet;
 
 
