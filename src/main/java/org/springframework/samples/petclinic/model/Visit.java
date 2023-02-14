@@ -47,7 +47,7 @@ public class Visit extends BaseEntity {
      * Holds value of property pet.
      */
     @ManyToOne
-//    @JoinColumn(name = "pet_id")
+    @JoinColumn(name = "pet_id")
     private Pet pet;
 
 
