@@ -10,31 +10,31 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true) // Enable @PreAuthorize method-level security
 @ConditionalOnProperty(name = "petclinic.security.enable", havingValue = "true")
-public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
+public class BasicAuthenticationConfig  {
 
     @Autowired
     private DataSource dataSource;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // @formatter:off
         http
-            .authorizeRequests()
-                .anyRequest()
-                    .authenticated()
-                    .and()
+            .authorizeHttpRequests((authz) -> authz
+                .anyRequest().authenticated()
+                )
                 .httpBasic()
                     .and()
                 .csrf()
                     .disable();
         // @formatter:on
+        return http.build();
     }
 
     @Autowired

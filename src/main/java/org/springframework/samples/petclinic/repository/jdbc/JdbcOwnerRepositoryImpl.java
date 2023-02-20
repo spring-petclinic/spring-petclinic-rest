@@ -33,7 +33,7 @@ import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -157,7 +157,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
             loadPetsAndVisits(owner);
         }
     }
-    
+
 	@Override
 	public Collection<Owner> findAll() throws DataAccessException {
 		List<Owner> owners = this.namedParameterJdbcTemplate.query(
