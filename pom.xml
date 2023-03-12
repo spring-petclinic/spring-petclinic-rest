@@ -26,7 +26,7 @@
         <jaxb-api.version>2.3.0</jaxb-api.version>
 
         <!-- Maven plugins -->
-        <jacoco.version>0.8.7</jacoco.version>
+        <jacoco.version>0.8.8</jacoco.version>
         <openapi-generator-maven-plugin.version>6.3.0</openapi-generator-maven-plugin.version>
         <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
 
