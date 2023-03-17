@@ -22,7 +22,9 @@ tags:
   - name: visit
     description: Endpoints related to vet visits.
   - name: pettypes
+    description: Endpoints related to pet types.
   - name: specialty
+    description: Endpoints related to vet specialties.
 paths:
   /oops:
     get:
