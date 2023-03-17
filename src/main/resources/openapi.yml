@@ -7,7 +7,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0
   version: '1.0'
 servers:
-  - url: http://localhost:8080/api
+  - url: http://localhost:9966/petclinic/api
 tags:
   - name: failing
     description: Endpoint which always returns an error.
@@ -21,6 +21,8 @@ tags:
     description: Endpoints related to vets.
   - name: visit
     description: Endpoints related to vet visits.
+  - name: pettypes
+  - name: specialty
 paths:
   /oops:
     get:
@@ -1714,7 +1716,7 @@ paths:
                 $ref: '#/components/schemas/RestError'
     delete:
       tags:
-        - vets
+        - vet
       operationId: deleteVet
       summary: Delete a vet by ID
       description: Returns the vet or a 404 error.
@@ -2187,7 +2189,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
-          example: 1234
+          example: 1234abc
         enabled:
           title: enabled
           description: Indicates if the user is enabled
