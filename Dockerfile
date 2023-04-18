@@ -1,14 +1,16 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:19
+FROM openjdk:latest
 
-# Set the working directory to /app
+# Add Maintainer Info
+
+# Set the working directory
 WORKDIR /app
 
-# Copy the packaged jar file to the container
-COPY target/spring-petclinic-rest-3.0.2.jar app.jar
+# Copy the Spring PetClinic REST application jar to the container
+COPY target/spring-petclinic-rest-3.0.2.jar /app
 
 # Expose the port on which the application will run
 EXPOSE 9966
 
-# Start the application
-CMD ["java", "-jar", "app.jar"]
+# Run the application when the container starts
+CMD ["java", "-jar", "spring-petclinic-rest-3.0.2.jar"]
+
