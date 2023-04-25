@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  petclinic-db:
+    image: tmarkesic/petclinic-psql
+    environment:
+      POSTGRES_DB: petclinic
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: petclinic
+    volumes:
+      - petclinic-data:/var/lib/postgresql/data
+    networks:
+      petclinic-network:
+        ipv4_address: 172.18.0.2
+
+  petclinic-be:
+    image: tmarkesic/petclinic-rest
+    environment: 
+      SPRING_DATASOURCE_URL: jdbc:postgresql://petclinic-db:5432/petclinic
+    ports:
+      - "9966:9966"
+    depends_on:
+      - petclinic-db
+    networks:
+      petclinic-network:
+        ipv4_address: 172.18.0.3
+
+  petclinic-fe:
+    image: tmarkesic/petclinic-angular
+    ports:
+      - "4200:8080"
+    depends_on:
+      - petclinic-be
+    networks:
+      petclinic-network:
+        ipv4_address: 172.18.0.4
+
+networks:
+  petclinic-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/16
+
+volumes:
+  petclinic-data:
