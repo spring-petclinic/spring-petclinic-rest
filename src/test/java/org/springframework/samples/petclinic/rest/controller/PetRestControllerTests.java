@@ -81,14 +81,14 @@ class PetRestControllerTests {
 
         OwnerDto owner = new OwnerDto();
         owner.id(1).firstName("Eduardo")
-        .lastName("Rodriquez")
-        .address("2693 Commerce St.")
-        .city("McFarland")
-        .telephone("6085558763");
+            .lastName("Rodriquez")
+            .address("2693 Commerce St.")
+            .city("McFarland")
+            .telephone("6085558763");
 
         PetTypeDto petType = new PetTypeDto();
         petType.id(2)
-                .name("dog");
+            .name("dog");
 
         PetDto pet = new PetDto();
         pets.add(pet.id(3)
@@ -108,7 +108,7 @@ class PetRestControllerTests {
     void testGetPetSuccess() throws Exception {
         given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
         this.mockMvc.perform(get("/api/pets/3")
-            .accept(MediaType.APPLICATION_JSON_VALUE))
+                .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(3))
@@ -120,7 +120,7 @@ class PetRestControllerTests {
     void testGetPetNotFound() throws Exception {
         given(petMapper.toPetDto(this.clinicService.findPetById(-1))).willReturn(null);
         this.mockMvc.perform(get("/api/pets/999")
-            .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
 
@@ -132,7 +132,7 @@ class PetRestControllerTests {
         when(this.clinicService.findAllPets()).thenReturn(pets);
         //given(this.clinicService.findAllPets()).willReturn(petMapper.toPets(pets));
         this.mockMvc.perform(get("/api/pets/")
-            .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.[0].id").value(3))
@@ -147,7 +147,7 @@ class PetRestControllerTests {
         pets.clear();
         given(this.clinicService.findAllPets()).willReturn(petMapper.toPets(pets));
         this.mockMvc.perform(get("/api/pets/")
-            .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
 
@@ -164,12 +164,12 @@ class PetRestControllerTests {
 
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         this.mockMvc.perform(put("/api/pets/3")
-            .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().contentType("application/json"))
             .andExpect(status().isNoContent());
 
         this.mockMvc.perform(get("/api/pets/3")
-            .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(3))
@@ -189,7 +189,7 @@ class PetRestControllerTests {
         String newPetAsJSON = mapper.writeValueAsString(newPet);
 
         this.mockMvc.perform(put("/api/pets/3")
-            .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isBadRequest());
     }
 
@@ -202,7 +202,7 @@ class PetRestControllerTests {
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
         this.mockMvc.perform(delete("/api/pets/3")
-            .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNoContent());
     }
 
@@ -215,8 +215,33 @@ class PetRestControllerTests {
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         given(this.clinicService.findPetById(999)).willReturn(null);
         this.mockMvc.perform(delete("/api/pets/999")
-            .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNotFound());
     }
 
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testAddPetSuccess() throws Exception {
+        PetDto newPet = pets.get(0);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
+        this.mockMvc.perform(post("/api/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testAddPetError() throws Exception {
+        PetDto newPet = pets.get(0);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        given(this.clinicService.findPetById(999)).willReturn(null);
+        this.mockMvc.perform(post("/api/pets")
+                .content(new String()).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest());
+    }
 }

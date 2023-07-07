@@ -27,6 +27,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.transaction.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,5 +96,11 @@ public class PetRestController implements PetsApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
+    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @Transactional
+    @Override
+    public ResponseEntity<PetDto> addPet(PetDto petDto) {
+        this.clinicService.savePet(petMapper.toPet(petDto));
+        return new ResponseEntity<>(petDto, HttpStatus.OK);
+    }
 }
