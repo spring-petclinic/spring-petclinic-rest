@@ -24,9 +24,10 @@ import org.springframework.samples.petclinic.rest.api.PetsApi;
 import org.springframework.samples.petclinic.rest.dto.PetDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +85,6 @@ public class PetRestController implements PetsApi {
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Transactional
     @Override
     public ResponseEntity<PetDto> deletePet(Integer petId) {
         Pet pet = this.clinicService.findPetById(petId);
@@ -95,5 +95,10 @@ public class PetRestController implements PetsApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
+    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @Override
+    public ResponseEntity<PetDto> addPet(PetDto petDto) {
+        this.clinicService.savePet(petMapper.toPet(petDto));
+        return new ResponseEntity<>(petDto, HttpStatus.OK);
+    }
 }
