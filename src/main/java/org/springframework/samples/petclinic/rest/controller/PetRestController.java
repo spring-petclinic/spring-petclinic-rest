@@ -24,9 +24,9 @@ import org.springframework.samples.petclinic.rest.api.PetsApi;
 import org.springframework.samples.petclinic.rest.dto.PetDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import jakarta.transaction.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
