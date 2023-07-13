@@ -35,8 +35,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.transaction.Transactional;
+
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Vitaliy Fedoriv
@@ -160,4 +162,20 @@ public class OwnerRestController implements OwnersApi {
         return new ResponseEntity<>(visitDto, headers, HttpStatus.CREATED);
     }
 
+
+    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @Override
+    public ResponseEntity<PetDto> getOwnersPet(Integer ownerId, Integer petId) {
+        Owner owner = this.clinicService.findOwnerById(ownerId);
+        Pet pet = this.clinicService.findPetById(petId);
+        if (owner == null || pet == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            if (!pet.getOwner().equals(owner)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<>(petMapper.toPetDto(pet), HttpStatus.OK);
+            }
+        }
+    }
 }
