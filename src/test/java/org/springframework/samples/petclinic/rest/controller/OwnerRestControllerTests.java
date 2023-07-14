@@ -26,8 +26,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.mapper.OwnerMapper;
+import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.rest.advice.ExceptionControllerAdvice;
 import org.springframework.samples.petclinic.rest.dto.OwnerDto;
 import org.springframework.samples.petclinic.rest.dto.PetDto;
@@ -67,6 +69,9 @@ class OwnerRestControllerTests {
 
     @Autowired
     private OwnerMapper ownerMapper;
+
+    @Autowired
+    private PetMapper petMapper;
 
     @Autowired
     private VisitMapper visitMapper;
@@ -377,7 +382,7 @@ class OwnerRestControllerTests {
     }
 
     @Test
-    @WithMockUser(roles="OWNER_ADMIN")
+    @WithMockUser(roles = "OWNER_ADMIN")
     void testCreateVisitSuccess() throws Exception {
         VisitDto newVisit = visits.get(0);
         newVisit.setId(999);
@@ -390,5 +395,33 @@ class OwnerRestControllerTests {
                 .content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isCreated());
     }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testGetOwnerPetSuccess() throws Exception {
+        owners.remove(0);
+        owners.remove(1);
+        given(this.clinicService.findAllOwners()).willReturn(ownerMapper.toOwners(owners));
+        var owner = ownerMapper.toOwner(owners.get(0));
+        given(this.clinicService.findOwnerById(2)).willReturn(owner);
+        var pet = petMapper.toPet(pets.get(0));
+        pet.setOwner(owner);
+        given(this.clinicService.findPetById(1)).willReturn(pet);
+        this.mockMvc.perform(get("/api/owners/2/pets/1")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testGetOwnersPetsNotFound() throws Exception {
+        owners.clear();
+        given(this.clinicService.findAllOwners()).willReturn(ownerMapper.toOwners(owners));
+        this.mockMvc.perform(get("/api/owners/1/pets/1")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
 
 }
