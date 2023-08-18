@@ -27,6 +27,7 @@ import org.springframework.samples.petclinic.mapper.PetTypeMapper;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.rest.advice.ExceptionControllerAdvice;
 import org.springframework.samples.petclinic.rest.controller.PetTypeRestController;
+import org.springframework.samples.petclinic.rest.dto.PetTypeDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -173,7 +174,7 @@ class PetTypeRestControllerTests {
     @WithMockUser(roles="VET_ADMIN")
     void testCreatePetTypeSuccess() throws Exception {
     	PetType newPetType = petTypes.get(0);
-    	newPetType.setId(999);
+    	newPetType.setId(null);
     	ObjectMapper mapper = new ObjectMapper();
         String newPetTypeAsJSON = mapper.writeValueAsString(petTypeMapper.toPetTypeDto(newPetType));
     	this.mockMvc.perform(post("/api/pettypes/")
@@ -193,7 +194,17 @@ class PetTypeRestControllerTests {
         		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         		.andExpect(status().isBadRequest());
      }
-
+    @Test
+    @WithMockUser(roles="VET_ADMIN")
+    void testCreatePetTypeErrorWithId() throws Exception {
+        PetType newPetType = petTypes.get(0);
+        newPetType.setId(1);
+        ObjectMapper mapper = new ObjectMapper();
+        String newPetTypeAsJSON = mapper.writeValueAsString(petTypeMapper.toPetTypeDto(newPetType));
+        this.mockMvc.perform(post("/api/pettypes/")
+                .content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest());
+    }
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testUpdatePetTypeSuccess() throws Exception {
