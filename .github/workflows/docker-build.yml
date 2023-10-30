@@ -1,7 +1,9 @@
 ---
 name: Build to Docker Hub
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [master]
 
 jobs:
   build:
