@@ -15,9 +15,13 @@
  */
 package org.springframework.samples.petclinic.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -151,7 +155,7 @@ public class ClinicServiceImpl implements ClinicService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
 	public PetType findPetTypeById(int petTypeId) {
 		PetType petType = null;
 		try {
@@ -171,12 +175,14 @@ public class ClinicServiceImpl implements ClinicService {
 
 	@Override
 	@Transactional
+    @CacheEvict(value = "petTypes", allEntries = true)
 	public void savePetType(PetType petType) throws DataAccessException {
 		petTypeRepository.save(petType);
 	}
 
 	@Override
 	@Transactional
+    @CacheEvict(value = "petTypes", key = "#petType.name")
 	public void deletePetType(PetType petType) throws DataAccessException {
 		petTypeRepository.delete(petType);
 	}
@@ -202,12 +208,14 @@ public class ClinicServiceImpl implements ClinicService {
 
 	@Override
 	@Transactional
+    @CacheEvict(value = "specialties", allEntries = true)
 	public void saveSpecialty(Specialty specialty) throws DataAccessException {
 		specialtyRepository.save(specialty);
 	}
 
 	@Override
 	@Transactional
+    @CacheEvict(value = "specialties", key = "#specialty.name")
 	public void deleteSpecialty(Specialty specialty) throws DataAccessException {
 		specialtyRepository.delete(specialty);
 	}
@@ -248,7 +256,6 @@ public class ClinicServiceImpl implements ClinicService {
 	@Transactional
 	public void savePet(Pet pet) throws DataAccessException {
 		petRepository.save(pet);
-
 	}
 
 	@Override
@@ -284,7 +291,31 @@ public class ClinicServiceImpl implements ClinicService {
 		return visitRepository.findByPetId(petId);
 	}
 
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "specialties", key = "#names")
+    public List<Specialty> findSpecialtiesByName(Set<String> names){
+        List<Specialty> specialties = new ArrayList<>();
+        try {
+            specialties = specialtyRepository.findByNameIn(names);
+        } catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
+            // just ignore not found exceptions for Jdbc/Jpa realization
+            return specialties;
+        }
+        return specialties;
+    }
 
-
-
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "petTypes", key = "#name")
+    public PetType findPetTypeByName(String name){
+        PetType petType;
+        try {
+            petType = petTypeRepository.findByName(name);
+        } catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
+            // just ignore not found exceptions for Jdbc/Jpa realization
+            return null;
+        }
+        return petType;
+    }
 }
