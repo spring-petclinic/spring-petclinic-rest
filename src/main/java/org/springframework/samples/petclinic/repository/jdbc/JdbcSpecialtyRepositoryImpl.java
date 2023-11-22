@@ -20,7 +20,6 @@ import java.util.*;
 
 import javax.sql.DataSource;
 
-import io.micrometer.core.instrument.binder.db.MetricsDSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
@@ -72,7 +71,7 @@ public class JdbcSpecialtyRepositoryImpl implements SpecialtyRepository {
 	}
 
     @Override
-    public List<Specialty> findByNameIn(Set<String> names) {
+    public List<Specialty> findSpecialtiesByName(Set<String> names) {
         List<Specialty> specialties;
         try{
             String sql = "SELECT id, name FROM specialties WHERE specialties.name IN (:names)";

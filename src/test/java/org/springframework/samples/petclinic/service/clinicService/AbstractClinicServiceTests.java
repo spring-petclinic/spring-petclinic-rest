@@ -475,7 +475,7 @@ abstract class AbstractClinicServiceTests {
 
     @Test
     @Transactional
-    void shouldFindSpecialtyByName() {
+    void shouldFindSpecialtiesByName() {
         Specialty specialty1 = new Specialty();
         specialty1.setName("radiology");
         specialty1.setId(1);
@@ -501,6 +501,7 @@ abstract class AbstractClinicServiceTests {
     }
 
     @Test
+    @Transactional
     void shouldFindPetTypeByName(){
         PetType petType = this.clinicService.findPetTypeByName("cat");
         assertThat(petType.getId()).isEqualTo(1);

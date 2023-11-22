@@ -289,7 +289,7 @@ public class ClinicServiceImpl implements ClinicService {
     public List<Specialty> findSpecialtiesByName(Set<String> names){
         List<Specialty> specialties = new ArrayList<>();
         try {
-            specialties = specialtyRepository.findByNameIn(names);
+            specialties = specialtyRepository.findSpecialtiesByName(names);
         } catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
             // just ignore not found exceptions for Jdbc/Jpa realization
             return specialties;
