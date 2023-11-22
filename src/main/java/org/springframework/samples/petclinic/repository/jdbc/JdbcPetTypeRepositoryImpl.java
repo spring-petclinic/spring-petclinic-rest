@@ -47,11 +47,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Profile("jdbc")
 public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
-	
+
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
+
 	private SimpleJdbcInsert insertPetType;
-	
+
 	@Autowired
 	public JdbcPetTypeRepositoryImpl(DataSource dataSource) {
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -76,7 +76,23 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
         return petType;
 	}
 
-	@Override
+    @Override
+    public PetType findByName(String name) throws DataAccessException {
+        PetType petType;
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("name", name);
+            petType = this.namedParameterJdbcTemplate.queryForObject(
+                "SELECT id, name FROM types WHERE name= :name",
+                params,
+                BeanPropertyRowMapper.newInstance(PetType.class));
+        } catch (EmptyResultDataAccessException ex) {
+            throw new ObjectRetrievalFailureException(PetType.class, name);
+        }
+        return petType;
+    }
+
+    @Override
 	public Collection<PetType> findAll() throws DataAccessException {
 		Map<String, Object> params = new HashMap<>();
         return this.namedParameterJdbcTemplate.query(
