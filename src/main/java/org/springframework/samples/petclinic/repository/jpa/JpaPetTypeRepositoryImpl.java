@@ -48,7 +48,15 @@ public class JpaPetTypeRepositoryImpl implements PetTypeRepository {
 		return this.em.find(PetType.class, id);
 	}
 
-	@SuppressWarnings("unchecked")
+    @Override
+    public PetType findByName(String name) throws DataAccessException {
+        return this.em.createQuery("SELECT p FROM PetType p WHERE p.name = :name", PetType.class)
+            .setParameter("name", name)
+            .getSingleResult();
+    }
+
+
+    @SuppressWarnings("unchecked")
 	@Override
 	public Collection<PetType> findAll() throws DataAccessException {
 		return this.em.createQuery("SELECT ptype FROM PetType ptype").getResultList();
