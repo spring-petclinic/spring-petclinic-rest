@@ -71,7 +71,7 @@ public class JdbcSpecialtyRepositoryImpl implements SpecialtyRepository {
 	}
 
     @Override
-    public List<Specialty> findSpecialtiesByName(Set<String> names) {
+    public List<Specialty> findSpecialtiesByNameIn(Set<String> names) {
         List<Specialty> specialties;
         try{
             String sql = "SELECT id, name FROM specialties WHERE specialties.name IN (:names)";

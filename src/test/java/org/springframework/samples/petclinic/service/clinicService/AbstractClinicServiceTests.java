@@ -475,7 +475,7 @@ abstract class AbstractClinicServiceTests {
 
     @Test
     @Transactional
-    void shouldFindSpecialtiesByName() {
+    void shouldFindSpecialtiesByNameIn() {
         Specialty specialty1 = new Specialty();
         specialty1.setName("radiology");
         specialty1.setId(1);
@@ -489,7 +489,7 @@ abstract class AbstractClinicServiceTests {
         Set<String> specialtyNames = expectedSpecialties.stream()
             .map(Specialty::getName)
             .collect(Collectors.toSet());
-        Collection<Specialty> actualSpecialties = this.clinicService.findSpecialtiesByName(specialtyNames);
+        Collection<Specialty> actualSpecialties = this.clinicService.findSpecialtiesByNameIn(specialtyNames);
         assertThat(actualSpecialties).isNotNull();
         assertThat(actualSpecialties.size()).isEqualTo(expectedSpecialties.size());
         for (Specialty expected : expectedSpecialties) {

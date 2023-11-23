@@ -286,10 +286,10 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Specialty> findSpecialtiesByName(Set<String> names){
+    public List<Specialty> findSpecialtiesByNameIn(Set<String> names){
         List<Specialty> specialties = new ArrayList<>();
         try {
-            specialties = specialtyRepository.findSpecialtiesByName(names);
+            specialties = specialtyRepository.findSpecialtiesByNameIn(names);
         } catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
             // just ignore not found exceptions for Jdbc/Jpa realization
             return specialties;

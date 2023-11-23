@@ -22,7 +22,6 @@ import org.springframework.samples.petclinic.mapper.SpecialtyMapper;
 import org.springframework.samples.petclinic.mapper.VetMapper;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.repository.VetRepository;
 import org.springframework.samples.petclinic.rest.api.VetsApi;
 import org.springframework.samples.petclinic.rest.dto.VetDto;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -32,9 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -83,7 +80,7 @@ public class VetRestController implements VetsApi {
         HttpHeaders headers = new HttpHeaders();
         Vet vet = vetMapper.toVet(vetDto);
         if(vet.getNrOfSpecialties() > 0){
-            List<Specialty> vetSpecialities = this.clinicService.findSpecialtiesByName(vet.getSpecialties().stream().map(Specialty::getName).collect(Collectors.toSet()));
+            List<Specialty> vetSpecialities = this.clinicService.findSpecialtiesByNameIn(vet.getSpecialties().stream().map(Specialty::getName).collect(Collectors.toSet()));
             vet.setSpecialties(vetSpecialities);
         }
         this.clinicService.saveVet(vet);
@@ -105,7 +102,7 @@ public class VetRestController implements VetsApi {
             currentVet.addSpecialty(spec);
         }
         if(currentVet.getNrOfSpecialties() > 0){
-            List<Specialty> vetSpecialities = this.clinicService.findSpecialtiesByName(currentVet.getSpecialties().stream().map(Specialty::getName).collect(Collectors.toSet()));
+            List<Specialty> vetSpecialities = this.clinicService.findSpecialtiesByNameIn(currentVet.getSpecialties().stream().map(Specialty::getName).collect(Collectors.toSet()));
             currentVet.setSpecialties(vetSpecialities);
         }
         this.clinicService.saveVet(currentVet);

@@ -32,7 +32,7 @@ public interface SpecialtyRepository {
 
 	Specialty findById(int id) throws DataAccessException;
 
-    List<Specialty> findSpecialtiesByName(Set<String> names);
+    List<Specialty> findSpecialtiesByNameIn(Set<String> names);
 
     Collection<Specialty> findAll() throws DataAccessException;
 

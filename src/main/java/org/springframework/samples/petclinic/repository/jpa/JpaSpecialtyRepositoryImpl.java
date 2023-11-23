@@ -47,7 +47,7 @@ public class JpaSpecialtyRepositoryImpl implements SpecialtyRepository {
 	}
 
     @Override
-    public List<Specialty> findSpecialtiesByName(Set<String> names) {
+    public List<Specialty> findSpecialtiesByNameIn(Set<String> names) {
         final String jpql = "SELECT s FROM Specialty s WHERE s.name IN :names";
         return em.createQuery(jpql, Specialty.class)
             .setParameter("names", names)
