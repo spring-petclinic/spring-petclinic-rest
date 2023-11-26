@@ -17,6 +17,8 @@
 package org.springframework.samples.petclinic.repository.jpa;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -44,7 +46,15 @@ public class JpaSpecialtyRepositoryImpl implements SpecialtyRepository {
 		return this.em.find(Specialty.class, id);
 	}
 
-	@SuppressWarnings("unchecked")
+    @Override
+    public List<Specialty> findSpecialtiesByNameIn(Set<String> names) {
+        final String jpql = "SELECT s FROM Specialty s WHERE s.name IN :names";
+        return em.createQuery(jpql, Specialty.class)
+            .setParameter("names", names)
+            .getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
 	@Override
 	public Collection<Specialty> findAll() throws DataAccessException {
 		return this.em.createQuery("SELECT s FROM Specialty s").getResultList();

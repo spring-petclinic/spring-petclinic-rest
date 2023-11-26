@@ -15,10 +15,12 @@
  */
 package org.springframework.samples.petclinic.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.orm.ObjectRetrievalFailureException;
@@ -151,7 +153,7 @@ public class ClinicServiceImpl implements ClinicService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
 	public PetType findPetTypeById(int petTypeId) {
 		PetType petType = null;
 		try {
@@ -248,7 +250,6 @@ public class ClinicServiceImpl implements ClinicService {
 	@Transactional
 	public void savePet(Pet pet) throws DataAccessException {
 		petRepository.save(pet);
-
 	}
 
 	@Override
@@ -260,7 +261,6 @@ public class ClinicServiceImpl implements ClinicService {
 
 	@Override
 	@Transactional(readOnly = true)
-    @Cacheable(value = "vets")
 	public Collection<Vet> findVets() throws DataAccessException {
 		return vetRepository.findAll();
 	}
@@ -284,7 +284,29 @@ public class ClinicServiceImpl implements ClinicService {
 		return visitRepository.findByPetId(petId);
 	}
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Specialty> findSpecialtiesByNameIn(Set<String> names){
+        List<Specialty> specialties = new ArrayList<>();
+        try {
+            specialties = specialtyRepository.findSpecialtiesByNameIn(names);
+        } catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
+            // just ignore not found exceptions for Jdbc/Jpa realization
+            return specialties;
+        }
+        return specialties;
+    }
 
-
-
+    @Override
+    @Transactional(readOnly = true)
+    public PetType findPetTypeByName(String name){
+        PetType petType;
+        try {
+            petType = petTypeRepository.findByName(name);
+        } catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
+            // just ignore not found exceptions for Jdbc/Jpa realization
+            return null;
+        }
+        return petType;
+    }
 }

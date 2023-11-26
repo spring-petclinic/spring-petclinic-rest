@@ -25,6 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -470,5 +473,37 @@ abstract class AbstractClinicServiceTests {
         assertThat(specialty).isNull();
     }
 
+    @Test
+    @Transactional
+    void shouldFindSpecialtiesByNameIn() {
+        Specialty specialty1 = new Specialty();
+        specialty1.setName("radiology");
+        specialty1.setId(1);
+        Specialty specialty2 = new Specialty();
+        specialty2.setName("surgery");
+        specialty2.setId(2);
+        Specialty specialty3 = new Specialty();
+        specialty3.setName("dentistry");
+        specialty3.setId(3);
+        List<Specialty> expectedSpecialties = List.of(specialty1, specialty2, specialty3);
+        Set<String> specialtyNames = expectedSpecialties.stream()
+            .map(Specialty::getName)
+            .collect(Collectors.toSet());
+        Collection<Specialty> actualSpecialties = this.clinicService.findSpecialtiesByNameIn(specialtyNames);
+        assertThat(actualSpecialties).isNotNull();
+        assertThat(actualSpecialties.size()).isEqualTo(expectedSpecialties.size());
+        for (Specialty expected : expectedSpecialties) {
+            assertThat(actualSpecialties.stream()
+                .anyMatch(
+                    actual -> actual.getName().equals(expected.getName())
+                    && actual.getId().equals(expected.getId()))).isTrue();
+        }
+    }
 
+    @Test
+    @Transactional
+    void shouldFindPetTypeByName(){
+        PetType petType = this.clinicService.findPetTypeByName("cat");
+        assertThat(petType.getId()).isEqualTo(1);
+    }
 }
