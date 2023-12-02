@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.orm.ObjectRetrievalFailureException;
@@ -179,6 +181,7 @@ public class ClinicServiceImpl implements ClinicService {
 
 	@Override
 	@Transactional
+    @CacheEvict(value = "petTypes", key = "#petType.name")
 	public void deletePetType(PetType petType) throws DataAccessException {
 		petTypeRepository.delete(petType);
 	}
@@ -210,6 +213,7 @@ public class ClinicServiceImpl implements ClinicService {
 
 	@Override
 	@Transactional
+    @CacheEvict(value = "specialties", allEntries = true)
 	public void deleteSpecialty(Specialty specialty) throws DataAccessException {
 		specialtyRepository.delete(specialty);
 	}
@@ -286,6 +290,7 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "specialties", key = "#names")
     public List<Specialty> findSpecialtiesByNameIn(Set<String> names){
         List<Specialty> specialties = new ArrayList<>();
         try {
@@ -299,6 +304,7 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "petTypes", key = "#name")
     public PetType findPetTypeByName(String name){
         PetType petType;
         try {

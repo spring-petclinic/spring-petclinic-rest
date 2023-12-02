@@ -24,6 +24,7 @@
         <jackson-databind-nullable.version>0.2.1</jackson-databind-nullable.version>
         <mapstruct.version>1.4.1.Final</mapstruct.version>
         <jaxb-api.version>2.3.0</jaxb-api.version>
+        <caffeine.version>3.1.8</caffeine.version>
 
         <!-- Maven plugins -->
         <jacoco.version>0.8.8</jacoco.version>
@@ -158,6 +159,13 @@
             <artifactId>jaxb-api</artifactId>
             <version>${jaxb-api.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
