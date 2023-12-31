@@ -296,17 +296,4 @@ public class ClinicServiceImpl implements ClinicService {
         }
         return specialties;
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public PetType findPetTypeByName(String name){
-        PetType petType;
-        try {
-            petType = petTypeRepository.findByName(name);
-        } catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-            // just ignore not found exceptions for Jdbc/Jpa realization
-            return null;
-        }
-        return petType;
-    }
 }

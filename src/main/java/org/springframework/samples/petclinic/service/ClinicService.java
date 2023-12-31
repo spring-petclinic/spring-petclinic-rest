@@ -67,6 +67,4 @@ public interface ClinicService {
 	void deleteSpecialty(Specialty specialty) throws DataAccessException;
 
     List<Specialty> findSpecialtiesByNameIn(Set<String> names) throws DataAccessException;
-
-    PetType findPetTypeByName(String name) throws DataAccessException;
 }

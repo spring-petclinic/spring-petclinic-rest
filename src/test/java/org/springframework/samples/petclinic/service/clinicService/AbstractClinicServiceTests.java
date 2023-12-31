@@ -499,11 +499,4 @@ abstract class AbstractClinicServiceTests {
                     && actual.getId().equals(expected.getId()))).isTrue();
         }
     }
-
-    @Test
-    @Transactional
-    void shouldFindPetTypeByName(){
-        PetType petType = this.clinicService.findPetTypeByName("cat");
-        assertThat(petType.getId()).isEqualTo(1);
-    }
 }
