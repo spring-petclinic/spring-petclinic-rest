@@ -3,8 +3,13 @@ package org.springframework.samples.petclinic.repository.jpa;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.repository.UserRepository;
 import org.springframework.stereotype.Repository;
@@ -17,11 +22,22 @@ public class JpaUserRepositoryImpl implements UserRepository {
     private EntityManager em;
 
     @Override
-    public void save(User user) throws DataAccessException {
+    public User save(User user) throws DataAccessException {
         if (this.em.find(User.class, user.getUsername()) == null) {
             this.em.persist(user);
         } else {
             this.em.merge(user);
         }
+
+        return user;
     }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        User user = new User();
+        user.setUsername("empty_username");
+        return Optional.ofNullable(user);
+
+    }
+
 }

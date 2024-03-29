@@ -1820,6 +1820,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
+  /users/{username}:
+    get:
+      tags:
+        - user
+      operationId: getUser
+      summary: Get a user by username
+      description: Returns the user  or a 404 error.
+      parameters:
+        - name: username
+          in: path
+          description: The username of the user.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: User details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        404:
+          description: Pet not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+
 components:
   schemas:
     RestError:

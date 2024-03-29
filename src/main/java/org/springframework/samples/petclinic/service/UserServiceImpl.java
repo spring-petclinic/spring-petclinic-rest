@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Role;
@@ -33,4 +35,12 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
     }
+
+    @Override
+    @Transactional
+    public Optional<User> getByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        return userOptional;
+    } 
+
 }
