@@ -1,10 +1,8 @@
 package org.springframework.samples.petclinic.security;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,9 +24,12 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableWebSecurity
-//// // @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 // @ConditionalOnProperty(name = "petclinic.security.enable", havingValue =
 //// "false")
+// @ConditionalOnProperty(name = "petclinic.security.enable", havingValue =
+//// "true") // this line blocks post requests
+
 public class DisableSecurityConfig {
 
     @Value("${spring.security.debug:false}")
@@ -53,13 +54,12 @@ public class DisableSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
-                                .requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                                .requestMatchers("/admin/**").hasAnyRole("ADMIN")
-                                .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/login/**").permitAll()
-                                .requestMatchers("/register/**").permitAll() // ?
-                                .requestMatchers("/simplepost/**").permitAll() // ?
-                                .anyRequest().authenticated())
+                                // .requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
+                                // .requestMatchers("/simplepost").hasRole("USER")
+                                .requestMatchers("/simplepost").permitAll()
+                                .requestMatchers("/simplepost_test").permitAll()
+                                .anyRequest().hasRole("ADMIN"))
+
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

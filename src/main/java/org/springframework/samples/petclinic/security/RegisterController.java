@@ -1,9 +1,7 @@
 package org.springframework.samples.petclinic.security;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.petclinic.rest.dto.UserDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,15 +15,24 @@ public class RegisterController {
 
     @PostMapping(value = "/register")
     public String register(@RequestBody UserDtoSecurity userDto) {
-        System.out.println("register user : " + userDto.getUsername());
         registerService.registerNewUserAccount(userDto);
-
         return "Registered!";
     }
 
     @GetMapping(value = "/register")
     public String register() {
         return "Registered!";
+    }
+
+    @PostMapping("/simplepost")
+    public String simple_p() {
+        return "Hello post.";
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/simplepost")
+    public String simple() {
+        return "Hello get.";
     }
 
 }

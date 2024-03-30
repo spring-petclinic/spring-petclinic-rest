@@ -17,8 +17,6 @@ public class UserDetailServiceConfig {
     @Bean
     public UserDetailsManager userDetailsManager() {
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
-
         return users;
     }
-
 }

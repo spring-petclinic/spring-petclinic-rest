@@ -23,8 +23,8 @@ public class RegisterService {
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .roles(userDto.getRoles())
                 .build();
-
         usersManager.createUser(user);
         return user;
     }
+
 }
