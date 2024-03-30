@@ -66,8 +66,8 @@ ALTER TABLE visits ADD CONSTRAINT fk_visits_pets FOREIGN KEY (pet_id) REFERENCES
 CREATE INDEX visits_pet_id ON visits (pet_id);
 
 CREATE  TABLE users (
-  username    VARCHAR(20) NOT NULL ,
-  password    VARCHAR(20) NOT NULL ,
+  username    VARCHAR(50) NOT NULL ,
+  password    VARCHAR(500) NOT NULL ,
   enabled     BOOLEAN DEFAULT TRUE NOT NULL ,
   PRIMARY KEY (username)
 );

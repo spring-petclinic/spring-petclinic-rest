@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS visits (
 ) engine=InnoDB;
 
 CREATE TABLE IF NOT EXISTS users (
-  username VARCHAR(20) NOT NULL ,
-  password VARCHAR(20) NOT NULL ,
+  username VARCHAR(50) NOT NULL ,
+  password VARCHAR(500) NOT NULL ,
   enabled TINYINT NOT NULL DEFAULT 1 ,
   PRIMARY KEY (username)
 ) engine=InnoDB;
