@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.security.model.RegisterUserDto;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,10 +17,10 @@ public class RegisterService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public UserDetails registerNewUserAccount(UserDtoSecurity userDto) {
+    public UserDetails registerNewUserAccount(RegisterUserDto userDto) {
 
         UserDetails user = User.builder()
-                .username(userDto.getUsernamemail())
+                .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .roles(userDto.getRoles())
                 .build();

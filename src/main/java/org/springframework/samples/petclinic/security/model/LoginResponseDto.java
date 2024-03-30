@@ -1,10 +1,12 @@
 package org.springframework.samples.petclinic.security.model;
 
-public class LoginRes {
+public class LoginResponseDto {
+
     private String email;
+    
     private String token;
 
-    public LoginRes(String email, String token) {
+    public LoginResponseDto(String email, String token) {
         this.email = email;
         this.token = token;
     }

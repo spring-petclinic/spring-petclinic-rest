@@ -1,7 +1,9 @@
 package org.springframework.samples.petclinic.security.model;
 
-public class LoginReq {
+public class LoginRequestDto {
+
     private String email;
+    
     private String password;
 
     public String getEmail() {

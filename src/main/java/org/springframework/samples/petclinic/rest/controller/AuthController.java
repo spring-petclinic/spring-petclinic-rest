@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.security.RegisterService;
-import org.springframework.samples.petclinic.security.UserDtoSecurity;
 import org.springframework.samples.petclinic.security.jwt.JwtUtil;
-import org.springframework.samples.petclinic.security.model.ErrorRes;
-import org.springframework.samples.petclinic.security.model.LoginReq;
-import org.springframework.samples.petclinic.security.model.LoginRes;
+import org.springframework.samples.petclinic.security.model.ErrorResponseDto;
+import org.springframework.samples.petclinic.security.model.LoginRequestDto;
+import org.springframework.samples.petclinic.security.model.LoginResponseDto;
+import org.springframework.samples.petclinic.security.model.RegisterUserDto;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,7 +42,7 @@ public class AuthController {
 
     @ResponseBody
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public ResponseEntity login(@RequestBody LoginReq loginReq)  {
+    public ResponseEntity login(@RequestBody LoginRequestDto loginReq)  {
 
         try {
             Authentication authentication =
@@ -58,21 +58,21 @@ public class AuthController {
                                     .toString();
                                     
             String token = jwtUtil.createToken(email, roles);
-            LoginRes loginRes = new LoginRes(email,token);
+            LoginResponseDto loginRes = new LoginResponseDto(email,token);
 
             return ResponseEntity.ok(loginRes);
 
         }catch (BadCredentialsException e){
-            ErrorRes errorResponse = new ErrorRes(HttpStatus.BAD_REQUEST,"Invalid username or password");
+            ErrorResponseDto errorResponse = new ErrorResponseDto(HttpStatus.BAD_REQUEST,"Invalid username or password");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }catch (Exception e){
-            ErrorRes errorResponse = new ErrorRes(HttpStatus.BAD_REQUEST, e.getMessage());
+            ErrorResponseDto errorResponse = new ErrorResponseDto(HttpStatus.BAD_REQUEST, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity register(@RequestBody UserDtoSecurity userDto) {
+    public ResponseEntity register(@RequestBody RegisterUserDto userDto) {
         registerService.registerNewUserAccount(userDto);
         return ResponseEntity.ok(userDto);
     }
