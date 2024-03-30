@@ -56,6 +56,8 @@ public class DisableSecurityConfig {
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/login/**").permitAll()
+                                .requestMatchers("/register/**").permitAll() // ?
+                                .requestMatchers("/simplepost/**").permitAll() // ?
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer

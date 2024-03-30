@@ -1,30 +1,40 @@
 package org.springframework.samples.petclinic.security;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 
 @Configuration
 public class UserDetailServiceConfig {
 
+    @Autowired
+    private DataSource dataSource;
+
     @Bean
-    public UserDetailsService userDetailsService(BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserDetailsManager userDetailsManager() {
+        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
 
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        // UserDetails user = User.builder()
+        // .username("user2")
+        // .password("11")
+        // // .disabled(false)
+        // .roles("USER")
+        // .build();
+        // UserDetails admin = User.builder()
+        // .username("admin2")
+        // .password("55")
+        // // .disabled(false)
+        // .roles("USER", "ADMIN")
+        // .build();
 
-        manager.createUser(User.withUsername("user")
-                .password(bCryptPasswordEncoder.encode("userPass"))
-                .roles("USER")
-                .build());
-        manager.createUser(User.withUsername("admin")
-                .password(bCryptPasswordEncoder.encode("adminPass"))
-                .roles("ADMIN", "USER")
-                .build());
+        // users.createUser(user);
+        // users.createUser(admin);
 
-        return manager;
+        return users;
     }
 
 }
