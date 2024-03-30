@@ -19,9 +19,7 @@ public class RegisterService {
                 .password(userDto.getPassword())
                 .roles(userDto.getRoles())
                 .build();
-
         usersManager.createUser(user);
-
         return user;
     }
 

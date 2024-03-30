@@ -1,6 +1,9 @@
 package org.springframework.samples.petclinic.security;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.rest.dto.UserDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,12 +25,6 @@ public class RegisterController {
 
     @GetMapping(value = "/register")
     public String register() {
-        UserDtoSecurity userDto = new UserDtoSecurity();
-        userDto.setUsername("user_");
-        userDto.setPassword("11");
-        userDto.setRoles("USER");
-        registerService.registerNewUserAccount(userDto);
-
         return "Registered!";
     }
 

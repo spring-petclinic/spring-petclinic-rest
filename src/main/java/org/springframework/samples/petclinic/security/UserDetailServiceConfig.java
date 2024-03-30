@@ -18,22 +18,6 @@ public class UserDetailServiceConfig {
     public UserDetailsManager userDetailsManager() {
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
 
-        // UserDetails user = User.builder()
-        // .username("user2")
-        // .password("11")
-        // // .disabled(false)
-        // .roles("USER")
-        // .build();
-        // UserDetails admin = User.builder()
-        // .username("admin2")
-        // .password("55")
-        // // .disabled(false)
-        // .roles("USER", "ADMIN")
-        // .build();
-
-        // users.createUser(user);
-        // users.createUser(admin);
-
         return users;
     }
 
