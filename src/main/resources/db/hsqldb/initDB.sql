@@ -5,7 +5,8 @@ DROP TABLE visits IF EXISTS;
 DROP TABLE pets IF EXISTS;
 DROP TABLE types IF EXISTS;
 DROP TABLE owners IF EXISTS;
-DROP TABLE roles IF EXISTS;
+-- DROP TABLE roles IF EXISTS;
+DROP TABLE authorities IF EXISTS;
 DROP TABLE users IF EXISTS;
 
 
@@ -72,11 +73,10 @@ CREATE  TABLE users (
   PRIMARY KEY (username)
 );
 
-CREATE TABLE roles (
+CREATE TABLE authorities (
   id              INTEGER IDENTITY PRIMARY KEY,
   username        VARCHAR(20) NOT NULL,
-  role            VARCHAR(20) NOT NULL
+  authority            VARCHAR(20) NOT NULL
 );
-ALTER TABLE roles ADD CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users (username);
-CREATE INDEX fk_username_idx ON roles (username);
-
+ALTER TABLE authorities ADD CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users (username);
+CREATE INDEX fk_username_idx ON authorities (username);

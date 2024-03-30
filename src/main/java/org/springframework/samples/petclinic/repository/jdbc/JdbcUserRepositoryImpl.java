@@ -61,11 +61,11 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     private void updateUserRoles(User user) {
         Map<String, Object> params = new HashMap<>();
         params.put("username", user.getUsername());
-        this.namedParameterJdbcTemplate.update("DELETE FROM roles WHERE username=:username", params);
+        this.namedParameterJdbcTemplate.update("DELETE FROM authorities WHERE username=:username", params);
         for (Role role : user.getRoles()) {
-            params.put("role", role.getName());
+            params.put("authority", role.getName());
             if (role.getName() != null) {
-                this.namedParameterJdbcTemplate.update("INSERT INTO roles(username, role) VALUES (:username, :role)", params);
+                this.namedParameterJdbcTemplate.update("INSERT INTO authorities(username, authority) VALUES (:username, :authority)", params);
             }
         }
     }

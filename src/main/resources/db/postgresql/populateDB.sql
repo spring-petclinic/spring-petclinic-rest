@@ -54,6 +54,6 @@ INSERT INTO visits VALUES (4, 7, '2008-09-04', 'spayed') ON CONFLICT DO NOTHING;
 
 INSERT INTO users(username,password,enabled) VALUES ('admin','{noop}admin', true) ON CONFLICT DO NOTHING;
 
-INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_OWNER_ADMIN') ON CONFLICT DO NOTHING;
-INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_VET_ADMIN') ON CONFLICT DO NOTHING;
-INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_ADMIN') ON CONFLICT DO NOTHING;
+INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_OWNER_ADMIN') ON CONFLICT DO NOTHING;
+INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_VET_ADMIN') ON CONFLICT DO NOTHING;
+INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_ADMIN') ON CONFLICT DO NOTHING;

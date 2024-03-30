@@ -71,12 +71,12 @@ CREATE TABLE IF NOT EXISTS users (
   PRIMARY KEY (username)
 ) engine=InnoDB;
 
-CREATE TABLE IF NOT EXISTS roles (
+CREATE TABLE IF NOT EXISTS authorities (
   id int(11) NOT NULL AUTO_INCREMENT,
   username varchar(20) NOT NULL,
-  role varchar(20) NOT NULL,
+  authority varchar(20) NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY uni_username_role (role,username),
+  UNIQUE KEY uni_username_authority (authority,username),
   KEY fk_username_idx (username),
   CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users (username)
 ) engine=InnoDB;

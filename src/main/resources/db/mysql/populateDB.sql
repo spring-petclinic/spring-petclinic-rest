@@ -54,6 +54,6 @@ INSERT IGNORE INTO visits VALUES (4, 7, '2008-09-04', 'spayed');
 
 INSERT IGNORE INTO users(username,password,enabled) VALUES ('admin','{noop}admin', true);
 
-INSERT IGNORE INTO roles (username, role) VALUES ('admin', 'ROLE_OWNER_ADMIN');
-INSERT IGNORE INTO roles (username, role) VALUES ('admin', 'ROLE_VET_ADMIN');
-INSERT IGNORE INTO roles (username, role) VALUES ('admin', 'ROLE_ADMIN');
+INSERT IGNORE INTO authorities (username, authority) VALUES ('admin', 'ROLE_OWNER_ADMIN');
+INSERT IGNORE INTO authorities (username, authority) VALUES ('admin', 'ROLE_VET_ADMIN');
+INSERT IGNORE INTO authorities (username, authority) VALUES ('admin', 'ROLE_ADMIN');

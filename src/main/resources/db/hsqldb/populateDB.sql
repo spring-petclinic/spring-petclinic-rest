@@ -54,6 +54,6 @@ INSERT INTO visits VALUES (4, 7, '2013-01-04', 'spayed');
 
 INSERT INTO users(username,password,enabled) VALUES ('admin','{noop}admin', true);
 
-INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_OWNER_ADMIN');
-INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_VET_ADMIN');
-INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_ADMIN');
+INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_OWNER_ADMIN');
+INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_VET_ADMIN');
+INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_ADMIN');
