@@ -20,12 +20,11 @@ public class RegisterService {
 
         UserDetails user = User.builder()
                 .username(userDto.getUsername())
-                .password(userDto.getPassword())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .roles(userDto.getRoles())
                 .build();
+
         usersManager.createUser(user);
         return user;
     }
-
 }
