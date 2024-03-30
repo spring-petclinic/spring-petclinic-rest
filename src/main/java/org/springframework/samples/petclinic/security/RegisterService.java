@@ -19,7 +19,7 @@ public class RegisterService {
     public UserDetails registerNewUserAccount(UserDtoSecurity userDto) {
 
         UserDetails user = User.builder()
-                .username(userDto.getUsername())
+                .username(userDto.getUsernamemail())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .roles(userDto.getRoles())
                 .build();

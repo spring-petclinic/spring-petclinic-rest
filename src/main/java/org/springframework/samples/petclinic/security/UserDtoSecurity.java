@@ -1,19 +1,21 @@
 package org.springframework.samples.petclinic.security;
 
+import java.util.Arrays;
+
 public class UserDtoSecurity {
 
-    private String username;
+    private String usernamemail;
 
     private String password;
 
-    private String roles;
+    private String[] roles;
 
-    public String getUsername() {
-        return username;
+    public String getUsernamemail() {
+        return usernamemail;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsernamemail(String username) {
+        this.usernamemail = username;
     }
 
     public String getPassword() {
@@ -24,12 +26,19 @@ public class UserDtoSecurity {
         this.password = password;
     }
 
-    public String getRoles() {
+    public String[] getRoles() {
         return roles;
     }
 
-    public void setRoles(String roles) {
+    public void setRoles(String[] roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDtoSecurity [username=" + usernamemail + ", password=" + password + ", roles="
+                + Arrays.toString(roles)
+                + "]";
     }
 
 }
