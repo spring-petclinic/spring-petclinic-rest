@@ -137,28 +137,29 @@ mvn clean install
 In its default configuration, Petclinic doesn't have authentication and authorization enabled.
 
 ### Basic Authentication
-In order to use the basic authentication functionality, turn in on from the application.properties file
+In order to use the basic authentication functionality, turn in on from the `application.properties` file
 ```properties
 petclinic.security.enable=true
 ```
 This will secure all APIs and in order to access them, basic authentication is required.
 Apart from authentication, APIs also require authorization. This is done via roles that a user can have.
 The existing roles are listed below with the corresponding permissions 
-* OWNER_ADMIN -> OwnerController, PetController, PetTypeController (getAllPetTypes and getPetType), VisitController
-* VET_ADMIN   -> PetTypeController, SpecialityController, VetController
-* ADMIN       -> UserController
+
+* `OWNER_ADMIN` -> `OwnerController`, `PetController`, `PetTypeController` (`getAllPetTypes` and `getPetType`), `VisitController`
+* `VET_ADMIN`   -> `PetTypeController`, `SpecialityController`, `VetController`
+* `ADMIN`       -> `UserController`
 
 There is an existing user with the username `admin` and password `admin` that has access to all APIs.
- In order to add a new user, please use the following API:
+ In order to add a new user, please make `POST /api/users` request with the following payload:
+
 ```json
-POST /api/users
 {
     "username": "secondAdmin",
     "password": "password",
     "enabled": true,
     "roles": [
     	{ "name" : "OWNER_ADMIN" }
-	]
+    ]
 }
 ```
 
