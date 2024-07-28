@@ -557,7 +557,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PetType'
+              $ref: '#/components/schemas/PetTypeFields'
         required: true
       responses:
         200:
@@ -2170,7 +2170,6 @@ components:
               format: int32
               minimum: 0
               example: 1
-              readOnly: true
           required:
             - id
     User:
