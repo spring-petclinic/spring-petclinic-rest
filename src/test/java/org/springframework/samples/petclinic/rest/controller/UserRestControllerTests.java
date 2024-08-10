@@ -63,7 +63,7 @@ class UserRestControllerTests {
     @WithMockUser(roles = "ADMIN")
     void testCreateUserError() throws Exception {
         User user = new User();
-        user.setUsername("username");
+        user.setUsername(""); // set empty username to force 400 error
         user.setPassword("password");
         user.setEnabled(true);
         ObjectMapper mapper = new ObjectMapper();

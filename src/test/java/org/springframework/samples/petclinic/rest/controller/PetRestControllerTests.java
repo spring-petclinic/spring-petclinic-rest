@@ -241,7 +241,8 @@ class PetRestControllerTests {
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         given(this.clinicService.findPetById(999)).willReturn(null);
         this.mockMvc.perform(post("/api/pets")
-                .content(new String()).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+                // set empty JSON to force 400 error
+                .content("{}").accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isBadRequest());
     }
 }
