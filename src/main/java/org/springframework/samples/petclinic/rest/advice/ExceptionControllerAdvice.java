@@ -16,8 +16,6 @@
 
 package org.springframework.samples.petclinic.rest.advice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -62,7 +60,7 @@ public class ExceptionControllerAdvice {
     /**
      * Handles all general exceptions by returning a 500 Internal Server Error status with error details.
      *
-     * @param  e The exception to be handled
+     * @param e The exception to be handled
      * @return A {@link ResponseEntity} containing the error information and a 500 Internal Server Error status
      */
     @ExceptionHandler(Exception.class)
@@ -105,6 +103,25 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<ErrorInfo> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         ErrorInfo errorInfo = new ErrorInfo(ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorInfo);
+    }
+
+    /**
+     * Handles exception thrown by Bean Validation on controller methods parameters
+     *
+     * @param ex The thrown exception
+     * @return an empty response entity
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public ResponseEntity<ErrorInfo> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        BindingErrorsResponse errors = new BindingErrorsResponse();
+        BindingResult bindingResult = ex.getBindingResult();
+        if (bindingResult.hasErrors()) {
+            errors.addAllErrors(bindingResult);
+            return ResponseEntity.badRequest().body(new ErrorInfo("MethodArgumentNotValidException", "Validation failed"));
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }
