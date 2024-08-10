@@ -64,7 +64,7 @@ class UserRestControllerTests {
     void testCreateUserError() throws Exception {
         User user = new User();
         user.setUsername("username");
-        user.setPassword("password");
+        user.setPassword(""); // empty password to force badRequest Response
         user.setEnabled(true);
         ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(userMapper.toUserDto(user));
