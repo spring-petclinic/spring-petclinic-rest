@@ -74,7 +74,7 @@ paths:
         required: true
       responses:
         201:
-          description: The pet owner was sucessfully added.
+          description: The pet owner was successfully added.
           content:
             application/json:
               schema:
@@ -314,7 +314,7 @@ paths:
         required: true
       responses:
         201:
-          description: The pet was sucessfully added.
+          description: The pet was successfully added.
           content:
             application/json:
               schema:
@@ -326,7 +326,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Pet not found.
+          description: Pet or Owner not found.
           content:
             application/json:
               schema:
@@ -489,7 +489,7 @@ paths:
         required: true
       responses:
         201:
-          description: The vet visit was sucessfully added.
+          description: The vet visit was successfully added.
           content:
             application/json:
               schema:
@@ -1849,7 +1849,7 @@ components:
           readOnly: true
         timestamp:
           title: Timestamp
-          description: The time the error occured.
+          description: The time the error occurred.
           type: string
           format: date-time
           example: '2019-08-21T21:41:46.158+0000'
@@ -1886,7 +1886,7 @@ components:
       properties:
         message:
           title: Message
-          description: The valiation message.
+          description: The validation message.
           type: string
           example: "[Path '/lastName'] Instance type (null) does not match any allowed primitive type (allowed: [\"string\"])"
           readOnly: true
