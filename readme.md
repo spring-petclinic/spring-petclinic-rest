@@ -53,52 +53,45 @@ Our issue tracker is available here: https://github.com/spring-petclinic/spring-
 ## Database configuration
 
 In its default configuration, Petclinic uses an in-memory database (HSQLDB) which gets populated at startup with data.
-Similar setups are provided for MySql and PostgreSQL in case a persistent database configuration is needed. However, to populate them with sample data, you should follow additional instructions from either `src/main/resources/db/mysql/petclinic_db_setup_mysql.txt` (for MySQL) or `src/main/resources/db/postgresql/petclinic_db_setup_postgresql.txt` (for PostgreSQL) file.
 
-To run Petclinic locally using persistent database, it is also needed to change profile defined in `application.properties` file.
+A similar setup is provided for MySQL and PostgreSQL if a persistent database configuration is needed.
 
+Note that whenever the database type changes, the app needs to run with a different profile: `spring.profiles.active=mysql` for MySQL or `spring.profiles.active=postgres` for PostgreSQL.
+See the [Spring Boot documentation](https://docs.spring.io/spring-boot/how-to/properties-and-configuration.html#howto.properties-and-configuration.set-active-spring-profiles) for more detail on how to set the active profile.
+You can also change profile defined in the `application.properties` file.
 For MySQL database, it is needed to change param `hsqldb` to `mysql` in the following line of `application.properies` file:
 ```properties
 spring.profiles.active=hsqldb,spring-data-jpa
 ```
-Before doing this, it would be good to check properties defined in `application-mysql.properties` file:
 
-```properties
-spring.datasource.url = jdbc:mysql://localhost:3306/petclinic?useUnicode=true
-spring.datasource.username=pc
-spring.datasource.password=petclinic
-spring.datasource.driver-class-name=com.mysql.jdbc.Driver
-spring.jpa.database=MYSQL
-spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
-spring.jpa.hibernate.ddl-auto=none
+You can start MySQL or PostgreSQL locally with whatever installer works for your OS or use docker:
+
+```bash
+docker run -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:8.4
 ```
 
-You may also start a MySql database with Docker:
+or
 
-```sh
-docker run --name mysql-petclinic -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:5.7.8
+```bash
+docker run -e POSTGRES_USER=petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 postgres:16.3
 ```
 
-For PostgeSQL database, it is needed to change param `hsqldb` to `postgresql` in the following line of `application.properties` file:
-```properties
-spring.profiles.active=hsqldb,spring-data-jpa
-```
-Before doing this, it would be good to check properties defined in `application-postgresql.properties` file:
+Further documentation is provided for [MySQL](https://github.com/spring-projects/spring-petclinic/blob/main/src/main/resources/db/mysql/petclinic_db_setup_mysql.txt)
+and [PostgreSQL](https://github.com/spring-projects/spring-petclinic/blob/main/src/main/resources/db/postgres/petclinic_db_setup_postgres.txt).
 
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/petclinic
-spring.datasource.username=postgres
-spring.datasource.password=petclinic
-spring.datasource.driver-class-name=org.postgresql.Driver
-spring.jpa.database=POSTGRESQL
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.hibernate.ddl-auto=none
-```
-You may also start a Postgres database with Docker:
+Instead of vanilla `docker` you can also use the provided `docker-compose.yml` file to start the database containers. Each one has a profile just like the Spring profile:
 
-```sh
-docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0
+```bash
+docker-compose --profile mysql up
 ```
+
+or
+
+```bash
+docker-compose --profile postgres up
+```
+
+
 ## API First Approach
 
 This API is built following some [API First approach principles](https://swagger.io/resources/articles/adopting-an-api-first-approach/).
