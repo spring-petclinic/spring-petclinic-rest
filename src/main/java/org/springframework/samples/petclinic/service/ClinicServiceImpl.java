@@ -24,10 +24,10 @@ import org.springframework.samples.petclinic.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Mostly used as a facade for all Petclinic controllers
@@ -77,14 +77,7 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public Visit findVisitById(int visitId) throws DataAccessException {
-        Visit visit = null;
-        try {
-            visit = visitRepository.findById(visitId);
-        } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
-            // just ignore not found exceptions for Jdbc/Jpa realization
-            return null;
-        }
-        return visit;
+        return findEntityById(() -> visitRepository.findById(visitId));
     }
 
     @Override
@@ -102,14 +95,7 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public Vet findVetById(int id) throws DataAccessException {
-        Vet vet = null;
-        try {
-            vet = vetRepository.findById(id);
-        } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
-            // just ignore not found exceptions for Jdbc/Jpa realization
-            return null;
-        }
-        return vet;
+        return findEntityById(() -> vetRepository.findById(id));
     }
 
     @Override
@@ -145,14 +131,7 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public PetType findPetTypeById(int petTypeId) {
-        PetType petType = null;
-        try {
-            petType = petTypeRepository.findById(petTypeId);
-        } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
-            // just ignore not found exceptions for Jdbc/Jpa realization
-            return null;
-        }
-        return petType;
+        return findEntityById(() -> petTypeRepository.findById(petTypeId));
     }
 
     @Override
@@ -176,14 +155,7 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public Specialty findSpecialtyById(int specialtyId) {
-        Specialty specialty = null;
-        try {
-            specialty = specialtyRepository.findById(specialtyId);
-        } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
-            // just ignore not found exceptions for Jdbc/Jpa realization
-            return null;
-        }
-        return specialty;
+        return findEntityById(() -> specialtyRepository.findById(specialtyId));
     }
 
     @Override
@@ -213,27 +185,13 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public Owner findOwnerById(int id) throws DataAccessException {
-        Owner owner = null;
-        try {
-            owner = ownerRepository.findById(id);
-        } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
-            // just ignore not found exceptions for Jdbc/Jpa realization
-            return null;
-        }
-        return owner;
+        return findEntityById(() -> ownerRepository.findById(id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Pet findPetById(int id) throws DataAccessException {
-        Pet pet = null;
-        try {
-            pet = petRepository.findById(id);
-        } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
-            // just ignore not found exceptions for Jdbc/Jpa realization
-            return null;
-        }
-        return pet;
+        return findEntityById(() -> petRepository.findById(id));
     }
 
     @Override
@@ -277,13 +235,16 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public List<Specialty> findSpecialtiesByNameIn(Set<String> names) {
-        List<Specialty> specialties = new ArrayList<>();
-        try {
-            specialties = specialtyRepository.findSpecialtiesByNameIn(names);
-        } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
-            // just ignore not found exceptions for Jdbc/Jpa realization
-            return specialties;
-        }
-        return specialties;
+        return findEntityById(() -> specialtyRepository.findSpecialtiesByNameIn(names));
     }
+
+    private <T> T findEntityById(Supplier<T> supplier) {
+        try {
+            return supplier.get();
+        } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
+            // Just ignore not found exceptions for Jdbc/Jpa realization
+            return null;
+        }
+    }
+
 }
