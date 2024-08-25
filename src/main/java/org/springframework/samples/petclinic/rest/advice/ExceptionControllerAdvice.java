@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import java.time.ZonedDateTime;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -53,9 +55,9 @@ public class ExceptionControllerAdvice {
      * @param className The name of the exception class
      * @param exMessage The message of the exception
      */
-    private record ErrorInfo(String className, String exMessage) {
+    private record ErrorInfo(String className, String exMessage, ZonedDateTime timestamp) {
         public ErrorInfo(Exception ex) {
-            this(ex.getClass().getName(), ex.getLocalizedMessage());
+            this(ex.getClass().getName(), ex.getLocalizedMessage(), ZonedDateTime.now());
         }
     }
 
@@ -101,7 +103,7 @@ public class ExceptionControllerAdvice {
         BindingResult bindingResult = ex.getBindingResult();
         if (bindingResult.hasErrors()) {
             errors.addAllErrors(bindingResult);
-            return ResponseEntity.badRequest().body(new ErrorInfo("MethodArgumentNotValidException", "Validation failed"));
+            return ResponseEntity.badRequest().body(new ErrorInfo("MethodArgumentNotValidException", "Validation failed", ZonedDateTime.now()));
         }
         return ResponseEntity.badRequest().build();
     }
