@@ -389,7 +389,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
         404:
-          description: Pet not found.
+          description: Owner or pet not found.
           content:
             application/json:
               schema:
