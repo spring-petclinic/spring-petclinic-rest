@@ -20,7 +20,7 @@
     <properties>
         <!-- Third-party libraries -->
         <spring-data-jdbc.version>1.2.1.RELEASE</spring-data-jdbc.version>
-        <springdoc-openapi-ui.version>2.0.2</springdoc-openapi-ui.version>
+        <springdoc-openapi-ui.version>2.6.0</springdoc-openapi-ui.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <mapstruct.version>1.4.1.Final</mapstruct.version>
         <jaxb-api.version>2.3.0</jaxb-api.version>
