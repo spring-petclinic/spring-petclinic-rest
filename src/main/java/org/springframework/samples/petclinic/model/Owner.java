@@ -133,6 +133,10 @@ public class Owner extends Person {
         return null;
     }
 
+    public Pet getPet(Integer petId) {
+        return getPetsInternal().stream().filter(p -> p.getId().equals(petId)).findFirst().orElse(null);
+    }
+
     @Override
     public String toString() {
         return new ToStringCreator(this)
