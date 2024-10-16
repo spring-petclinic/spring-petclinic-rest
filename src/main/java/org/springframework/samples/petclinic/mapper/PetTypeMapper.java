@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.samples.petclinic.rest.dto.PetTypeDto;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.rest.dto.PetTypeFieldsDto;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Map PetType & PetTypeDto using mapstruct
  */
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PetTypeMapper {
 
     PetType toPetType(PetTypeDto petTypeDto);
