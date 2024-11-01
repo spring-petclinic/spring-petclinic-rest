@@ -31,7 +31,7 @@
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
 
         <!-- Docker -->
-        <docker.jib-maven-plugin.version>3.4.3</docker.jib-maven-plugin.version>
+        <docker.jib-maven-plugin.version>3.4.4</docker.jib-maven-plugin.version>
         <docker.image.prefix>springcommunity</docker.image.prefix>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     </properties>
