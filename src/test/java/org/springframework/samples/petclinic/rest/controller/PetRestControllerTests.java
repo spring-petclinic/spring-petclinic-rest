@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Pet;
@@ -229,7 +230,8 @@ class PetRestControllerTests {
         given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
         this.mockMvc.perform(post("/api/pets")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk());
+            .andExpect(status().isCreated())
+            .andExpect(header().string(HttpHeaders.LOCATION, "/api/pets/3"));
     }
 
     @Test
