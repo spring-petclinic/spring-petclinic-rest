@@ -812,7 +812,7 @@ paths:
               $ref: '#/components/schemas/Pet'
         required: true
       responses:
-        200:
+        201:
           description: Pet type created successfully.
           headers:
             ETag:
