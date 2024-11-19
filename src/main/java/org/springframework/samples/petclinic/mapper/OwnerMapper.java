@@ -1,8 +1,10 @@
 package org.springframework.samples.petclinic.mapper;
 
 import org.mapstruct.Mapper;
-import org.springframework.samples.petclinic.rest.dto.OwnerDto;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.rest.dto.OwnerDto;
 import org.springframework.samples.petclinic.rest.dto.OwnerFieldsDto;
 
 import java.util.Collection;
@@ -18,6 +20,7 @@ public interface OwnerMapper {
 
     Owner toOwner(OwnerDto ownerDto);
 
+    @Mappings(value = {@Mapping(target = "id", ignore = true), @Mapping(target = "pets", ignore = true)})
     Owner toOwner(OwnerFieldsDto ownerDto);
 
     List<OwnerDto> toOwnerDtoCollection(Collection<Owner> ownerCollection);
