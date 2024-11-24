@@ -4,7 +4,7 @@ info:
   description: Spring PetClinic Sample Application.
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
   version: '1.0'
 servers:
   - url: http://localhost:9966/petclinic/api
@@ -1831,7 +1831,7 @@ components:
           title: Type
           description: Full URL that originated the error response.
           type: string
-          format: text
+          format: uri
           example: 'http://localhost:9966/petclinic/api/owner'
           readOnly: true
         title:
@@ -1844,6 +1844,10 @@ components:
           title: Status
           description: HTTP status code
           type: integer
+          format: int32
+          minimum: 400
+          maximum: 600
+          exclusiveMaximum: true
           example: 500
           readOnly: true
         detail:
