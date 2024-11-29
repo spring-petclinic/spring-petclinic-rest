@@ -1861,7 +1861,7 @@ components:
           description: The time the error occurred.
           type: string
           format: date-time
-          example: '2024-11-23T13:59:21.3820407'
+          example: '2024-11-23T13:59:21.3820407Z'
           readOnly: true
         schemaValidationErrors:
           title: Schema validation errors

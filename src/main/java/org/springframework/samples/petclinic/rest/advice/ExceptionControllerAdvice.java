@@ -29,7 +29,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URI;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Global Exception handler for REST controllers.
@@ -55,7 +57,7 @@ public class ExceptionControllerAdvice {
         detail.setType(URI.create(url.toString()));
         detail.setTitle(ex.getClass().getSimpleName());
         detail.setDetail(ex.getLocalizedMessage());
-        detail.setProperty("timestamp", LocalDateTime.now());
+        detail.setProperty("timestamp", Instant.now());
         return detail;
     }
 
