@@ -27,7 +27,7 @@
 
         <!-- Maven plugins -->
         <jacoco.version>0.8.12</jacoco.version>
-        <openapi-generator-maven-plugin.version>7.9.0</openapi-generator-maven-plugin.version>
+        <openapi-generator-maven-plugin.version>7.10.0</openapi-generator-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
 
         <!-- Docker -->
