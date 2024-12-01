@@ -4,7 +4,7 @@ info:
   description: Spring PetClinic Sample Application.
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
   version: '1.0'
 servers:
   - url: http://localhost:9966/petclinic/api
@@ -57,7 +57,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /owners:
     post:
       tags:
@@ -84,13 +84,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     get:
       tags:
         - owner
@@ -131,7 +131,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /owners/{ownerId}:
     get:
       tags:
@@ -173,19 +173,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Owner not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     put:
       tags:
         - owner
@@ -221,19 +221,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Owner not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
 
     delete:
       tags:
@@ -275,19 +275,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Owner  not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /owners/{ownerId}/pets:
     post:
       tags:
@@ -324,19 +324,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet or Owner not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /owners/{ownerId}/pets/{petId}:
     get:
       tags:
@@ -387,19 +387,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Owner or pet not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     put:
       tags:
         - pet
@@ -441,19 +441,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet not found for this owner.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /owners/{ownerId}/pets/{petId}/visits:
     post:
       tags:
@@ -499,19 +499,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet not found for this owner.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /pettypes:
     get:
       tags:
@@ -545,7 +545,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     post:
       tags:
         - pettypes
@@ -583,19 +583,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet Type not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /pettypes/{petTypeId}:
     get:
       tags:
@@ -637,19 +637,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet Type not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     put:
       tags:
         - pettypes
@@ -697,19 +697,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet Type not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     delete:
       tags:
         - pettypes
@@ -750,19 +750,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet type not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
 
   /pets:
     get:
@@ -797,7 +797,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     post:
       tags:
         - pet
@@ -835,19 +835,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /pets/{petId}:
     get:
       tags:
@@ -889,19 +889,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     put:
       tags:
         - pet
@@ -949,19 +949,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     delete:
       tags:
         - pet
@@ -1002,19 +1002,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Pet not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /visits:
     get:
       tags:
@@ -1048,7 +1048,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     post:
       tags:
         - visit
@@ -1086,19 +1086,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Visit not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /visits/{visitId}:
     get:
       tags:
@@ -1140,19 +1140,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Visit not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     put:
       tags:
         - visit
@@ -1200,19 +1200,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Visit not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     delete:
       tags:
         - visit
@@ -1253,19 +1253,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Visit not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /specialties:
     get:
       tags:
@@ -1299,7 +1299,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     post:
       tags:
         - specialty
@@ -1337,19 +1337,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Specialty not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /specialties/{specialtyId}:
     get:
       tags:
@@ -1391,19 +1391,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Specialty not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     put:
       tags:
         - specialty
@@ -1451,19 +1451,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Specialty not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     delete:
       tags:
         - specialty
@@ -1504,19 +1504,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Specialty not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /vets:
     get:
       tags:
@@ -1550,7 +1550,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
 
     post:
       tags:
@@ -1589,19 +1589,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Vet not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /vets/{vetId}:
     get:
       tags:
@@ -1643,19 +1643,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Vet not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     put:
       tags:
         - vet
@@ -1703,19 +1703,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Vet not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
     delete:
       tags:
         - vet
@@ -1756,19 +1756,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: Vet not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
   /users:
     post:
       tags:
@@ -1807,58 +1807,61 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         404:
           description: User not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestError'
+                $ref: '#/components/schemas/ProblemDetail'
 components:
   schemas:
-    RestError:
-      title: REST Error
+    ProblemDetail:
+      title: Problem Detail
       description: The schema for all error responses.
       type: object
       properties:
-        status:
-          title: Status
-          description: The HTTP status code.
-          type: integer
-          format: int32
-          example: 400
-          readOnly: true
-        error:
-          title: Error
-          description: The short error message.
-          type: string
-          example: Bad Request
-          readOnly: true
-        path:
-          title: Path
-          description: The path of the URL for this request.
+        type:
+          title: Type
+          description: Full URL that originated the error response.
           type: string
           format: uri
-          example: '/api/owners'
+          example: 'http://localhost:9966/petclinic/api/owner'
+          readOnly: true
+        title:
+          title: Title
+          description: The short error title.
+          type: string
+          example: NoResourceFoundException
+          readOnly: true
+        status:
+          title: Status
+          description: HTTP status code
+          type: integer
+          format: int32
+          minimum: 400
+          maximum: 600
+          exclusiveMaximum: true
+          example: 500
+          readOnly: true
+        detail:
+          title: Detail
+          description: The long error message.
+          type: string
+          example: 'No static resource api/owner.'
           readOnly: true
         timestamp:
           title: Timestamp
           description: The time the error occurred.
           type: string
           format: date-time
-          example: '2019-08-21T21:41:46.158+0000'
-          readOnly: true
-        message:
-          title: Message
-          description: The long error message.
-          type: string
-          example: 'Request failed schema validation'
+          example: '2024-11-23T13:59:21.3820407Z'
           readOnly: true
         schemaValidationErrors:
           title: Schema validation errors
@@ -1866,18 +1869,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationMessage'
-        trace:
-          title: Trace
-          description: The stacktrace for this error.
-          type: string
-          example: 'com.atlassian.oai.validator.springmvc.InvalidRequestException: ...'
-          readOnly: true
       required:
+        - type
+        - title
         - status
-        - error
-        - path
+        - detail
         - timestamp
-        - message
         - schemaValidationErrors
     ValidationMessage:
       title: Validation message

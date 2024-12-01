@@ -16,11 +16,10 @@
 
 package org.springframework.samples.petclinic.rest.advice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.rest.controller.BindingErrorsResponse;
 import org.springframework.validation.BindingResult;
@@ -28,16 +27,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import java.net.URI;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Global Exception handler for REST controllers.
  * <p>
- * This class handles exceptions thrown by REST controllers and returns
- * appropriate HTTP responses to the client.
+ * This class handles exceptions thrown by REST controllers and returns appropriate HTTP responses to the client.
  *
  * @author Vitaliy Fedoriv
  * @author Alexander Dudkin
@@ -46,64 +45,72 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class ExceptionControllerAdvice {
 
     /**
-     * Record for storing error information.
-     * <p>
-     * This record encapsulates the class name and message of the exception.
+     * Private method for constructing the {@link ProblemDetail} object passing the name and details of the exception
+     * class.
      *
-     * @param className The name of the exception class
-     * @param exMessage The message of the exception
+     * @param ex     Object referring to the thrown exception.
+     * @param status HTTP response status.
+     * @param url URL request.
      */
-    private record ErrorInfo(String className, String exMessage) {
-        public ErrorInfo(Exception ex) {
-            this(ex.getClass().getName(), ex.getLocalizedMessage());
-        }
+    private ProblemDetail detailBuild(Exception ex, HttpStatus status, StringBuffer url) {
+        ProblemDetail detail = ProblemDetail.forStatus(status);
+        detail.setType(URI.create(url.toString()));
+        detail.setTitle(ex.getClass().getSimpleName());
+        detail.setDetail(ex.getLocalizedMessage());
+        detail.setProperty("timestamp", Instant.now());
+        return detail;
     }
 
     /**
      * Handles all general exceptions by returning a 500 Internal Server Error status with error details.
      *
-     * @param  e The exception to be handled
+     * @param e The {@link Exception} to be handled
+     * @param request {@link HttpServletRequest} object referring to the current request.
      * @return A {@link ResponseEntity} containing the error information and a 500 Internal Server Error status
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorInfo> handleGeneralException(Exception e) {
-        ErrorInfo info = new ErrorInfo(e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(info);
+    @ResponseBody
+    public ResponseEntity<ProblemDetail> handleGeneralException(Exception e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ProblemDetail detail = this.detailBuild(e, status, request.getRequestURL());
+        return ResponseEntity.status(status).body(detail);
     }
 
     /**
-     * Handles {@link DataIntegrityViolationException} which typically indicates database constraint violations.
-     * This method returns a 404 Not Found status if an entity does not exist.
+     * Handles {@link DataIntegrityViolationException} which typically indicates database constraint violations. This
+     * method returns a 404 Not Found status if an entity does not exist.
      *
      * @param ex The {@link DataIntegrityViolationException} to be handled
+     * @param request {@link HttpServletRequest} object referring to the current request.
      * @return A {@link ResponseEntity} containing the error information and a 404 Not Found status
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ResponseEntity<ErrorInfo> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        ErrorInfo errorInfo = new ErrorInfo(ex);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorInfo);
+    public ResponseEntity<ProblemDetail> handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ProblemDetail detail = this.detailBuild(ex, status, request.getRequestURL());
+        return ResponseEntity.status(status).body(detail);
     }
 
     /**
      * Handles exception thrown by Bean Validation on controller methods parameters
      *
-     * @param ex      The thrown exception
-     *
-     * @return an empty response entity
+     * @param ex The {@link MethodArgumentNotValidException} to be handled
+     * @param request {@link HttpServletRequest} object referring to the current request.
+     * @return A {@link ResponseEntity} containing the error information and a 400 Bad Request status.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(BAD_REQUEST)
     @ResponseBody
-    public ResponseEntity<ErrorInfo> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         BindingErrorsResponse errors = new BindingErrorsResponse();
         BindingResult bindingResult = ex.getBindingResult();
         if (bindingResult.hasErrors()) {
             errors.addAllErrors(bindingResult);
-            return ResponseEntity.badRequest().body(new ErrorInfo("MethodArgumentNotValidException", "Validation failed"));
+            ProblemDetail detail = this.detailBuild(ex, status, request.getRequestURL());
+            return ResponseEntity.status(status).body(detail);
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.status(status).build();
     }
 
 }
