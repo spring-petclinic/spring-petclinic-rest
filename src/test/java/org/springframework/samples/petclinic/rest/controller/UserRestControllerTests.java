@@ -54,7 +54,7 @@ class UserRestControllerTests {
         user.addRole("OWNER_ADMIN");
         ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(userMapper.toUserDto(user));
-        this.mockMvc.perform(post("/api/users/")
+        this.mockMvc.perform(post("/api/users")
             .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isCreated());
     }
@@ -68,7 +68,7 @@ class UserRestControllerTests {
         user.setEnabled(true);
         ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(userMapper.toUserDto(user));
-        this.mockMvc.perform(post("/api/users/")
+        this.mockMvc.perform(post("/api/users")
             .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isBadRequest());
     }

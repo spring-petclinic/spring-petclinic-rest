@@ -56,8 +56,7 @@ public class VetRestController implements VetsApi {
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
     public ResponseEntity<List<VetDto>> listVets() {
-        List<VetDto> vets = new ArrayList<>();
-        vets.addAll(vetMapper.toVetDtos(this.clinicService.findAllVets()));
+        List<VetDto> vets = new ArrayList<>(vetMapper.toVetDtos(this.clinicService.findAllVets()));
         if (vets.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

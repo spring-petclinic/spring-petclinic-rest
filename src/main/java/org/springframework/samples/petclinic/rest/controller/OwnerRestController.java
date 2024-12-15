@@ -139,6 +139,7 @@ public class OwnerRestController implements OwnersApi {
         Owner owner = new Owner();
         owner.setId(ownerId);
         pet.setOwner(owner);
+        pet.getType().setName(null);
         this.clinicService.savePet(pet);
         PetDto petDto = petMapper.toPetDto(pet);
         headers.setLocation(UriComponentsBuilder.newInstance().path("/api/pets/{id}")
