@@ -5,7 +5,7 @@
 
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-petclinic-rest</artifactId>
-    <version>3.2.1</version>
+    <version>3.4.0</version>
 
     <description>REST version of the Spring Petclinic sample application</description>
     <url>https://spring-petclinic.github.io/</url>
@@ -13,14 +13,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.4.0</version>
         <relativePath/> <!-- lookup parent from Maven repository -->
     </parent>
 
     <properties>
         <!-- Third-party libraries -->
         <spring-data-jdbc.version>1.2.1.RELEASE</spring-data-jdbc.version>
-        <springdoc-openapi-ui.version>2.6.0</springdoc-openapi-ui.version>
+        <springdoc-openapi-ui.version>2.7.0</springdoc-openapi-ui.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>

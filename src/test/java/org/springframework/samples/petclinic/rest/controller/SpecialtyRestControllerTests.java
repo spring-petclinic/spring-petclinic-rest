@@ -21,16 +21,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.mapper.SpecialtyMapper;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.rest.advice.ExceptionControllerAdvice;
-import org.springframework.samples.petclinic.rest.controller.SpecialtyRestController;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -58,7 +57,7 @@ class SpecialtyRestControllerTests {
     @Autowired
     private SpecialtyMapper specialtyMapper;
 
-	@MockBean
+	@MockitoBean
     private ClinicService clinicService;
 
     private MockMvc mockMvc;
@@ -115,7 +114,7 @@ class SpecialtyRestControllerTests {
     void testGetAllSpecialtysSuccess() throws Exception {
     	specialties.remove(0);
     	given(this.clinicService.findAllSpecialties()).willReturn(specialties);
-        this.mockMvc.perform(get("/api/specialties/")
+        this.mockMvc.perform(get("/api/specialties")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -130,7 +129,7 @@ class SpecialtyRestControllerTests {
     void testGetAllSpecialtysNotFound() throws Exception {
     	specialties.clear();
     	given(this.clinicService.findAllSpecialties()).willReturn(specialties);
-        this.mockMvc.perform(get("/api/specialties/")
+        this.mockMvc.perform(get("/api/specialties")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -142,7 +141,7 @@ class SpecialtyRestControllerTests {
     	newSpecialty.setId(999);
     	ObjectMapper mapper = new ObjectMapper();
         String newSpecialtyAsJSON = mapper.writeValueAsString(specialtyMapper.toSpecialtyDto(newSpecialty));
-    	this.mockMvc.perform(post("/api/specialties/")
+    	this.mockMvc.perform(post("/api/specialties")
     		.content(newSpecialtyAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
     		.andExpect(status().isCreated());
     }
@@ -155,7 +154,7 @@ class SpecialtyRestControllerTests {
     	newSpecialty.setName(null);
     	ObjectMapper mapper = new ObjectMapper();
         String newSpecialtyAsJSON = mapper.writeValueAsString(specialtyMapper.toSpecialtyDto(newSpecialty));
-    	this.mockMvc.perform(post("/api/specialties/")
+    	this.mockMvc.perform(post("/api/specialties")
         		.content(newSpecialtyAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         		.andExpect(status().isBadRequest());
      }

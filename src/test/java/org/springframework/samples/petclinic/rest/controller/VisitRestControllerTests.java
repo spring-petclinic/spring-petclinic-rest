@@ -23,7 +23,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Owner;
@@ -35,6 +34,7 @@ import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -60,7 +60,7 @@ class VisitRestControllerTests {
     @Autowired
     private VisitRestController visitRestController;
 
-    @MockBean
+    @MockitoBean
     private ClinicService clinicService;
 
     @Autowired
@@ -140,7 +140,7 @@ class VisitRestControllerTests {
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetAllVisitsSuccess() throws Exception {
     	given(this.clinicService.findAllVisits()).willReturn(visits);
-        this.mockMvc.perform(get("/api/visits/")
+        this.mockMvc.perform(get("/api/visits")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -155,7 +155,7 @@ class VisitRestControllerTests {
     void testGetAllVisitsNotFound() throws Exception {
     	visits.clear();
     	given(this.clinicService.findAllVisits()).willReturn(visits);
-        this.mockMvc.perform(get("/api/visits/")
+        this.mockMvc.perform(get("/api/visits")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -170,7 +170,7 @@ class VisitRestControllerTests {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	System.out.println("newVisitAsJSON " + newVisitAsJSON);
-    	this.mockMvc.perform(post("/api/visits/")
+    	this.mockMvc.perform(post("/api/visits")
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
     		.andExpect(status().isCreated());
     }
@@ -184,7 +184,7 @@ class VisitRestControllerTests {
     	ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
-    	this.mockMvc.perform(post("/api/visits/")
+    	this.mockMvc.perform(post("/api/visits")
         		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         		.andExpect(status().isBadRequest());
      }

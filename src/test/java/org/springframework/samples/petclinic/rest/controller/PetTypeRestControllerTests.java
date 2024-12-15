@@ -21,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.mapper.PetTypeMapper;
 import org.springframework.samples.petclinic.model.PetType;
@@ -30,6 +29,7 @@ import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -58,7 +58,7 @@ class PetTypeRestControllerTests {
     @Autowired
     private PetTypeMapper petTypeMapper;
 
-    @MockBean
+    @MockitoBean
     private ClinicService clinicService;
 
     private MockMvc mockMvc;
@@ -132,7 +132,7 @@ class PetTypeRestControllerTests {
     	petTypes.remove(0);
     	petTypes.remove(1);
     	given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
-        this.mockMvc.perform(get("/api/pettypes/")
+        this.mockMvc.perform(get("/api/pettypes")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -148,7 +148,7 @@ class PetTypeRestControllerTests {
         petTypes.remove(0);
         petTypes.remove(1);
         given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
-        this.mockMvc.perform(get("/api/pettypes/")
+        this.mockMvc.perform(get("/api/pettypes")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -163,7 +163,7 @@ class PetTypeRestControllerTests {
     void testGetAllPetTypesNotFound() throws Exception {
     	petTypes.clear();
     	given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
-        this.mockMvc.perform(get("/api/pettypes/")
+        this.mockMvc.perform(get("/api/pettypes")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -175,7 +175,7 @@ class PetTypeRestControllerTests {
     	newPetType.setId(null);
     	ObjectMapper mapper = new ObjectMapper();
         String newPetTypeAsJSON = mapper.writeValueAsString(petTypeMapper.toPetTypeFieldsDto(newPetType));
-    	this.mockMvc.perform(post("/api/pettypes/")
+    	this.mockMvc.perform(post("/api/pettypes")
     		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
     		.andExpect(status().isCreated());
     }
@@ -188,7 +188,7 @@ class PetTypeRestControllerTests {
     	newPetType.setName(null);
     	ObjectMapper mapper = new ObjectMapper();
         String newPetTypeAsJSON = mapper.writeValueAsString(petTypeMapper.toPetTypeDto(newPetType));
-    	this.mockMvc.perform(post("/api/pettypes/")
+    	this.mockMvc.perform(post("/api/pettypes")
         		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         		.andExpect(status().isBadRequest());
      }

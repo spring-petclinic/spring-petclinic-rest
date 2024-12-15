@@ -403,6 +403,7 @@ abstract class AbstractClinicServiceTests {
     void shouldDeletePetType(){
     	PetType petType = this.clinicService.findPetTypeById(1);
         this.clinicService.deletePetType(petType);
+        clearCache();
         try {
         	petType = this.clinicService.findPetTypeById(1);
 		} catch (Exception e) {
@@ -499,4 +500,6 @@ abstract class AbstractClinicServiceTests {
                     && actual.getId().equals(expected.getId()))).isTrue();
         }
     }
+
+    void clearCache() {}
 }
