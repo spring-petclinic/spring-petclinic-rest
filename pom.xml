@@ -29,6 +29,9 @@
         <jacoco.version>0.8.12</jacoco.version>
         <openapi-generator-maven-plugin.version>7.10.0</openapi-generator-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
+        <doxia.version>2.0.0</doxia.version> <!-- TODO, remove this once project-info-reports itself upgrades -->
+        <maven.project.info.reports.plugin.version>3.8.0</maven.project.info.reports.plugin.version>
+
 
         <!-- Docker -->
         <docker.jib-maven-plugin.version>3.4.4</docker.jib-maven-plugin.version>
@@ -147,10 +150,11 @@
             <version>${mapstruct.version}</version>
         </dependency>
 
+        <!-- TODO remove once project-info-reports has updated -->
         <dependency>
             <groupId>org.apache.maven.doxia</groupId>
             <artifactId>doxia-core</artifactId>
-            <version>2.0.0</version> <!-- Use latest stable version -->
+            <version>${doxia.version}</version>
         </dependency>
 
         <dependency>
@@ -171,7 +175,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>${maven.project.info.reports.plugin.version}</version>
             </plugin>
         </plugins>
     </reporting>
