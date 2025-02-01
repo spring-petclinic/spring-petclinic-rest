@@ -27,7 +27,7 @@
 
         <!-- Maven plugins -->
         <jacoco.version>0.8.12</jacoco.version>
-        <openapi-generator-maven-plugin.version>7.10.0</openapi-generator-maven-plugin.version>
+        <openapi-generator-maven-plugin.version>7.11.0</openapi-generator-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <doxia.version>2.0.0</doxia.version> <!-- TODO, remove this once project-info-reports itself upgrades -->
         <maven.project.info.reports.plugin.version>3.8.0</maven.project.info.reports.plugin.version>
