@@ -13,33 +13,62 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.4.2</version>
         <relativePath/> <!-- lookup parent from Maven repository -->
     </parent>
 
     <properties>
+
         <!-- Third-party libraries -->
         <spring-data-jdbc.version>1.2.1.RELEASE</spring-data-jdbc.version>
-        <springdoc-openapi-ui.version>2.7.0</springdoc-openapi-ui.version>
+        <springdoc-openapi-ui.version>2.8.4</springdoc-openapi-ui.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
 
-        <!-- Maven plugins -->
+        <!-- Maven plugins nad supporting properties -->
         <jacoco.version>0.8.12</jacoco.version>
-        <openapi-generator-maven-plugin.version>7.10.0</openapi-generator-maven-plugin.version>
-        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
-        <doxia.version>2.0.0</doxia.version> <!-- TODO, remove this once project-info-reports itself upgrades -->
-        <maven.project.info.reports.plugin.version>3.8.0</maven.project.info.reports.plugin.version>
-
+        <maven.antrun-plugin.version>3.1.0</maven.antrun-plugin.version>
+        <maven.build-helper-plugin.version>3.6.0</maven.build-helper-plugin.version>
+        <maven.changes-plugin.version>3.0.0-M2</maven.changes-plugin.version>
+        <maven.checkstyle-plugin.version>3.6.0</maven.checkstyle-plugin.version>
+        <maven.clean-plugin.version>3.4.0</maven.clean-plugin.version>
+        <maven.compiler-plugin.version>3.13.0</maven.compiler-plugin.version>
+        <maven.compiler.release>11</maven.compiler.release>
+        <maven.dependency-plugin.version>3.8.1</maven.dependency-plugin.version>
+        <maven.deploy-plugin.version>3.1.3</maven.deploy-plugin.version>
+        <maven.directory-maven-plugin.version>1.0</maven.directory-maven-plugin.version>
+        <maven.enforcer-plugin.version>3.5.0</maven.enforcer-plugin.version>
+        <maven.exec-plugin.version>3.5.0</maven.exec-plugin.version>
+        <maven.install-plugin.version>3.1.3</maven.install-plugin.version>
+        <maven.jacoco-plugin.version>0.8.12</maven.jacoco-plugin.version>
+        <maven.jar-plugin.version>3.4.2</maven.jar-plugin.version>
+        <maven.javadoc-plugin.version>3.11.2</maven.javadoc-plugin.version>
+        <maven.jxr-plugin.version>3.6.0</maven.jxr-plugin.version>
+        <maven.license-plugin.version>2.5.0</maven.license-plugin.version>
+        <!-- TODO Upgrade to 3.26.0+ once we move to PMD 7.8.0+ -->
+        <maven.openapi-generator-plugin.version>7.11.0</maven.openapi-generator-plugin.version>
+        <maven.pmd-plugin.version>3.21.2</maven.pmd-plugin.version>
+        <maven.project-info-reports-plugin.version>3.8.0</maven.project-info-reports-plugin.version>
+        <maven.rat-plugin.version>0.16.1</maven.rat-plugin.version>
+        <maven.release-plugin.version>3.1.1</maven.release-plugin.version>
+        <maven.resources-plugin.version>3.3.1</maven.resources-plugin.version>
+        <maven.site-plugin.version>3.21.0</maven.site-plugin.version>
+        <maven.source-plugin.version>3.3.1</maven.source-plugin.version>
+        <maven.spotbugs-plugin.version>4.8.6.6</maven.spotbugs-plugin.version>
+        <maven.surefire-plugin.version>3.5.2</maven.surefire-plugin.version>
+        <maven.version>3.9.9</maven.version>
+        <maven.versions-plugin.version>2.18.0</maven.versions-plugin.version>
+        <mutability.detector.version>0.9.1</mutability.detector.version>
 
         <!-- Docker -->
         <docker.jib-maven-plugin.version>3.4.4</docker.jib-maven-plugin.version>
         <docker.image.prefix>springcommunity</docker.image.prefix>
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+
     </properties>
 
     <dependencies>
+        <!-- Spring Boot Dependencies all inherit from the spring-boot-starter-parent -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -72,6 +101,8 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
+        <!-- Data stores and supporting libs -->
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
@@ -87,7 +118,6 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jdbc-core</artifactId>
@@ -100,6 +130,7 @@
             </exclusions>
         </dependency>
 
+        <!-- Test libs -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -110,7 +141,13 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
 
+        <!-- JSON / XML / Serialization libs -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -129,7 +166,6 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc-openapi-ui.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
@@ -149,20 +185,6 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
-
-        <!-- TODO remove once project-info-reports has updated -->
-        <dependency>
-            <groupId>org.apache.maven.doxia</groupId>
-            <artifactId>doxia-core</artifactId>
-            <version>${doxia.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -173,9 +195,124 @@
     <reporting>
         <plugins>
             <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${maven.spotbugs-plugin.version}</version>
+                <configuration>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.mutabilitydetector</groupId>
+                            <artifactId>MutabilityDetector4FindBugs</artifactId>
+                            <version>${mutability.detector.version}</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <version>${maven.changes-plugin.version}</version>
+                <!-- TODO This configuration is only if we want to produce GitHub published reports -->
+                <configuration>
+                    <!-- This value should match what is in your settings.xml for the server -->
+                    <githubAPIServerId>github</githubAPIServerId>
+                    <includeOpenIssues>false</includeOpenIssues>
+                    <onlyCurrentVersion>false</onlyCurrentVersion>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>changes</report>
+                            <!-- TODO Only if reporting off GitHub directly -->
+                            <!-- <report>github-changes</report> -->
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyle-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>checkstyle</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>${maven.jxr-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven.pmd-plugin.version}</version>
+                <configuration>
+                    <targetJdk>${maven.compiler.release}</targetJdk>
+                    <rulesets>
+                        <!-- A rule set, that comes bundled with PMD -->
+                        <ruleset>pmd-ruleset.xml</ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>${maven.project.info.reports.plugin.version}</version>
+                <version>${maven.project-info-reports-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>${maven.rat-plugin.version}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${maven.license-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependency-updates-report</report>
+                            <report>plugin-updates-report</report>
+                            <report>property-updates-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.hjug.refactorfirst.plugin</groupId>
+                <artifactId>refactor-first-maven-plugin</artifactId>
+                <version>0.6.2</version>
+                <!-- optional -->
+                <configuration>
+                    <showDetails>true</showDetails>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <id>report</id>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
         </plugins>
     </reporting>
@@ -270,12 +407,11 @@
                 </configuration>
             </plugin>
 
-
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <!-- RELEASE_VERSION -->
-                <version>${openapi-generator-maven-plugin.version}</version>
+                <version>${maven.openapi-generator-plugin.version}</version>
                 <!-- /RELEASE_VERSION -->
                 <executions>
                     <execution>
@@ -317,7 +453,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>${build-helper-maven-plugin.version}</version>
+                <version>${maven.build-helper-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>add-source</id>
@@ -377,7 +513,25 @@
                             </rules>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>${maven.version}</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${maven.site-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
