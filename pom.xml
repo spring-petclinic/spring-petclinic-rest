@@ -27,7 +27,6 @@
         <jaxb-api.version>2.3.1</jaxb-api.version>
 
         <!-- Maven plugins and supporting properties -->
-        <jacoco.version>0.8.12</jacoco.version>
         <maven.build-helper-plugin.version>3.6.0</maven.build-helper-plugin.version>
         <maven.checkstyle-plugin.version>3.6.0</maven.checkstyle-plugin.version>
         <maven.clean-plugin.version>3.4.0</maven.clean-plugin.version>
@@ -282,7 +281,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
+                <version>${maven.jacoco-plugin.version}</version>
                 <configuration>
                     <excludes>
                         <!-- Generated code -->
