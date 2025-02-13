@@ -1,4 +1,4 @@
-# REST version of Spring PetClinic Sample Application (spring-framework-petclinic extend ) 
+# REST version of Spring PetClinic Sample Application (spring-framework-petclinic extension ) 
 
 [![Java Build Status](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/maven-build.yml/badge.svg)](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/maven-build.yml)
 [![Docker Build Status](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/docker-build.yml/badge.svg)](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/docker-build.yml)
@@ -92,20 +92,6 @@ API documentation (OAS 3.1) is accessible at: [http://localhost:9966/petclinic/v
 | **POST** | `/api/users` | Create a new user |
 
 
-
-### **Security & Authentication**
-
-- By default, authentication is **disabled**.
-- To enable **Basic Authentication**, set in `application.properties`:
-  ```properties
-  petclinic.security.enable=true
-  ```
-- When authentication is enabled, use credentials:
-   
-   **Username:** `admin`  
-   **Password:** `admin`
-   
-
 ## Screenshot of the Angular client
 
 See its repository here: https://github.com/spring-petclinic/spring-petclinic-angular
@@ -125,7 +111,7 @@ A similar setup is provided for MySQL and PostgreSQL if a persistent database co
 Note that whenever the database type changes, the app needs to run with a different profile: `spring.profiles.active=mysql` for MySQL or `spring.profiles.active=postgres` for PostgreSQL.
 See the [Spring Boot documentation](https://docs.spring.io/spring-boot/how-to/properties-and-configuration.html#howto.properties-and-configuration.set-active-spring-profiles) for more detail on how to set the active profile.
 You can also change profile defined in the `application.properties` file.
-For MySQL database, it is needed to change param `hsqldb` to `mysql` in the following line of `application.properies` file:
+For MySQL database, it is needed to change param `hsqldb` to `mysql` in the following line of `application.properties` file:
 ```properties
 spring.profiles.active=hsqldb,spring-data-jpa
 ```
@@ -260,7 +246,7 @@ File -> Import -> Maven -> Existing Maven project
 
 ## Publishing a Docker image
 
-This application uses [Google Jib]([https://github.com/GoogleContainerTools/jib) to build an optimized Docker image into the [Docker Hub](https://cloud.docker.com/u/springcommunity/repository/docker/springcommunity/spring-petclinic-rest/) repository.
+This application uses [Google Jib](https://github.com/GoogleContainerTools/jib) to build an optimized Docker image into the [Docker Hub](https://cloud.docker.com/u/springcommunity/repository/docker/springcommunity/spring-petclinic-rest/) repository.
 The [pom.xml](pom.xml) has been configured to publish the image with a the `springcommunity/spring-petclinic-rest`image name.
 
 Command line to run:
