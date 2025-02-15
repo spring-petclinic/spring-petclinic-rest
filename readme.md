@@ -1,4 +1,4 @@
-# REST version of Spring PetClinic Sample Application (spring-framework-petclinic extend ) 
+# REST version of Spring PetClinic Sample Application (spring-framework-petclinic extension ) 
 
 [![Java Build Status](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/maven-build.yml/badge.svg)](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/maven-build.yml)
 [![Docker Build Status](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/docker-build.yml/badge.svg)](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/docker-build.yml)
@@ -35,12 +35,62 @@ You can then access petclinic here: [http://localhost:9966/petclinic/](http://lo
 There is an actuator health check route as well:
 * [http://localhost:9966/petclinic/actuator/health](http://localhost:9966/petclinic/actuator/health)
 
-## OpenAPI REST API documentation
+## 📖 OpenAPI REST API Documentation
+This project provides a RESTful API for managing a veterinary clinic's **owners, pets, veterinarians, visits, and specialties**.
 
-You can reach the Swagger UI with this URL (after application start):
-[http://localhost:9966/petclinic/](http://localhost:9966/petclinic/swagger-ui.html).
+### **Access Swagger UI**
+Swagger UI is available at: [http://localhost:9966/petclinic/swagger-ui.html](http://localhost:9966/petclinic/swagger-ui.html).
 
-You then can get the Open API description reaching this URL: [localhost:9966/petclinic/v3/api-docs](localhost:9966/petclinic/v3/api-docs).
+API documentation (OAS 3.1) is accessible at: [http://localhost:9966/petclinic/v3/api-docs](http://localhost:9966/petclinic/v3/api-docs).
+
+
+## 📌 API Endpoints Overview
+
+| **Method** | **Endpoint** | **Description** |
+|-----------|------------|----------------|
+| **Owners** |  |  |
+| **GET** | `/api/owners` | Retrieve all pet owners |
+| **GET** | `/api/owners/{ownerId}` | Get a pet owner by ID |
+| **POST** | `/api/owners` | Add a new pet owner |
+| **PUT** | `/api/owners/{ownerId}` | Update an owner’s details |
+| **DELETE** | `/api/owners/{ownerId}` | Delete an owner |
+| **GET** | `/api/owners/{ownerId}/pets/{petId}` | Get a pet by ID (owner’s pet) |
+| **PUT** | `/api/owners/{ownerId}/pets/{petId}` | Update pet details (owner’s pet) |
+| **POST** | `/api/owners/{ownerId}/pets` | Add a new pet to an owner |
+| **POST** | `/api/owners/{ownerId}/pets/{petId}/visits` | Add a vet visit for a pet |
+| **Pets** |  |  |
+| **GET** | `/api/pets` | Retrieve all pets |
+| **GET** | `/api/pets/{petId}` | Get a pet by ID |
+| **POST** | `/api/pets` | Add a new pet |
+| **PUT** | `/api/pets/{petId}` | Update pet details |
+| **DELETE** | `/api/pets/{petId}` | Delete a pet |
+| **Vets** |  |  |
+| **GET** | `/api/vets` | Retrieve all veterinarians |
+| **GET** | `/api/vets/{vetId}` | Get a vet by ID |
+| **POST** | `/api/vets` | Add a new vet |
+| **PUT** | `/api/vets/{vetId}` | Update vet details |
+| **DELETE** | `/api/vets/{vetId}` | Delete a vet |
+| **Pet Types** |  |  |
+| **GET** | `/api/pettypes` | Retrieve all pet types |
+| **GET** | `/api/pettypes/{petTypeId}` | Get a pet type by ID |
+| **POST** | `/api/pettypes` | Add a new pet type |
+| **PUT** | `/api/pettypes/{petTypeId}` | Update pet type details |
+| **DELETE** | `/api/pettypes/{petTypeId}` | Delete a pet type |
+| **Specialties** |  |  |
+| **GET** | `/api/specialties` | Retrieve all vet specialties |
+| **GET** | `/api/specialties/{specialtyId}` | Get a specialty by ID |
+| **POST** | `/api/specialties` | Add a new specialty |
+| **PUT** | `/api/specialties/{specialtyId}` | Update a specialty |
+| **DELETE** | `/api/specialties/{specialtyId}` | Delete a specialty |
+| **Visits** |  |  |
+| **GET** | `/api/visits` | Retrieve all vet visits |
+| **GET** | `/api/visits/{visitId}` | Get a visit by ID |
+| **POST** | `/api/visits` | Add a new visit |
+| **PUT** | `/api/visits/{visitId}` | Update a visit |
+| **DELETE** | `/api/visits/{visitId}` | Delete a visit |
+| **Users** |  |  |
+| **POST** | `/api/users` | Create a new user |
+
 
 ## Screenshot of the Angular client
 
@@ -61,7 +111,7 @@ A similar setup is provided for MySQL and PostgreSQL if a persistent database co
 Note that whenever the database type changes, the app needs to run with a different profile: `spring.profiles.active=mysql` for MySQL or `spring.profiles.active=postgres` for PostgreSQL.
 See the [Spring Boot documentation](https://docs.spring.io/spring-boot/how-to/properties-and-configuration.html#howto.properties-and-configuration.set-active-spring-profiles) for more detail on how to set the active profile.
 You can also change profile defined in the `application.properties` file.
-For MySQL database, it is needed to change param `hsqldb` to `mysql` in the following line of `application.properies` file:
+For MySQL database, it is needed to change param `hsqldb` to `mysql` in the following line of `application.properties` file:
 ```properties
 spring.profiles.active=hsqldb,spring-data-jpa
 ```
@@ -196,7 +246,7 @@ File -> Import -> Maven -> Existing Maven project
 
 ## Publishing a Docker image
 
-This application uses [Google Jib]([https://github.com/GoogleContainerTools/jib) to build an optimized Docker image into the [Docker Hub](https://cloud.docker.com/u/springcommunity/repository/docker/springcommunity/spring-petclinic-rest/) repository.
+This application uses [Google Jib](https://github.com/GoogleContainerTools/jib) to build an optimized Docker image into the [Docker Hub](https://cloud.docker.com/u/springcommunity/repository/docker/springcommunity/spring-petclinic-rest/) repository.
 The [pom.xml](pom.xml) has been configured to publish the image with a the `springcommunity/spring-petclinic-rest`image name.
 
 Command line to run:
