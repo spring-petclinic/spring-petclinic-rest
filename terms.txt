@@ -1,0 +1,24 @@
+Terms of Service
+
+1. Educational Use Only
+
+This API is provided solely for demonstration and learning purposes. It should not be used in
+production environments.
+
+2. No Guarantee of Availability or Support
+
+This is an open-source project maintained by the Spring Petclinic community, as such, no service
+availability or support guarantee is provided.
+
+3. No Liability
+
+The project maintainers and contributors disclaim any liability for the use of this code in critical
+or commercial environments.
+
+4. License (Apache 2.0)
+
+The API and its source code are distributed under the Apache 2.0 license. You are free to use,
+modify, and redistribute it, provided that you comply with the terms of the license.
+
+
+Note: The endpoints and structure of this API are subject to change at any time without notice.

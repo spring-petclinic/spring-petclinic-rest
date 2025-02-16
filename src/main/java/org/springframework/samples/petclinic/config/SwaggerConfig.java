@@ -43,7 +43,7 @@ public class SwaggerConfig {
             .info(new Info()
                 .title("REST Petclinic backend API documentation")
                 .version("1.0")
-                .termsOfService("https://github.com/spring-petclinic/spring-petclinic-rest/blob/master/readme.md")
+                .termsOfService("https://github.com/spring-petclinic/spring-petclinic-rest/blob/master/terms.txt")
                 .description(
                     "This is the REST API documentation of the Spring Petclinic backend. " +
                         "If authentication is enabled, use admin/admin when calling the APIs")
