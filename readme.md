@@ -101,48 +101,90 @@ See its repository here: https://github.com/spring-petclinic/spring-petclinic-an
 ## In case you find a bug/suggested improvement for Spring Petclinic
 Our issue tracker is available here: https://github.com/spring-petclinic/spring-petclinic-rest/issues
 
-
 ## Database configuration
 
-In its default configuration, Petclinic uses an in-memory database (HSQLDB) which gets populated at startup with data.
+By default, Petclinic uses an **in-memory H2 database**, which is automatically populated with sample data at startup.
 
-A similar setup is provided for MySQL and PostgreSQL if a persistent database configuration is needed.
+### **Supported Databases**
 
-Note that whenever the database type changes, the app needs to run with a different profile: `spring.profiles.active=mysql` for MySQL or `spring.profiles.active=postgres` for PostgreSQL.
-See the [Spring Boot documentation](https://docs.spring.io/spring-boot/how-to/properties-and-configuration.html#howto.properties-and-configuration.set-active-spring-profiles) for more detail on how to set the active profile.
-You can also change profile defined in the `application.properties` file.
-For MySQL database, it is needed to change param `hsqldb` to `mysql` in the following line of `application.properties` file:
+Petclinic supports the following databases:
+
+- **H2 (Default, In-Memory)**
+- **HSQLDB (Alternative In-Memory Option)**
+- **MySQL (Persistent)**
+- **PostgreSQL (Persistent)**
+
+### **Switching Databases**
+
+You can change the database by updating the `spring.profiles.active` property in `application.properties`:
+
+| Database  | Profile Configuration |
+|-----------|----------------------|
+| **H2** (Default)  | `spring.profiles.active=h2,spring-data-jpa` |
+| **HSQLDB** (Alternative In-Memory) | `spring.profiles.active=hsqldb,spring-data-jpa` |
+| **MySQL** (Persistent) | `spring.profiles.active=mysql,spring-data-jpa` |
+| **PostgreSQL** (Persistent) | `spring.profiles.active=postgres,spring-data-jpa` |
+
+For more details, see the [Spring Boot documentation](https://docs.spring.io/spring-boot/how-to/properties-and-configuration.html#howto.properties-and-configuration.set-active-spring-profiles).
+
+### **Using H2 (Default)**
+- No additional setup is required.
+- The database schema and sample data are loaded automatically from `src/main/resources/db/h2/`.
+- You can access the **H2 Console** to inspect the database.
+
+### **Accessing the H2 Console**
+1. **Run the application:**
+   ```sh
+   mvn spring-boot:run
+   ```
+2. **Open H2 Console in your browser:**
+   - **URL**: http://localhost:9966/h2-console
+   - **JDBC URL**: `jdbc:h2:mem:petclinic`
+   - **Username**: `sa`
+   - **Password**: _(leave blank)_
+
+### **Using HSQLDB**
+- HSQLDB works similarly to H2 as an **in-memory database**.
+- No additional setup is required—schema and sample data are loaded automatically from `src/main/resources/db/hsqldb/`.
+- Swtich to **HSQLDB** by modifying `application.properties`:
+
+    ```properties
+    spring.profiles.active=hsqldb,spring-data-jpa
+    ```
+
+### **Using MySQL**
+Modify `application.properties`:
+
 ```properties
-spring.profiles.active=hsqldb,spring-data-jpa
+spring.profiles.active=mysql,spring-data-jpa
 ```
-
-You can start MySQL or PostgreSQL locally with whatever installer works for your OS or use docker:
-
+Start a MySQL database using Docker:
 ```bash
 docker run -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:8.4
 ```
 
-or
+### **Using PostgreSQL**
+Modify application.properties:
 
+```properties
+spring.profiles.active=postgres,spring-data-jpa
+```
+Start a PostgreSQL database using Docker:
 ```bash
 docker run -e POSTGRES_USER=petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 postgres:16.3
 ```
 
-Further documentation is provided for [MySQL](https://github.com/spring-projects/spring-petclinic/blob/main/src/main/resources/db/mysql/petclinic_db_setup_mysql.txt)
-and [PostgreSQL](https://github.com/spring-projects/spring-petclinic/blob/main/src/main/resources/db/postgres/petclinic_db_setup_postgres.txt).
+Instead of manually running containers, you can also use `docker-compose.yml`:
 
-Instead of vanilla `docker` you can also use the provided `docker-compose.yml` file to start the database containers. Each one has a profile just like the Spring profile:
-
-```bash
+```sh
 docker-compose --profile mysql up
-```
-
-or
-
-```bash
 docker-compose --profile postgres up
 ```
 
+### **Further Documentation**
+- [HSQLDB](http://hsqldb.org/doc/2.0/guide/index.html)
+- [MySQL](https://github.com/spring-projects/spring-petclinic/blob/main/src/main/resources/db/mysql/petclinic_db_setup_mysql.txt)
+- [PostgreSQL](https://github.com/spring-projects/spring-petclinic/blob/main/src/main/resources/db/postgres/petclinic_db_setup_postgres.txt)
 
 ## API First Approach
 
@@ -231,7 +273,6 @@ git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
 File -> Import -> Maven -> Existing Maven project
 ```
 
-
 ## Looking for something in particular?
 
 | Layer | Source |
@@ -242,7 +283,6 @@ File -> Import -> Maven -> Existing Maven project
 | JPA | [jpa folder](src/main/java/org/springframework/samples/petclinic/repository/jpa) |
 | Spring Data JPA | [springdatajpa folder](src/main/java/org/springframework/samples/petclinic/repository/springdatajpa) |
 | Tests | [AbstractClinicServiceTests.java](src/test/java/org/springframework/samples/petclinic/service/clinicService/AbstractClinicServiceTests.java) |
-
 
 ## Publishing a Docker image
 
@@ -264,12 +304,8 @@ hosted in a special GitHub org: [spring-petclinic](https://github.com/spring-pet
 If you have a special interest in a different technology stack
 that could be used to implement the Pet Clinic then please join the community there.
 
-
 # Contributing
 
 The [issue tracker](https://github.com/spring-petclinic/spring-petclinic-rest/issues) is the preferred channel for bug reports, features requests and submitting pull requests.
 
 For pull requests, editor preferences are available in the [editor config](https://github.com/spring-petclinic/spring-petclinic-rest/blob/master/.editorconfig) for easy use in common text editors. Read more and download plugins at <http://editorconfig.org>.
-
-
-
