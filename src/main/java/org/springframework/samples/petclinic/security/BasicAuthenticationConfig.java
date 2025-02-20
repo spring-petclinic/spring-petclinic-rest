@@ -9,8 +9,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -27,12 +27,11 @@ public class BasicAuthenticationConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        var encoders = Map.of("noop", NoOpPasswordEncoder.getInstance());
-        var passwordEncoder = new DelegatingPasswordEncoder("noop", encoders);
-        passwordEncoder.setDefaultPasswordEncoderForMatches(NoOpPasswordEncoder.getInstance());
+        Map<String, PasswordEncoder> encoders = Map.of("bcrypt", new BCryptPasswordEncoder());
+        var passwordEncoder = new DelegatingPasswordEncoder("bcrypt", encoders);
+        passwordEncoder.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder());
         return passwordEncoder;
     }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // @formatter:off
@@ -40,7 +39,7 @@ public class BasicAuthenticationConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authz) -> authz
                 .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults());
+            .httpBasic(Customizer.withDefaults());
         // @formatter:on
         return http.build();
     }
@@ -50,9 +49,10 @@ public class BasicAuthenticationConfig {
         // @formatter:off
         auth
             .jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("select username,password,enabled from users where username=?")
-                .authoritiesByUsernameQuery("select username,role from roles where username=?");
+            .dataSource(dataSource)
+            .passwordEncoder(passwordEncoder())
+            .usersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username=?")
+            .authoritiesByUsernameQuery("SELECT username, role FROM roles WHERE username=?");
         // @formatter:on
     }
 }
