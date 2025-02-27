@@ -294,6 +294,17 @@ Command line to run:
 mvn compile jib:build -X -DjibSerialize=true -Djib.to.auth.username=xxx -Djib.to.auth.password=xxxxx
 ```
 
+## Performance Testing
+
+To benchmark the scalability of the PetClinic REST API, a JMeter test plan is available.
+
+- See the [JMeter Performance Test](src/test/jmeter/README.md) for details.
+- Run the test using:
+  ```sh
+  jmeter -n -t src/test/jmeter/petclinic-jmeter-crud-benchmark.jmx \
+  -Jthreads=100 -Jduration=600 -Jops=2000 -Jramp_time=120 \
+  -l results/petclinic-test-results.jtl
+  
 ## Interesting Spring Petclinic forks
 
 The Spring Petclinic master branch in the main [spring-projects](https://github.com/spring-projects/spring-petclinic)
