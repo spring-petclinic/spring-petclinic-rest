@@ -11,3 +11,17 @@ services:
   petclinicbe:
     image: ffijuljani1/petclinicbe
     container_name: petclinicbe
+    ports:
+      - "9966:9966"
+    depends_on:
+      - postgres
+  petclinicfe:
+    image: ffijuljani1/petclinicfe
+    container_name: petclinicfe
+    ports:
+      - "4200:80"
+
+networks:
+  petclinic-network:
+    name: petclinic-network
+    driver: bridge
