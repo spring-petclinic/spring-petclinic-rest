@@ -19,11 +19,15 @@ services:
       - "9966:9966"
     depends_on:
       - postgres
+    networks:
+      - petclinic-network
   petclinicfe:
     image: ffijuljani1/petclinicfe
     container_name: petclinicfe
     ports:
       - "4200:80"
+    networks:
+      - petclinic-network
 
 networks:
   petclinic-network:
