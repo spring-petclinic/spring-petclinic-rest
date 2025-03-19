@@ -8,6 +8,10 @@ services:
       - "5432:5432"
     networks:
       - petclinic-network
+    environment:
+      POSTGRES_USER: petclinic
+      POSTGRES_PASSWORD: petclinic
+      POSTGRES_DB: petclinic
   petclinicbe:
     image: ffijuljani1/petclinicbe
     container_name: petclinicbe
