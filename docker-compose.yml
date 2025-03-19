@@ -3,7 +3,7 @@ services:
     image: ffijuljani1/postgres
     container_name: postgres
     volumes:
-      - ~/postgres-data:/var/lib/postgreql/data
+      - ~/postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
