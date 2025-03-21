@@ -13,7 +13,7 @@ services:
       POSTGRES_PASSWORD: petclinic
       POSTGRES_DB: petclinic
   petclinicbe:
-    image: ffijuljani1/petclinicbe
+    image: ffijuljani1/petclinicbe:env-var
     container_name: petclinicbe
     ports:
       - "9966:9966"
@@ -21,13 +21,20 @@ services:
       - postgres
     networks:
       - petclinic-network
+    environment:
+      POSTGRES_URL: jdbc:postgresql://postgres:5432/petclinic
+      POSTGRES_USER: petclinic
+      POSTGRES_PASS: petclinic
   petclinicfe:
-    image: ffijuljani1/petclinicfe
+    image: ffijuljani1/petclinicfe:env-var
     container_name: petclinicfe
     ports:
       - "4200:80"
     networks:
       - petclinic-network
+    environment:
+      REST_API_URL: /petclinic/api/
+      BACKEND_URL: http://petclinicbe:9966
 
 networks:
   petclinic-network:
