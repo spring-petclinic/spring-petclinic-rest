@@ -1,0 +1,137 @@
+name: "\U0001F41B Bug Report"
+description: "If something isn't working as expected \U0001F914"
+labels: ["needs triage"]
+type: bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## :warning: Please verify before reporting
+
+        If you are not sure that your issue is a bug, you could:
+
+        - Check the [Spring Boot Common Issues](https://docs.spring.io/spring-boot/docs/current/reference/html/common.html)
+        - Ask in [Spring Community Slack](https://spring.io/slack)
+        - Use [StackOverflow with 'spring-boot' tag](https://stackoverflow.com/questions/tagged/spring-boot)
+        - For quick questions, check [Spring's Twitter](https://twitter.com/springcentral)
+
+        **NOTE:** Please ensure your issue is specific to Spring PetClinic REST
+
+        ---
+
+  - type: checkboxes
+    attributes:
+      label: "Existing Issue Check"
+      description: "Search [issues](../issues?q=is%3Aissue) first"
+      options:
+        - label: "I have searched existing issues"
+          required: true
+
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: "Current Behavior"
+      description: "Describe what's happening (include error messages/logs if applicable)"
+
+  - type: input
+    validations:
+      required: true
+    attributes:
+      label: "Reproduction Steps"
+      placeholder: "https://github.com/..."
+      description: |
+        A link to a minimal reproducible example (GitHub repo/Spring Initializr config)
+        
+        > [!WARNING]
+        > Issues without reproduction may be closed
+
+  - type: textarea
+    attributes:
+      label: "Detailed Steps"
+      description: "Step-by-step explanation (if not covered in reproduction link)"
+      placeholder: |
+        1. Clone repository
+        2. mvn spring-boot:run
+        3. Navigate to /api/...
+
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: "Expected Behavior"
+      description: "What should be happening?"
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: checkboxes
+    validations:
+      required: true
+    attributes:
+      label: "Affected Components"
+      description: "Which Spring modules are involved?"
+      options:
+        - label: "Spring Boot Starter Web"
+        - label: "Spring Data JPA"
+        - label: "Spring Boot Actuator"
+        - label: "Spring Boot Test"
+        - label: "Hibernate"
+        - label: "Other (specify below)"
+
+  - type: input
+    attributes:
+      label: "Specific Dependency"
+      description: "List any other relevant dependencies"
+
+  - type: input
+    attributes:
+      label: "Spring Boot Version"
+      placeholder: "3.2.0"
+      description: "Check pom.xml for exact version"
+
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: "Environment Details"
+      description: |
+        From pom.xml or build.gradle:
+        ```xml
+        <!-- Paste relevant dependencies here -->
+        ```
+        Or output of `mvn spring-boot:info`
+
+  - type: input
+    attributes:
+      label: "Java Version"
+      placeholder: "17.0.7"
+      description: "Output of `java -version`"
+
+  - type: checkboxes
+    validations:
+      required: true
+    attributes:
+      label: "Tested Environments"
+      options:
+        - label: macOS
+        - label: Windows
+        - label: Linux
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    attributes:
+      label: "Additional Context"
+      description: |
+        Include any:
+        - Stack traces
+        - Screenshots
+        - Build tool (Maven/Gradle)
+        - IDE details
+        - Application logs
