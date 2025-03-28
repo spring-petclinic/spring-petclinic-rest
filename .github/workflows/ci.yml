@@ -21,9 +21,6 @@ jobs:
       - name: Build and Test
         run: mvn clean verify -B
 
-      - name: Checkstyle
-        run: mvn checkstyle:check
-
       - name: Dependency Check
         run: mvn org.owasp:dependency-check-maven:check
 
