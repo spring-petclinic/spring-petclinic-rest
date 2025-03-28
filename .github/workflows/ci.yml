@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Nécessaire pour SonarQube
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -21,8 +24,16 @@ jobs:
       - name: Build and Test
         run: mvn clean verify -B
 
-      - name: Dependency Check
-        run: mvn org.owasp:dependency-check-maven:check
+      - name: SonarQube Analysis
+        uses: sonarsource/sonarqube-scan-action@v1.8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=petclinic
+            -Dsonar.java.binaries=target/classes
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            -Dsonar.exclusions=**/generated-sources/**,**/test/**
 
       - name: Spring Boot Actuator Health Check
         run: |
