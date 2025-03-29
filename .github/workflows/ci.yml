@@ -25,7 +25,7 @@ jobs:
         run: mvn clean verify -B
 
       - name: SonarQube Analysis
-        uses: sonarsource/sonarqube-scan-action@v1.8
+        uses: sonarsource/sonarqube-scan-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
