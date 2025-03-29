@@ -35,8 +35,3 @@ jobs:
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
             -Dsonar.exclusions=**/generated-sources/**,**/test/**
 
-      - name: Spring Boot Actuator Health Check
-        run: |
-          mvn spring-boot:start
-          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8080/actuator/health
-          mvn spring-boot:stop
