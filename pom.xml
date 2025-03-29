@@ -46,7 +46,7 @@
         <docker.image.prefix>springcommunity</docker.image.prefix>
 
         <!-- SonarQube configuration -->
-        <sonar.organization>spring-petclinic-rest</sonar.organization>
+        <sonar.organization>lkevenson</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
     </properties>
