@@ -13,6 +13,19 @@
         </encoder>
     </appender>
 
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>/app/logs/app.log</file>
+    <encoder>
+        <pattern>%-5level %logger{0} - %msg%n</pattern>
+    </encoder>
+</appender>
+
+<root level="info">
+    <appender-ref ref="console"/>
+    <appender-ref ref="FILE"/>
+</root>
+
+
     <!--<logger name="org.hibernate" level="debug"/> -->
     <logger name="org.springframework.samples.petclinic" level="debug"/>
 
