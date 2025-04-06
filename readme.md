@@ -138,7 +138,7 @@ For more details, see the [Spring Boot documentation](https://docs.spring.io/spr
    mvn spring-boot:run
    ```
 2. **Open H2 Console in your browser:**
-   - **URL**: http://localhost:9966/h2-console
+   - **URL**: http://localhost:9966/petclinic/h2-console
    - **JDBC URL**: `jdbc:h2:mem:petclinic`
    - **Username**: `sa`
    - **Password**: _(leave blank)_
