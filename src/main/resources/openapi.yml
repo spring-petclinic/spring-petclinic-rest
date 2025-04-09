@@ -1924,7 +1924,7 @@ components:
           type: string
           minLength: 1
           maxLength: 30
-          pattern: '^[a-zA-Z]*$'
+          pattern: "^[\\p{L}]+([ '-][\\p{L}]+){0,2}$"
           example: George
         lastName:
           title: Last name
@@ -1932,7 +1932,7 @@ components:
           type: string
           minLength: 1
           maxLength: 30
-          pattern: '^[a-zA-Z]*$'
+          pattern: "^[\\p{L}]+([ '-][\\p{L}]+){0,2}\\.?$"
           example: Franklin
         address:
           title: Address
@@ -2054,7 +2054,7 @@ components:
           type: string
           minLength: 1
           maxLength: 30
-          pattern: '^[a-zA-Z]*$'
+          pattern: "^[\\p{L}]+([ '-][\\p{L}]+){0,2}$"
           example: 'James'
         lastName:
           title: Last name
@@ -2062,7 +2062,7 @@ components:
           type: string
           minLength: 1
           maxLength: 30
-          pattern: '^[a-zA-Z]*$'
+          pattern: "^[\\p{L}]+([ '-][\\p{L}]+){0,2}\\.?$"
           example: 'Carter'
         specialties:
           title: Specialties
