@@ -798,56 +798,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-    post:
-      tags:
-        - pet
-      operationId: addPet
-      summary: Create a pet
-      description: Creates a pet .
-      requestBody:
-        description: The pet
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Pet'
-        required: true
-      responses:
-        201:
-          description: Pet type created successfully.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Pet'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Pet not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
   /pets/{petId}:
     get:
       tags:

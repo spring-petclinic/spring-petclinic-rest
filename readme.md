@@ -61,7 +61,6 @@ API documentation (OAS 3.1) is accessible at: [http://localhost:9966/petclinic/v
 | **Pets** |  |  |
 | **GET** | `/api/pets` | Retrieve all pets |
 | **GET** | `/api/pets/{petId}` | Get a pet by ID |
-| **POST** | `/api/pets` | Add a new pet |
 | **PUT** | `/api/pets/{petId}` | Update pet details |
 | **DELETE** | `/api/pets/{petId}` | Delete a pet |
 | **Vets** |  |  |

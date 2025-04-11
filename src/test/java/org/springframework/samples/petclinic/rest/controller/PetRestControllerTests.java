@@ -23,7 +23,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Pet;
@@ -220,31 +219,4 @@ class PetRestControllerTests {
             .andExpect(status().isNotFound());
     }
 
-    @Test
-    @WithMockUser(roles = "OWNER_ADMIN")
-    void testAddPetSuccess() throws Exception {
-        PetDto newPet = pets.get(0);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        String newPetAsJSON = mapper.writeValueAsString(newPet);
-        given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
-        this.mockMvc.perform(post("/api/pets")
-                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isCreated())
-            .andExpect(header().string(HttpHeaders.LOCATION, "/api/pets/3"));
-    }
-
-    @Test
-    @WithMockUser(roles = "OWNER_ADMIN")
-    void testAddPetError() throws Exception {
-        PetDto newPet = pets.get(0);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        String newPetAsJSON = mapper.writeValueAsString(newPet);
-        given(this.clinicService.findPetById(999)).willReturn(null);
-        this.mockMvc.perform(post("/api/pets")
-                // set empty JSON to force 400 error
-                .content("{}").accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isBadRequest());
-    }
 }
