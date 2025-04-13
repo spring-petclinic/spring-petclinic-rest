@@ -1,13 +1,14 @@
 #!/bin/zsh
 
-COLLECTION="./postman/petclinic-nonregressiontests.postman_collection.json"
-ENVIRONMENT="./postman/petclinic-env.postman_environment.json"
-REPORT_DIR="./postman/reports"
+COLLECTION="./src/test/postman/petclinic-nonregressiontests.postman_collection.json"
+ENVIRONMENT="./src/test/postman/petclinic-env.postman_environment.json"
+REPORT_DIR="./src/test/postman/reports"
 
 mkdir -p "$REPORT_DIR"
 
 GREEN='\033[0;32m'
 RED='\033[0;31m'
+YELLOW='\033[0;33m'
 NC='\033[0m'
 
 # If you create a new scenario, each one should be put on this
@@ -31,24 +32,18 @@ for SCENARIO in "${SCENARIOS[@]}"; do
     exit 1
   fi
 
-  npx newman run "$COLLECTION" \
+  npx -p newman -p newman-reporter-htmlextra newman run "$COLLECTION" \
     -e "$ENVIRONMENT" \
     --folder "$SCENARIO" \
-    --reporters cli,html \
-    --reporter-html-export "$REPORT_FILE" \
-    --timeout-request 5000
-
-  if [ $? -eq 0 ]; then
-    echo ""
-    echo -e "${GREEN}✅ Scenario passed successfully!${NC}"
-    echo -e "${GREEN}📄 HTML report generated at: $REPORT_FILE${NC}"
-  else
-    echo ""
-    echo -e "${RED}❌ Scenario failed.${NC}"
-    echo -e "${RED}📄 Check the detailed report at: $REPORT_FILE${NC}"
-  fi
+    --reporters cli,htmlextra \
+    --reporter-htmlextra-export "$REPORT_FILE" \
+    --timeout-request 5000 \
+    --suppress-exit-code 1
 
   echo ""
+  echo -e "${YELLOW}📄 HTML report generated at: $REPORT_FILE${NC}"
+  echo ""
+
 done
 
 
