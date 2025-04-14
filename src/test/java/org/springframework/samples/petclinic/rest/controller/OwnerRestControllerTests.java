@@ -430,4 +430,66 @@ class OwnerRestControllerTests {
     }
 
 
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnersPetSuccess() throws Exception {
+        int ownerId = owners.get(0).getId();
+        int petId = pets.get(0).getId();
+        given(this.clinicService.findOwnerById(ownerId)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        given(this.clinicService.findPetById(petId)).willReturn(petMapper.toPet(pets.get(0)));
+        PetDto updatedPetDto = pets.get(0);
+        updatedPetDto.setName("Rex");
+        updatedPetDto.setBirthDate(LocalDate.of(2020, 1, 15));
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String updatedPetAsJSON = mapper.writeValueAsString(updatedPetDto);
+        this.mockMvc.perform(put("/api/owners/" + ownerId + "/pets/" + petId)
+                .content(updatedPetAsJSON)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnersPetOwnerNotFound() throws Exception {
+        int ownerId = 0;
+        int petId = pets.get(0).getId();
+        given(this.clinicService.findOwnerById(ownerId)).willReturn(null);
+        PetDto petDto = pets.get(0);
+        petDto.setName("Thor");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String updatedPetAsJSON = mapper.writeValueAsString(petDto);
+        this.mockMvc.perform(put("/api/owners/" + ownerId + "/pets/" + petId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updatedPetAsJSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnersPetPetNotFound() throws Exception {
+        int ownerId = owners.get(0).getId();
+        int petId = 0;
+        given(this.clinicService.findOwnerById(ownerId)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        given(this.clinicService.findPetById(petId)).willReturn(null);
+        PetDto petDto = pets.get(0);
+        petDto.setName("Ghost");
+        petDto.setBirthDate(LocalDate.of(2020, 1, 1));
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String updatedPetAsJSON = mapper.writeValueAsString(petDto);
+        this.mockMvc.perform(put("/api/owners/" + ownerId + "/pets/" + petId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updatedPetAsJSON))
+            .andExpect(status().isNotFound());
+    }
+
 }
