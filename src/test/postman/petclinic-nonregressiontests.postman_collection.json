@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "5fd27f12-8cfd-4cf0-81b4-26f8421f0aa4",
 		"name": "Petclinic - Non Regression Tests",
-		"description": "## 🐾 Petclinic - Non Regression Tests\n\nThis Postman collection covers functional API flows to ensure the Petclinic app remains stable during changes.\n\n### 📑 Test Scenarios\n\n1. **01 - First Visit**\n    \n    - _Create Owner_: Registers a new pet owner.\n        \n    - _Create Pet_: Adds a pet to that owner.\n        \n    - _Create Visit_: Schedules the pet’s first visit.\n        \n\nMore flows can be added later, like:\n\n- \"03 - Owner Edits, etc.\"\n    \n\n### 🛠 Environment Variables\n\n- `baseUrl`: URL of the running API (e.g., `http://localhost:9966/petclinic`)\n    \n- `ownerId`, `petId`: Dynamically set during test execution\n    \n\n### ▶️ Run Tests via Newman\n\n- Make sure that you have Node Js installed in your system\n    \n- Give permission to the script file with `chmod +x postman-tests.sh`\n    \n- With your application running... Run `./postman-tests.sh` in the root directory of the project or `sh postman-tests.sh` if you dont want to give permission to the script file.",
+		"description": "## 🐾 Petclinic - Non Regression Tests\n\nThis Postman collection covers functional API flows to ensure the Petclinic app remains stable during changes.\n\n### 📑 Test Scenarios\n\n1. **01 - First Visit**\n    \n    1. _Register Owner_: Registers a new pet owner.\n        \n    2. _Register Pet_: Adds a pet to that owner.\n        \n    3. _Schedule Visit_: Schedules the pet’s first visit.\n        \n2. 02 - Returning Customer\n    \n    1. Update Owner: Updates the owner registration\n        \n    2. Confirm Update: Confirming the update\n        \n    3. _Update Pet's Owner: Updates the pet's owner registration_\n        \n    4. Schedule a new Visit: Scheduling new visit\n        \n\nMore flows can be added later, like:\n\n- \"03 - Owner Edits, etc.\"\n    \n\n### 🛠 Environment Variables\n\n- `baseUrl`: URL of the running API (e.g., `http://localhost:9966/petclinic`)\n    \n- `ownerId`, `petId`: Dynamically set during test execution\n    \n\n### ▶️ Run Tests via Newman\n\n- Make sure that you have Node Js installed in your system\n    \n- Give permission to the script file with `chmod +x postman-tests.sh`\n    \n- With your application running... Run `./postman-tests.sh` in the root directory of the project or `sh postman-tests.sh` if you dont want to give permission to the script file.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29491402"
 	},
@@ -1596,7 +1596,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"description\": \"Regular checkup\",\n  \"date\": \"2025-04-12\"\n}",
+							"raw": "{\n  \"description\": \"Regular checkup\",\n  \"date\": \"2025-10-02\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
