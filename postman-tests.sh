@@ -64,9 +64,16 @@ npx -p newman -p newman-reporter-htmlextra newman run "$COLLECTION" \
   --reporters cli,htmlextra \
   --reporter-htmlextra-export "$REPORT_DIR/report.html" \
   --timeout-request 5000 \
-  --suppress-exit-code 1
 
-# --------------- Done ----------------------------------------------------
+  EXIT_CODE=$?
+
+# --------------- Checking if the test failed  ----------------------------------------------------
+if [ $EXIT_CODE -ne 0 ]; then
+  echo -e "${RED}❌ Newman tests failed. See the HTML report at: $REPORT_DIR/report.html${NC}"
+  exit 1
+fi
+
+# -------------- Done when is success --------------------------------------------------------------------
 echo ""
 echo -e "${YELLOW}📄 HTML report generated at: $REPORT_DIR/report.html${NC}"
 echo ""

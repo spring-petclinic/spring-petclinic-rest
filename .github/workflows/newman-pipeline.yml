@@ -1,0 +1,49 @@
+name: Newman Smoke testing
+  
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  newman-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Start PetClinic API
+        run: |
+          echo "Starting PetClinic API"
+          nohup mvn spring-boot:run &
+
+      - name: Wait for API Availability
+        run: |
+          timeout=60
+          while ! curl -s http://localhost:9966/petclinic > /dev/null; do
+            echo "Wating for API..."
+            sleep 1
+            ((timeout--))
+            if [ $timeout -le 0 ]; then
+              echo "API not available within timeout."
+              exit 1
+            fi
+          done
+          echo "API Available!"
+
+      - name: Run Newman Tests
+        run: |
+          bash postman-tests.sh 
+
+      - name: Upload Newman HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-html-reports
+          path: src/test/postman/reports/
