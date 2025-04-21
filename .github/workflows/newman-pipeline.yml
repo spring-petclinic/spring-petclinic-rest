@@ -1,4 +1,4 @@
-name: Newman CI Pipeline
+name: Newman Smoke testing
   
 on:
   workflow_dispatch:
