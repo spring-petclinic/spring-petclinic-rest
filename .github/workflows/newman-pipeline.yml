@@ -22,17 +22,22 @@ jobs:
 
       - name: Start PetClinic API
         run: |
+          echo "Starting PetClinic API"
           nohup mvn spring-boot:run &
-          sleep 3
-  
+
       - name: Wait for API Availability
         run: |
-          echo "Waiting for API"
-          until curl -s http://localhost:9966/petclinic > /dev/null; do
-            echo "."
+          timeout=60
+          while ! curl -s http://localhost:9966/petclinic > /dev/null; do
+            echo "Wating for API..."
             sleep 1
+            ((timeout--))
+            if [ $timeout -le 0 ]; then
+              echo "API not available within timeout."
+              exit 1
+            fi
           done
-          echo "API available!"
+          echo "API Available!"
 
       - name: Run Newman Tests
         run: |
