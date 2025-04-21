@@ -18,7 +18,7 @@
               "script": {
                 "exec": [
                   "pm.test(\"Owner created successfully\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
+                  "    pm.response.to.have.status(201);\r",
                   "});\r",
                   "\r",
                   "pm.test(\"Owner data contains a ID and firstName is equal to the expected?\", function () {\r",
