@@ -1,9 +1,11 @@
 name: Newman CI Pipeline
   
 on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
   push:
-    branches:
-        - integrateNewmanCI
+    branches: [NewmanCI]
 
 jobs:
   newman-tests:
