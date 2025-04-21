@@ -16,6 +16,7 @@ This project contains a Postman collection designed to validate the **Spring Pet
 Ensure the following are available:
 
 - **Node.js installed** ([Download here](https://nodejs.org))
+- **jq installed** ([Download here](https://jqlang.org/download/))
 - **Spring PetClinic REST API running locally**
 
 ```sh

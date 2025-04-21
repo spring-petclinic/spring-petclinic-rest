@@ -21,3 +21,6 @@ springboot-petclinic-server/
 # asdf generated files
 .tool-versions
 .factorypath
+
+# newman reports
+./src/test/postman/reports/
