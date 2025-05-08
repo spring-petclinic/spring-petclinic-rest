@@ -67,7 +67,7 @@ CREATE INDEX visits_pet_id ON visits (pet_id);
 
 CREATE  TABLE users (
   username    VARCHAR(20) NOT NULL ,
-  password    VARCHAR(20) NOT NULL ,
+  password    VARCHAR(60) NOT NULL ,
   enabled     BOOLEAN DEFAULT TRUE NOT NULL ,
   PRIMARY KEY (username)
 );

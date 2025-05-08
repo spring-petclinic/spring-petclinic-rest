@@ -67,8 +67,8 @@ INSERT INTO visits (pet_id, visit_date, description) VALUES
 (7, '2013-01-04', 'spayed');
 
 -- Insert Admin User
-INSERT INTO users (username, password, enabled) VALUES 
-('admin', 'admin', TRUE);
+INSERT INTO users (username, password, enabled) VALUES
+('admin', '$2a$10$ymaklWBnpBKlgdMgkjWVF.GMGyvH8aDuTK.glFOaKw712LHtRRymS', TRUE);
 
 -- Assign Roles to Admin
 INSERT INTO roles (username, role) VALUES 
