@@ -106,7 +106,7 @@ class VetRestControllerTests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testGetVetNotFound() throws Exception {
-    	given(this.clinicService.findVetById(-1)).willReturn(null);
+    	given(this.clinicService.findVetById(999)).willReturn(null);
         this.mockMvc.perform(get("/api/vets/999")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -213,7 +213,7 @@ class VetRestControllerTests {
     	Vet newVet = vets.get(0);
     	ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
-    	given(this.clinicService.findVetById(-1)).willReturn(null);
+    	given(this.clinicService.findVetById(999)).willReturn(null);
     	this.mockMvc.perform(delete("/api/vets/999")
     		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNotFound());
