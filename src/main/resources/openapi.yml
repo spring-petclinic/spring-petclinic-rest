@@ -1124,7 +1124,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Visit'
+              $ref: '#/components/schemas/VisitFields'
         required: true
       responses:
         200:
