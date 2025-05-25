@@ -2086,9 +2086,9 @@ components:
               format: int32
               minimum: 0
               example: 1
-              readOnly: true
           required:
             - id
+            - petId
     PetTypeFields:
       title: PetType fields
       description: Editable fields of a pet type.
