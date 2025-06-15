@@ -1,0 +1,17 @@
+---
+- name: Install python if not
+  hosts: web
+  become: true
+  gather_facts: false
+  roles:
+    - role: robertdebock.bootstrap
+- name: Install Docker with geerlingguy.docker
+  hosts: web
+  become: true
+  gather_facts: false
+
+  vars_files:
+    - vars/docker.yml
+
+  roles:
+    - geerlingguy.docker

@@ -5,7 +5,7 @@
 
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-petclinic-rest</artifactId>
-    <version>3.4.3</version>
+    <version>3.4.5</version>
 
     <description>REST version of the Spring Petclinic sample application</description>
     <url>https://spring-petclinic.github.io/</url>
@@ -106,6 +106,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>42.7.7</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

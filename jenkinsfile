@@ -1,0 +1,30 @@
+pipeline {
+  agent {
+    label 'Agent1'  // Make sure this node has Docker installed
+  }
+
+  environment {
+    TF_VAR_project_id = 'earnest-scene-454409-t5'
+  }
+
+  stages {
+    stage('Terraform Init & Apply in Docker') {
+      steps {
+        withCredentials([file(credentialsId: 'GCP-credinals', variable: 'GCP_credinals')]) {
+          sh '''
+            echo "✅ Running Terraform inside Docker..."
+          docker run --rm \
+  --entrypoint /bin/sh \
+  -v "$PWD:/workspace" \
+  -v "$GCP_credinals:/workspace/creds.json" \
+  -w /workspace/GCE \
+  -e GOOGLE_APPLICATION_CREDENTIALS="/workspace/creds.json" \
+  hashicorp/terraform:1.9.7 \
+  -c "terraform init -backend-config='bucket=my-tf-petclinic-backend' -backend-config='prefix=vpc/petclinic-backend' -backend-config='credentials=/workspace/creds.json' && terraform plan -out=tfplan && terraform apply -auto-approve tfplan"
+
+          '''
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,311 @@
+{
+  "$defs": {
+    "rule": {
+      "additionalProperties": false,
+      "properties": {
+        "exclude_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Glob-like paths to be excluded.",
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "$id": "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible-lint-config.json",
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "additionalProperties": false,
+  "description": "https://ansible.readthedocs.io/projects/lint/configuring/",
+  "examples": [
+    ".ansible-lint",
+    ".ansible-lint.yml",
+    ".ansible-lint.yaml",
+    ".config/ansible-lint.yml",
+    ".config/ansible-lint.yaml"
+  ],
+  "properties": {
+    "display_relative_path": {
+      "default": true,
+      "title": "Configure how to display file paths",
+      "type": "boolean"
+    },
+    "enable_list": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Enable List",
+      "type": "array"
+    },
+    "exclude_paths": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Exclude Paths",
+      "type": "array"
+    },
+    "extra_vars": {
+      "title": "Extra Vars",
+      "type": "object"
+    },
+    "kinds": {
+      "items": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "title": "Kinds",
+      "type": "array"
+    },
+    "loop_var_prefix": {
+      "title": "Loop Var Prefix",
+      "type": "string"
+    },
+    "max_block_depth": {
+      "title": "Maximum Block Depth",
+      "type": "integer",
+      "default": 20
+    },
+    "mock_modules": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Mock Modules",
+      "type": "array"
+    },
+    "mock_roles": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Mock Roles",
+      "type": "array"
+    },
+    "offline": {
+      "default": false,
+      "title": "Offline",
+      "type": "boolean"
+    },
+    "only_builtins_allow_collections": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Only Builtins Allow Collections",
+      "type": "array"
+    },
+    "only_builtins_allow_modules": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Only Builtins Allow Modules",
+      "type": "array"
+    },
+    "parseable": {
+      "default": true,
+      "title": "Parseable",
+      "type": "boolean"
+    },
+    "profile": {
+      "enum": [
+        "min",
+        "basic",
+        "moderate",
+        "safety",
+        "shared",
+        "production",
+        null
+      ],
+      "title": "Profile",
+      "type": ["null", "string"]
+    },
+    "progressive": {
+      "default": false,
+      "title": "Progressive (removed feature)",
+      "type": "boolean"
+    },
+    "project_dir": {
+      "default": null,
+      "title": "Project Directory",
+      "type": ["string", "null"]
+    },
+    "quiet": {
+      "default": true,
+      "title": "Quiet",
+      "type": "boolean"
+    },
+    "rules": {
+      "additionalProperties": {
+        "$ref": "#/$defs/rule"
+      },
+      "propertyNames": {
+        "oneOf": [
+          {
+            "enum": [
+              "command-instead-of-module",
+              "command-instead-of-shell",
+              "deprecated-bare-vars",
+              "deprecated-local-action",
+              "deprecated-module",
+              "empty-string-compare",
+              "fqcn",
+              "fqcn[action-core]",
+              "fqcn[action]",
+              "fqcn[canonical]",
+              "fqcn[keyword]",
+              "galaxy",
+              "galaxy[no-changelog]",
+              "galaxy[no-runtime]",
+              "galaxy[tags]",
+              "galaxy[version-incorrect]",
+              "galaxy[version-missing]",
+              "ignore-errors",
+              "inline-env-var",
+              "internal-error",
+              "jinja",
+              "jinja[invalid]",
+              "jinja[spacing]",
+              "key-order",
+              "latest",
+              "literal-compare",
+              "load-failure",
+              "load-failure[not-found]",
+              "loop-var-prefix",
+              "loop-var-prefix[missing]",
+              "loop-var-prefix[wrong]",
+              "meta-incorrect",
+              "meta-no-tags",
+              "meta-runtime",
+              "meta-video-links",
+              "name",
+              "name[casing]",
+              "name[play]",
+              "name[prefix]",
+              "name[template]",
+              "no-changed-when",
+              "no-handler",
+              "no-jinja-when",
+              "no-log-password",
+              "no-prompting",
+              "no-relative-paths",
+              "no-same-owner",
+              "no-tabs",
+              "only-builtins",
+              "package-latest",
+              "parser-error",
+              "partial-become",
+              "playbook-extension",
+              "risky-file-permissions",
+              "risky-octal",
+              "risky-shell-pipe",
+              "role-name",
+              "run-once",
+              "run-once[play]",
+              "run-once[task]",
+              "sanity",
+              "sanity[bad-ignore]",
+              "sanity[cannot-ignore]",
+              "schema",
+              "syntax-check",
+              "var-naming",
+              "yaml"
+            ],
+            "type": "string"
+          },
+          {
+            "pattern": "^[a-z0-9-\\[\\]]+$",
+            "type": "string"
+          }
+        ]
+      },
+      "title": "Rules specific configuration.",
+      "type": "object"
+    },
+    "rulesdir": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Rulesdir",
+      "type": "array"
+    },
+    "sarif_file": {
+      "default": null,
+      "title": "SARIF Output filename",
+      "type": ["null", "string"]
+    },
+    "skip_action_validation": {
+      "default": false,
+      "title": "Skip Action Validation",
+      "type": "boolean"
+    },
+    "skip_list": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Skip List",
+      "type": "array"
+    },
+    "strict": {
+      "default": false,
+      "title": "Strict",
+      "type": "boolean"
+    },
+    "supported_ansible_also": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Add supported ansible versions",
+      "type": "array"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array"
+    },
+    "task_name_prefix": {
+      "default": "{stem} | ",
+      "title": "Allow custom prefix for task[prefix]",
+      "type": "string"
+    },
+    "use_default_rules": {
+      "default": true,
+      "title": "Use Default Rules",
+      "type": "boolean"
+    },
+    "var_naming_pattern": {
+      "default": "^[a-z_][a-z0-9_]*$",
+      "title": "Regex used to verify variable names",
+      "type": "string"
+    },
+    "verbosity": {
+      "default": 0,
+      "title": "Verbosity",
+      "type": "integer"
+    },
+    "warn_list": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warn List",
+      "type": "array"
+    },
+    "write_exclude_list": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Write Exclude List",
+      "type": "array"
+    },
+    "write_list": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Write List",
+      "type": "array"
+    }
+  },
+  "title": "Ansible-lint Configuration Schema",
+  "type": "object"
+}

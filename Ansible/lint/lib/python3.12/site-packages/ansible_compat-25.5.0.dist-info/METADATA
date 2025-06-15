@@ -1,0 +1,89 @@
+Metadata-Version: 2.4
+Name: ansible-compat
+Version: 25.5.0
+Summary: Ansible compatibility goodies
+Author-email: Sorin Sbarnea <ssbarnea@redhat.com>
+Maintainer-email: Sorin Sbarnea <ssbarnea@redhat.com>
+License: MIT
+Project-URL: changelog, https://github.com/ansible/ansible-compat/releases
+Project-URL: documentation, https://ansible.readthedocs.io/projects/compat/
+Project-URL: homepage, https://github.com/ansible/ansible-compat
+Project-URL: repository, https://github.com/ansible/ansible-compat
+Keywords: ansible
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python
+Classifier: Topic :: System :: Systems Administration
+Classifier: Topic :: Software Development :: Bug Tracking
+Classifier: Topic :: Software Development :: Quality Assurance
+Classifier: Topic :: Software Development :: Testing
+Classifier: Topic :: Utilities
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: ansible-core>=2.16
+Requires-Dist: packaging
+Requires-Dist: PyYAML
+Requires-Dist: subprocess-tee>=0.4.1
+Requires-Dist: jsonschema>=4.6.0
+Provides-Extra: docs
+Requires-Dist: argparse-manpage; extra == "docs"
+Requires-Dist: black; extra == "docs"
+Requires-Dist: mkdocs-ansible>=24.3.1; extra == "docs"
+Provides-Extra: test
+Requires-Dist: coverage; extra == "test"
+Requires-Dist: pip; extra == "test"
+Requires-Dist: pytest-instafail; extra == "test"
+Requires-Dist: pytest-mock; extra == "test"
+Requires-Dist: pytest-plus>=0.6.1; extra == "test"
+Requires-Dist: pytest>=7.2.0; extra == "test"
+Requires-Dist: uv>=0.4.30; extra == "test"
+Dynamic: license-file
+
+# ansible-compat
+
+[![pypi](https://img.shields.io/pypi/v/ansible-compat.svg)](https://pypi.org/project/ansible-compat/)
+[![docs](https://readthedocs.org/projects/ansible-compat/badge/?version=latest)](https://ansible.readthedocs.io/projects/compat/)
+[![gh](https://github.com/ansible/ansible-compat/actions/workflows/tox.yml/badge.svg)](https://github.com/ansible/ansible-compat/actions/workflows/tox.yml)
+[![codecov.io](https://codecov.io/github/ansible/ansible-compat/coverage.svg?branch=main)](https://codecov.io/github/ansible/ansible-compat?branch=main)
+
+A python package contains functions that facilitate working with various
+versions of Ansible.
+
+## Documentation
+
+Documentation is available at
+[ansible.readthedocs.io/projects/compat/](https://ansible.readthedocs.io/projects/compat/).
+
+## Communication
+
+Join the Ansible forum to ask questions, get help, and interact with the
+community.
+
+- [Get Help](https://forum.ansible.com/c/help/6): get help or help others.
+  Please add appropriate tags if you start new discussions.
+- [Social Spaces](https://forum.ansible.com/c/chat/4): meet and interact with
+  fellow enthusiasts.
+- [News & Announcements](https://forum.ansible.com/c/news/5): track project-wide
+  announcements including social events.
+
+To get release announcements and important changes from the community, see the
+[Bullhorn newsletter](https://docs.ansible.com/ansible/devel/community/communication.html#the-bullhorn).
+
+For more information about getting in touch, see the
+[Ansible communication guide](https://docs.ansible.com/ansible/devel/community/communication.html).
+
+## Code of Conduct
+
+Please see the official
+[Ansible Community Code of Conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html).

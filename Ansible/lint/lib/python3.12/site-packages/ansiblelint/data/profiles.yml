@@ -1,0 +1,119 @@
+---
+# Do not change sorting order of the primary keys as they also represent how
+# progressive the profiles are, each one extending the one before it.
+min:
+  description: >
+    The `min` profile ensures that Ansible can load content.
+    Rules in this profile are mandatory because they prevent fatal errors.
+    You can add files to the exclude list or provide dependencies to load the
+    correct files.
+  extends: null
+  rules:
+    internal-error:
+    load-failure:
+    parser-error:
+    syntax-check:
+basic:
+  description: >
+    The `basic` profile prevents common coding issues and enforces standard styles and formatting.
+  extends: min
+  rules:
+    command-instead-of-module:
+    command-instead-of-shell:
+    deprecated-bare-vars:
+    deprecated-local-action:
+    deprecated-module:
+    inline-env-var:
+    key-order:
+    literal-compare:
+    jinja:
+    no-free-form: # schema-related
+      url: https://github.com/ansible/ansible-lint/issues/2117
+    no-jinja-when:
+    no-tabs:
+    partial-become:
+    playbook-extension:
+    role-name:
+    schema: # can cover lots of rules, but not really be able to give best error messages
+    name:
+    var-naming:
+    yaml:
+  skip_list: # just because we enable them in following profiles
+    - name[template]
+    - name[casing]
+moderate:
+  description: >
+    The `moderate` profile ensures that content adheres to best practices for making content easier to read and maintain.
+  extends: basic
+  rules:
+    name[template]:
+    name[imperative]:
+      url: https://github.com/ansible/ansible-lint/issues/2170
+    name[casing]:
+    spell-var-name:
+      url: https://github.com/ansible/ansible-lint/issues/2168
+safety:
+  description: >
+    The `safety` profile avoids module calls that can have non-determinant outcomes or security concerns.
+  extends: moderate
+  rules:
+    avoid-implicit:
+    latest:
+    package-latest:
+    risky-file-permissions:
+    risky-octal:
+    risky-shell-pipe:
+shared:
+  description: >
+    The `shared` profile ensures that content follows best practices for packaging and publishing.
+    This profile is intended for content creators who want to make Ansible
+    playbooks, roles, or collections available from
+    [galaxy.ansible.com](https://galaxy.ansible.com/),
+    [automation-hub](https://console.redhat.com/ansible/automation-hub),
+    or a private instance.
+  extends: safety
+  rules:
+    galaxy: # <-- applies to both galaxy and automation-hub
+    ignore-errors:
+    layout:
+      url: https://github.com/ansible/ansible-lint/issues/1900
+    meta-incorrect:
+    meta-no-tags:
+    meta-video-links:
+    meta-version:
+      url: https://github.com/ansible/ansible-lint/issues/2103
+    meta-runtime:
+      url: https://github.com/ansible/ansible-lint/issues/2102
+    no-changed-when:
+    no-changelog:
+      url: https://github.com/ansible/ansible-lint/issues/2101
+    no-handler:
+    no-relative-paths:
+    max-block-depth:
+      url: https://github.com/ansible/ansible-lint/issues/2173
+    max-tasks:
+      url: https://github.com/ansible/ansible-lint/issues/2172
+    unsafe-loop:
+      # unsafe-loop[prefix] (currently named "no-var-prefix")
+      # [unsafe-loop[var-prefix|iterator]]
+      url: https://github.com/ansible/ansible-lint/issues/2038
+production:
+  description: >
+    The `production` profile ensures that content meets requirements for
+    inclusion in [Ansible Automation Platform (AAP)](https://www.redhat.com/en/technologies/management/ansible)
+    as validated or certified content.
+  extends: shared
+  rules:
+    avoid-dot-notation:
+      url: https://github.com/ansible/ansible-lint/issues/2174
+    sanity:
+      url: https://github.com/ansible/ansible-lint/issues/2121
+    fqcn:
+    import-task-no-when:
+      url: https://github.com/ansible/ansible-lint/issues/2219
+    meta-no-dependencies:
+      url: https://github.com/ansible/ansible-lint/issues/2159
+    single-entry-point:
+      url: https://github.com/ansible/ansible-lint/issues/2242
+    use-loop:
+      url: https://github.com/ansible/ansible-lint/issues/2204
