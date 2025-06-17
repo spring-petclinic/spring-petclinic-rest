@@ -17,11 +17,24 @@ subnets = [{ subnet_name = "web-applications"
 
 ingress_rules = [{
   allow = [{
-    ports    = ["22", "80", "443"]
+    ports    = ["22", "80", "443","2377","7946"]
     protocol = "tcp"
   }]
   deny               = []
-  description        = "for ssh"
+  description        = "for ssh,docker swaem and website access"
+  destination_ranges = ["10.10.1.0/24"]
+  disabled           = false
+  name               = "allow-ssh"
+  priority           = 1000
+  source_ranges      = ["0.0.0.0/0"]
+  target_tags        = ["web"]
+  },{
+  allow = [{
+    ports    = [4789]
+    protocol = "udp"
+  }]
+  deny               = []
+  description        = "for docker swarm"
   destination_ranges = ["10.10.1.0/24"]
   disabled           = false
   name               = "allow-ssh"
@@ -97,8 +110,13 @@ name_web           = "web-hosting"
 zone_vm            = "us-west1-a"
 subnet_web         = "https://www.googleapis.com/compute/v1/projects/earnest-scene-454409-t5/regions/us-west1/subnetworks/web-applications"
 access_config_web  = "PREMIUM"
-startup_script_web = "touch my.txt "
+startup_script_web = ""
 
+# Web VM variables
+name_web2          = "web-hosting"
+subnet_web2         = "https://www.googleapis.com/compute/v1/projects/earnest-scene-454409-t5/regions/us-west1/subnetworks/web-applications"
+access_config_web2  = "PREMIUM"
+startup_script_web2 = ""
 
 
 

@@ -33,7 +33,7 @@ module "web_instance_template" {
 }
 
 # --- Compute Instance from Template ---
-resource "google_compute_instance_from_template" "web" {
+resource "google_compute_instance_from_template" "web1" {
   name                     = var.name_web
   project                  = var.project_id_vm
   zone                     = var.zone_vm
@@ -48,6 +48,27 @@ resource "google_compute_instance_from_template" "web" {
 
   metadata_startup_script = var.startup_script_web
 }
+
+
+# --- Compute Instance from Template ---
+resource "google_compute_instance_from_template" "web2" {
+  name                     = var.name_web2
+  project                  = var.project_id_vm
+  zone                     = var.zone_vm
+  source_instance_template = module.web_instance_template.self_link
+
+  network_interface {
+    subnetwork = var.subnet_web2
+    access_config {
+      network_tier = var.access_config_web2
+    }
+  }
+
+  metadata_startup_script = var.startup_script_web2
+}
+
+
+
 
 # --- Global Address for PSC ---
 resource "google_compute_global_address" "psc_ip_range" {

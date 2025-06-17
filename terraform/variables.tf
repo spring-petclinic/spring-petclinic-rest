@@ -333,6 +333,35 @@ variable "access_config_web" {
   default     = "PREMIUM"
 }
 
+##GCE Resource VM WEB2
+variable "name_web2" {
+  description = "User startup script to run when instances spin up"
+  type        = string
+}
+variable "zone_vm" {
+  description = "User startup script to run when instances spin up"
+  type        = string
+  default     = "us-west1"
+}
+
+variable "subnet_web2" {
+  description = "User startup script to run when instances spin up"
+  type        = string
+}
+variable "startup_script_web2" {
+  description = "User startup script to run when instances spin up"
+  type        = string
+  default     = "ls"
+}
+
+variable "access_config_web2" {
+  description = "User startup script to run when instances spin up"
+  type        = string
+  default     = "PREMIUM"
+}
+
+
+
 
 #CLoudSql variables 
 
