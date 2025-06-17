@@ -91,6 +91,7 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 }
 
 # --- MySQL Cloud SQL ---
+# tfsec:ignore:google-sql-encrypt-in-transit-data This Cloud SQL instance uses private networking only.
 module "mysql-db" {
   source  = "terraform-google-modules/sql-db/google//modules/mysql"
   version = "~> 25.2"
@@ -116,9 +117,13 @@ module "mysql-db" {
     private_network    = module.network.network_self_link
     allocated_ip_range = google_compute_global_address.psc_ip_range.name
     psc_enabled        = true
-    
+    ssl_mode           = "ENCRYPTED_ONLY"
+    requireSsl=true
+
   }
 
+
   deletion_protection = var.deletion_protection_sql
-  depends_on = [google_service_networking_connection.private_vpc_connection]  #befor the sql insyance private connection need to create
+  depends_on          = [google_service_networking_connection.private_vpc_connection] #befor the sql insyance private connection need to create
 }
+

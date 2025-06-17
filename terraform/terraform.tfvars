@@ -17,7 +17,7 @@ subnets = [{ subnet_name = "web-applications"
 
 ingress_rules = [{
   allow = [{
-    ports    = ["22", "80", "443","2377","7946"]
+    ports    = ["22", "80", "443", "2377", "7946"]
     protocol = "tcp"
   }]
   deny               = []
@@ -28,7 +28,7 @@ ingress_rules = [{
   priority           = 1000
   source_ranges      = ["0.0.0.0/0"]
   target_tags        = ["web"]
-  },{
+  }, {
   allow = [{
     ports    = [4789]
     protocol = "udp"
@@ -85,7 +85,7 @@ egress_rules = [{
 project_id_vm = "earnest-scene-454409-t5"
 region        = "us-west1"
 machine_type  = "e2-micro"
-source_image = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20250605"
+source_image  = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20250605"
 disk_size_gb  = "10"
 
 tags       = ["web"]
@@ -113,7 +113,7 @@ access_config_web  = "PREMIUM"
 startup_script_web = ""
 
 # Web VM variables
-name_web2          = "web-hosting"
+name_web2           = "web-hosting"
 subnet_web2         = "https://www.googleapis.com/compute/v1/projects/earnest-scene-454409-t5/regions/us-west1/subnetworks/web-applications"
 access_config_web2  = "PREMIUM"
 startup_script_web2 = ""
@@ -140,11 +140,12 @@ db_disk_type      = "PD_SSD"
 availability_type = "ZONAL"
 project_id_sql    = "earnest-scene-454409-t5"
 backup_configuration = {
-   enabled                        = true
-      start_time                     = "03:00"
-      point_in_time_recovery_enabled = true
-      retained_days                  = 7  #it keeps a backup 7 days and not support with retained_unit it means keep a number of backups 
+  enabled                        = true
+  start_time                     = "03:00"
+  point_in_time_recovery_enabled = true
+  retained_days                  = 7 #it keeps a backup 7 days and not support with retained_unit it means keep a number of backups 
 }
+
 
 # Optional user, password, and DB setup
 #don't use hardcorede passwords 
