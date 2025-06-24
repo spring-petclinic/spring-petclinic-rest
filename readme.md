@@ -25,6 +25,17 @@ cd spring-petclinic-rest
 ./mvnw spring-boot:run
 ```
 
+
+```markdown
+> ⚠️ **Important: Build the Project Before Opening in an IDE**
+
+If you open this project in an IDE (like IntelliJ or Eclipse) before building it, you may see missing classes or unresolved entities (e.g., `Pet`, `Visit`, `User`, or generated DTOs).
+
+To fix this:
+```sh
+./mvnw clean install
+
+
 ### With Docker
 ```sh
 docker run -p 9966:9966 springcommunity/spring-petclinic-rest
