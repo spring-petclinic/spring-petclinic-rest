@@ -22,8 +22,9 @@ import org.springframework.core.style.ToStringCreator;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.*;
 import jakarta.validation.constraints.Pattern;
+
+import java.util.*;
 
 /**
  * Simple JavaBean domain object representing an owner.
@@ -141,13 +142,13 @@ public class Owner extends Person {
     public String toString() {
         return new ToStringCreator(this)
 
-                .append("id", this.getId())
-                .append("new", this.isNew())
-                .append("lastName", this.getLastName())
-                .append("firstName", this.getFirstName())
-                .append("address", this.address)
-                .append("city", this.city)
-                .append("telephone", this.telephone)
-                .toString();
+            .append("id", this.getId())
+            .append("new", this.isNew())
+            .append("lastName", this.getLastName())
+            .append("firstName", this.getFirstName())
+            .append("address", this.address)
+            .append("city", this.city)
+            .append("telephone", this.telephone)
+            .toString();
     }
 }
