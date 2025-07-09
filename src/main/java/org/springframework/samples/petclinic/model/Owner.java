@@ -23,7 +23,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.*;
-
+import jakarta.validation.constraints.Pattern;
 
 /**
  * Simple JavaBean domain object representing an owner.
@@ -47,11 +47,11 @@ public class Owner extends Person {
     @Column(name = "telephone")
     @NotEmpty
     @Digits(fraction = 0, integer = 10)
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
     private String telephone;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", fetch = FetchType.EAGER)
     private Set<Pet> pets;
-
 
     public String getAddress() {
         return this.address;
@@ -141,13 +141,13 @@ public class Owner extends Person {
     public String toString() {
         return new ToStringCreator(this)
 
-            .append("id", this.getId())
-            .append("new", this.isNew())
-            .append("lastName", this.getLastName())
-            .append("firstName", this.getFirstName())
-            .append("address", this.address)
-            .append("city", this.city)
-            .append("telephone", this.telephone)
-            .toString();
+                .append("id", this.getId())
+                .append("new", this.isNew())
+                .append("lastName", this.getLastName())
+                .append("firstName", this.getFirstName())
+                .append("address", this.address)
+                .append("city", this.city)
+                .append("telephone", this.telephone)
+                .toString();
     }
 }
