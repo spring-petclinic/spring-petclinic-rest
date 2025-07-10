@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.repository.jdbc;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,5 +65,13 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 this.namedParameterJdbcTemplate.update("INSERT INTO roles(username, role) VALUES (:username, :role)", params);
             }
         }
+    }
+
+    @Override
+    public Collection<User> findAll() throws DataAccessException {
+        return this.namedParameterJdbcTemplate.query(
+            "SELECT * FROM users",
+            BeanPropertyRowMapper.newInstance(User.class)
+        );
     }
 }

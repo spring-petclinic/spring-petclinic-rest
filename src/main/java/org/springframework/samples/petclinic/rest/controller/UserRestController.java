@@ -31,6 +31,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
@@ -53,5 +57,15 @@ public class UserRestController implements UsersApi {
         User user = userMapper.toUser(userDto);
         this.userService.saveUser(user);
         return new ResponseEntity<>(userMapper.toUserDto(user), headers, HttpStatus.CREATED);
+    }
+
+    @PreAuthorize( "hasRole(@roles.ADMIN)" )
+    @Override
+    public ResponseEntity<List<UserDto>> listUsers() {
+        Collection<User> users = this.userService.findAllUsers();
+        List<UserDto> userDtos = users.stream()
+            .map(userMapper::toUserDto)
+            .collect(Collectors.toList());
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
 }

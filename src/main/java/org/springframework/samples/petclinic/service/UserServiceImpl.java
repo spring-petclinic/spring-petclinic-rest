@@ -7,6 +7,8 @@ import org.springframework.samples.petclinic.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -32,5 +34,11 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<User> findAllUsers() {
+        return userRepository.findAll();
     }
 }

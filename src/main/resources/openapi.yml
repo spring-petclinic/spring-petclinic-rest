@@ -1770,6 +1770,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
+    get:
+      tags:
+        - user
+      operationId: listUsers
+      summary: Lists users
+      description: Returns an array of users.
+      responses:
+        200:
+          description: User details found and returned.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        304:
+          description: Not modified.
+          headers:
+            ETag:
+              description: An ID for this version of the response.
+              schema:
+                type: string
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
 components:
   schemas:
     ProblemDetail:
