@@ -49,6 +49,8 @@
         <sonar.organization>spring-petclinic-rest</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
+        <jacoco.skip>false</jacoco.skip>
+
     </properties>
 
     <dependencies>
@@ -236,6 +238,9 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <skip>${jacoco.skip}</skip>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <id>report</id>

@@ -63,7 +63,7 @@ jobs:
           cache: maven
 
       # ──────────── 4. compile ────────────
-      - run: mvn -B compile --file pom.xml
+      - run: mvn -B -Djacoco.skip=true compile --file pom.xml
 
       # ──────────── 5. extract FAIL_TO_PASS / PASS_TO_PASS ────────────
       - name: Extract test names
@@ -90,11 +90,11 @@ jobs:
       # ──────────── 6. run tests ────────────
       - name: Run selected tests
         if: ${{ steps.extract_tests.outputs.tests }}
-        run: mvn -B -Dtest="${{ steps.extract_tests.outputs.tests }}" test
+        run: mvn -B -Dtest="${{ steps.extract_tests.outputs.tests }}" -Djacoco.skip=true test
 
       - name: Run all tests
         if: ${{ steps.extract_tests.outputs.tests == '' }}
-        run: mvn -B test --file pom.xml
+        run: mvn -B test --file -Djacoco.skip=true pom.xml
 
       # ──────────── 7. update the same comment (FINAL) ────────────
       - name: Update issue comment with final status
