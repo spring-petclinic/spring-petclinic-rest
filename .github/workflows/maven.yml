@@ -2,9 +2,9 @@ name: Run Tests
 
 on:
   push:
-    branches: [ "main", "scenario/*", "eval/*", "feature/*" ]
+    branches: [ "main", "master", "scenario/*", "eval/*", "feature/*" ]
   pull_request:
-    branches: [ "main", "scenario/*", "eval/*", "feature/*" ]
+    branches: [ "main", "master", "scenario/*", "eval/*", "feature/*" ]
 
 jobs:
   build:
