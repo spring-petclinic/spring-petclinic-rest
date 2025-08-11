@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -52,7 +51,6 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
 
 	private SimpleJdbcInsert insertPetType;
 
-	@Autowired
 	public JdbcPetTypeRepositoryImpl(DataSource dataSource) {
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		this.insertPetType = new SimpleJdbcInsert(dataSource)
