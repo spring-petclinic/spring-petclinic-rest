@@ -16,7 +16,6 @@
 
 package org.springframework.samples.petclinic.repository.jpa;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 

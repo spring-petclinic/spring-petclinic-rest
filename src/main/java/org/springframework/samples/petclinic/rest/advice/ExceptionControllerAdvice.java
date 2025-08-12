@@ -30,8 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URI;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Global Exception handler for REST controllers.
