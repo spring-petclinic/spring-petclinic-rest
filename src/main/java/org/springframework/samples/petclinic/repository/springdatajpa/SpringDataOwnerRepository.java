@@ -23,6 +23,8 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Spring Data JPA specialization of the {@link OwnerRepository} interface
@@ -41,4 +43,6 @@ public interface SpringDataOwnerRepository extends OwnerRepository, Repository<O
     @Override
     @Query("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id")
     Owner findById(@Param("id") int id);
+    Page<Owner> findAll(Pageable pageable);
+    Page<Owner> findByLastName(String lastName, Pageable pageable);
 }
