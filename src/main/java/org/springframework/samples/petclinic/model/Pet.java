@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull; // Added this import
 import java.time.LocalDate;
 import java.util.*;
 
@@ -35,6 +36,7 @@ import java.util.*;
 public class Pet extends NamedEntity {
 
     @Column(name = "birth_date", columnDefinition = "DATE")
+    @NotNull // Added this annotation
     private LocalDate birthDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
