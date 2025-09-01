@@ -19,8 +19,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.*;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.samples.petclinic.service.CacheClearingTestExecutionListener;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -51,6 +53,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Michael Isvy
  * @author Vitaliy Fedoriv
  */
+@TestExecutionListeners(listeners = CacheClearingTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 abstract class AbstractClinicServiceTests {
 
     @Autowired

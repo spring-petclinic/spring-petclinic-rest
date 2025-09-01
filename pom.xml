@@ -39,7 +39,7 @@
         <maven.release-plugin.version>3.1.1</maven.release-plugin.version>
         <maven.site-plugin.version>3.21.0</maven.site-plugin.version>
         <maven.spotbugs-plugin.version>4.8.6.6</maven.spotbugs-plugin.version>
-        <maven.version>3.9.9</maven.version>
+        <maven.version>3.8.0</maven.version>
 
         <!-- Docker -->
         <docker.jib-maven-plugin.version>3.4.6</docker.jib-maven-plugin.version>
@@ -66,6 +66,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
