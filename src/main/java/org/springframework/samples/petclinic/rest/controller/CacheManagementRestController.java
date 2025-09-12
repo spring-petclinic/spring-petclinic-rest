@@ -31,25 +31,12 @@ public class CacheManagementRestController {
     }
 
     /**
-     * Get size of a specific cache
-     */
-    @GetMapping(value = "/size/{cacheName}")
-    public ResponseEntity<Long> getCacheSize(@PathVariable("cacheName") String cacheName) {
-        long size = cacheMonitoringService.getCacheSize(cacheName);
-        if (size >= 0) {
-            return new ResponseEntity<>(size, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    /**
      * Clear all caches
      */
     @DeleteMapping(value = "/clear")
     public ResponseEntity<Void> clearAllCaches() {
         cacheMonitoringService.clearAllCaches();
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -58,6 +45,6 @@ public class CacheManagementRestController {
     @DeleteMapping(value = "/clear/{cacheName}")
     public ResponseEntity<Void> clearCache(@PathVariable("cacheName") String cacheName) {
         cacheMonitoringService.clearCache(cacheName);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

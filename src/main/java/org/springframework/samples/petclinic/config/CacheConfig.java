@@ -20,15 +20,21 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableCaching
 public class CacheConfig {
-
     private static final Logger logger = LoggerFactory.getLogger(CacheConfig.class);
+
+    public static final String VETS_CACHE = "vets";
+    public static final String OWNERS_CACHE = "owners";
+    public static final String PETS_CACHE = "pets";
+    public static final String VISITS_CACHE = "visits";
+    public static final String SPECIALTIES_CACHE = "specialties";
+    public static final String PET_TYPES_CACHE = "petTypes";
 
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(caffeineCacheBuilder());
         cacheManager.setCacheNames(java.util.Arrays.asList("vets", "owners", "pets", "petTypes", "specialties", "visits"));
-        
+
         logger.info("Initialized Caffeine cache manager with caches: vets, owners, pets, petTypes, specialties, visits");
         return cacheManager;
     }
@@ -40,7 +46,7 @@ public class CacheConfig {
                 .expireAfterWrite(30, TimeUnit.MINUTES)
                 .expireAfterAccess(10, TimeUnit.MINUTES)
                 .recordStats()
-                .removalListener((key, value, cause) -> 
+                .removalListener((key, value, cause) ->
                     logger.debug("Cache entry removed - Key: {}, Cause: {}", key, cause));
     }
 

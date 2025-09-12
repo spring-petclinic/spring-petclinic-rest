@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCache;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -26,30 +25,6 @@ public class CacheMonitoringService {
     }
 
     /**
-     * Log cache statistics every 5 minutes
-     */
-    @Scheduled(fixedRate = 300000) // 5 minutes
-    public void logCacheStatistics() {
-        Map<String, CacheStatistics> stats = getCacheStatistics();
-
-        if (stats.isEmpty()) {
-            return;
-        }
-
-        logger.info("=== Cache Performance Statistics ===");
-        stats.forEach((cacheName, stat) -> {
-            logger.info("Cache: {} | Hits: {} | Misses: {} | Hit Rate: {:.2f}% | Evictions: {} | Size: {}",
-                cacheName,
-                stat.hitCount,
-                stat.missCount,
-                stat.hitRate * 100,
-                stat.evictionCount,
-                stat.estimatedSize);
-        });
-        logger.info("=====================================");
-    }
-
-    /**
      * Get comprehensive cache statistics
      */
     public Map<String, CacheStatistics> getCacheStatistics() {
@@ -64,10 +39,7 @@ public class CacheMonitoringService {
 
                 statistics.put(cacheName, new CacheStatistics(
                     stats.hitCount(),
-                    stats.missCount(),
-                    stats.hitRate(),
-                    stats.evictionCount(),
-                    nativeCache.estimatedSize()
+                    stats.missCount()
                 ));
             }
         });
@@ -102,17 +74,6 @@ public class CacheMonitoringService {
         }
     }
 
-    /**
-     * Get cache size for a specific cache
-     */
-    public long getCacheSize(String cacheName) {
-        org.springframework.cache.Cache cache = cacheManager.getCache(cacheName);
-        if (cache instanceof CaffeineCache) {
-            CaffeineCache caffeineCache = (CaffeineCache) cache;
-            return caffeineCache.getNativeCache().estimatedSize();
-        }
-        return -1;
-    }
 
     /**
      * Data class to hold cache statistics
@@ -120,16 +81,10 @@ public class CacheMonitoringService {
     public static class CacheStatistics {
         public final long hitCount;
         public final long missCount;
-        public final double hitRate;
-        public final long evictionCount;
-        public final long estimatedSize;
 
-        public CacheStatistics(long hitCount, long missCount, double hitRate, long evictionCount, long estimatedSize) {
+        public CacheStatistics(long hitCount, long missCount) {
             this.hitCount = hitCount;
             this.missCount = missCount;
-            this.hitRate = hitRate;
-            this.evictionCount = evictionCount;
-            this.estimatedSize = estimatedSize;
         }
     }
 }
