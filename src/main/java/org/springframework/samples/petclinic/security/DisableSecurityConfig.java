@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -21,7 +22,10 @@ public class DisableSecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authz) -> authz
-               .anyRequest().permitAll()
+                .anyRequest().permitAll()
+            )
+            .headers((headers) -> headers
+                .frameOptions(FrameOptionsConfig::sameOrigin)  // to avoid setting of X-Frame-Options=deny header
             );
         // @formatter:on
         return http.build();
