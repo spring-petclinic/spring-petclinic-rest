@@ -1955,6 +1955,12 @@ components:
           example: '2010-09-07'
         type:
           $ref: '#/components/schemas/PetType'
+        weight:
+          title: Weight
+          description: The weight of the pet in decimal format.
+          type: number
+          format: double
+          example: 15.75
       required:
         - name
         - birthDate

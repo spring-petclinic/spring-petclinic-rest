@@ -157,6 +157,7 @@ public class OwnerRestController implements OwnersApi {
                 currentPet.setBirthDate(petFieldsDto.getBirthDate());
                 currentPet.setName(petFieldsDto.getName());
                 currentPet.setType(petMapper.toPetType(petFieldsDto.getType()));
+                currentPet.setWeight(petFieldsDto.getWeight());
                 this.clinicService.savePet(currentPet);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
