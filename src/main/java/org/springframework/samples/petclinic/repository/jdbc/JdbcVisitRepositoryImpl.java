@@ -15,6 +15,16 @@
  */
 package org.springframework.samples.petclinic.repository.jdbc;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -29,11 +39,6 @@ import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
 
 /**
  * A simple JDBC-based implementation of the {@link VisitRepository} interface.
@@ -114,7 +119,7 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
     public Collection<Visit> findAll() throws DataAccessException {
         Map<String, Object> params = new HashMap<>();
         return this.namedParameterJdbcTemplate.query(
-            "SELECT id as visit_id, pets.id as pets_id, visit_date, description FROM visits LEFT JOIN pets ON visits.pet_id = pets.id",
+            "SELECT visits.id as visit_id, pets.id as pets_id, visit_date, description FROM visits LEFT JOIN pets ON visits.pet_id = pets.id",
             params, new JdbcVisitRowMapperExt());
     }
 
