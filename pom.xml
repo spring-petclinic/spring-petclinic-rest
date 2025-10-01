@@ -31,7 +31,7 @@
         <maven.exec-plugin.version>3.5.0</maven.exec-plugin.version>
         <maven.jacoco-plugin.version>0.8.13</maven.jacoco-plugin.version>
         <maven.jxr-plugin.version>3.6.0</maven.jxr-plugin.version>
-        <maven.license-plugin.version>2.6.0</maven.license-plugin.version>
+        <maven.license-plugin.version>2.7.0</maven.license-plugin.version>
         <maven.openapi-generator-plugin.version>7.14.0</maven.openapi-generator-plugin.version>
         <maven.project-info-reports-plugin.version>3.9.0</maven.project-info-reports-plugin.version>
         <maven.rat-plugin.version>0.16.1</maven.rat-plugin.version>
