@@ -27,6 +27,7 @@ import org.springframework.samples.petclinic.repository.SpecialtyRepository;
  *
  */
 
+@org.springframework.stereotype.Repository
 @Profile("spring-data-jpa")
 public interface SpringDataSpecialtyRepository extends SpecialtyRepository, Repository<Specialty, Integer>, SpecialtyRepositoryOverride {
 

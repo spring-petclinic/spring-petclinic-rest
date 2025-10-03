@@ -5,6 +5,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.repository.UserRepository;
 
+@org.springframework.stereotype.Repository
 @Profile("spring-data-jpa")
 public interface SpringDataUserRepository extends UserRepository, Repository<User, String>  {
 

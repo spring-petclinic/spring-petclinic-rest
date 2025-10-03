@@ -32,6 +32,7 @@ import org.springframework.samples.petclinic.repository.PetRepository;
  * @author Vitaliy Fedoriv
  */
 
+@org.springframework.stereotype.Repository
 @Profile("spring-data-jpa")
 public interface SpringDataPetRepository extends PetRepository, Repository<Pet, Integer>, PetRepositoryOverride {
 

@@ -27,6 +27,7 @@ import org.springframework.samples.petclinic.repository.VetRepository;
  * @since 15.1.2013
  */
 
+@org.springframework.stereotype.Repository
 @Profile("spring-data-jpa")
 public interface SpringDataVetRepository extends VetRepository, Repository<Vet, Integer> {
 }

@@ -31,6 +31,7 @@ import org.springframework.samples.petclinic.repository.OwnerRepository;
  * @since 15.1.2013
  */
 
+@org.springframework.stereotype.Repository
 @Profile("spring-data-jpa")
 public interface SpringDataOwnerRepository extends OwnerRepository, Repository<Owner, Integer> {
 
