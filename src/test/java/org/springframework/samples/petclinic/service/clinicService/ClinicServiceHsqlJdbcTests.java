@@ -17,16 +17,18 @@ package org.springframework.samples.petclinic.service.clinicService;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 /**
- * <p> Integration test using the jdbc profile.
+ * <p> Integration test using the JDBC and HSQLDB profiles.
  *
  * @author Thomas Risberg
  * @author Michael Isvy
  * @see AbstractClinicServiceTests AbstractClinicServiceTests for more details. </p>
  */
 @SpringBootTest
-@ActiveProfiles({"jdbc", "hsqldb"})
-class ClinicServiceJdbcTests extends AbstractClinicServiceTests {
+@ActiveProfiles({"hsqldb", "jdbc"})
+@TestPropertySource(properties = {"spring.sql.init.platform=hsqldb"})
+class ClinicServiceHsqlJdbcTests extends AbstractClinicServiceTests {
 
 }
