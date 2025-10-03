@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+
 # ------------------- Constants & Config ---------------------------------------------------
 COLLECTION="./src/test/postman/petclinic-nonregressiontests.postman_collection.json"
 ENVIRONMENT="./src/test/postman/petclinic-env.postman_environment.json"
