@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.service;
+package org.springframework.samples.petclinic.service.user;
 
 import org.springframework.samples.petclinic.model.User;
 

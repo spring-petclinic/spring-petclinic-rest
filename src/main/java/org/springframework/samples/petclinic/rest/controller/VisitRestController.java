@@ -24,7 +24,7 @@ import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.rest.api.VisitsApi;
 import org.springframework.samples.petclinic.rest.dto.VisitDto;
 import org.springframework.samples.petclinic.rest.dto.VisitFieldsDto;
-import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.samples.petclinic.service.visit.VisitService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -42,12 +42,12 @@ import java.util.List;
 @RequestMapping("api")
 public class VisitRestController implements VisitsApi {
 
-    private final ClinicService clinicService;
+    private final VisitService visitService;
 
     private final VisitMapper visitMapper;
 
-    public VisitRestController(ClinicService clinicService, VisitMapper visitMapper) {
-        this.clinicService = clinicService;
+    public VisitRestController(VisitService visitService, VisitMapper visitMapper) {
+        this.visitService = visitService;
         this.visitMapper = visitMapper;
     }
 
@@ -55,7 +55,7 @@ public class VisitRestController implements VisitsApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<List<VisitDto>> listVisits() {
-        List<Visit> visits = new ArrayList<>(this.clinicService.findAllVisits());
+        List<Visit> visits = new ArrayList<>(this.visitService.findAll());
         if (visits.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -65,7 +65,7 @@ public class VisitRestController implements VisitsApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<VisitDto> getVisit( Integer visitId) {
-        Visit visit = this.clinicService.findVisitById(visitId);
+        Visit visit = this.visitService.findById(visitId);
         if (visit == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -77,7 +77,7 @@ public class VisitRestController implements VisitsApi {
     public ResponseEntity<VisitDto> addVisit(VisitDto visitDto) {
         HttpHeaders headers = new HttpHeaders();
         Visit visit = visitMapper.toVisit(visitDto);
-        this.clinicService.saveVisit(visit);
+        this.visitService.save(visit);
         visitDto = visitMapper.toVisitDto(visit);
         headers.setLocation(UriComponentsBuilder.newInstance().path("/api/visits/{id}").buildAndExpand(visit.getId()).toUri());
         return new ResponseEntity<>(visitDto, headers, HttpStatus.CREATED);
@@ -86,13 +86,13 @@ public class VisitRestController implements VisitsApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<VisitDto> updateVisit(Integer visitId, VisitFieldsDto visitDto) {
-        Visit currentVisit = this.clinicService.findVisitById(visitId);
+        Visit currentVisit = this.visitService.findById(visitId);
         if (currentVisit == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         currentVisit.setDate(visitDto.getDate());
         currentVisit.setDescription(visitDto.getDescription());
-        this.clinicService.saveVisit(currentVisit);
+        this.visitService.save(currentVisit);
         return new ResponseEntity<>(visitMapper.toVisitDto(currentVisit), HttpStatus.NO_CONTENT);
     }
 
@@ -100,11 +100,11 @@ public class VisitRestController implements VisitsApi {
     @Transactional
     @Override
     public ResponseEntity<VisitDto> deleteVisit(Integer visitId) {
-        Visit visit = this.clinicService.findVisitById(visitId);
+        Visit visit = this.visitService.findById(visitId);
         if (visit == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        this.clinicService.deleteVisit(visit);
+        this.visitService.delete(visit);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.service;
+package org.springframework.samples.petclinic.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.User;

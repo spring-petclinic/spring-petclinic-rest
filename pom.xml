@@ -86,6 +86,14 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+            <!-- Lombok dependency -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.32</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!-- Data stores and supporting libs -->
         <dependency>
@@ -107,6 +115,11 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+            <version>3.1.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
