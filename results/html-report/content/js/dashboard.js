@@ -133,7 +133,7 @@ $(document).ready(function() {
         widgets: ['zebra']
     });
 
-    var data = {"OkPercent": 37.54171024453409, "KoPercent": 62.45828975546591};
+    var data = {"OkPercent": 100.0, "KoPercent": 0.0};
     var dataset = [
         {
             "label" : "FAIL",
@@ -173,7 +173,7 @@ $(document).ready(function() {
     });
 
     // Creates APDEX table
-    createTable($("#apdexTable"), {"supportsControllersDiscrimination": true, "overall": {"data": [0.37534239752975745, 500, 1500, "Total"], "isController": false}, "titles": ["Apdex", "T (Toleration threshold)", "F (Frustration threshold)", "Label"], "items": [{"data": [0.0, 500, 1500, "Get Pet Belonging to Owner"], "isController": false}, {"data": [1.0, 500, 1500, "Delete Owner"], "isController": false}, {"data": [0.0, 500, 1500, "Add Pet to Owner"], "isController": false}, {"data": [0.9996086105675147, 500, 1500, "Create Owner"], "isController": false}, {"data": [0.0, 500, 1500, "Delete Pet"], "isController": false}, {"data": [0.999801429706116, 500, 1500, "Update Owner"], "isController": false}, {"data": [0.0, 500, 1500, "Update Pet"], "isController": false}, {"data": [0.0, 500, 1500, "Schedule Visit"], "isController": false}]}, function(index, item){
+    createTable($("#apdexTable"), {"supportsControllersDiscrimination": true, "overall": {"data": [1.0, 500, 1500, "Total"], "isController": false}, "titles": ["Apdex", "T (Toleration threshold)", "F (Frustration threshold)", "Label"], "items": [{"data": [1.0, 500, 1500, "Get Pet Belonging to Owner"], "isController": false}, {"data": [1.0, 500, 1500, "Delete Owner"], "isController": false}, {"data": [1.0, 500, 1500, "Add Pet to Owner"], "isController": false}, {"data": [1.0, 500, 1500, "Create Owner"], "isController": false}, {"data": [1.0, 500, 1500, "Delete Pet"], "isController": false}, {"data": [1.0, 500, 1500, "Update Owner"], "isController": false}, {"data": [1.0, 500, 1500, "Update Pet"], "isController": false}, {"data": [1.0, 500, 1500, "Schedule Visit"], "isController": false}]}, function(index, item){
         switch(index){
             case 0:
                 item = item.toFixed(3);
@@ -187,7 +187,7 @@ $(document).ready(function() {
     }, [[0, 0]], 3);
 
     // Create statistics table
-    createTable($("#statisticsTable"), {"supportsControllersDiscrimination": true, "overall": {"data": ["Total", 20079, 12541, 62.45828975546591, 3.1052841276956373, 0, 611, 2.0, 4.0, 5.0, 10.0, 33.48034515819751, 23.738979323856768, 8.688834270394764], "isController": false}, "titles": ["Label", "#Samples", "FAIL", "Error %", "Average", "Min", "Max", "Median", "90th pct", "95th pct", "99th pct", "Transactions/s", "Received", "Sent"], "items": [{"data": ["Get Pet Belonging to Owner", 2490, 2490, 100.0, 3.4224899598393543, 1, 422, 2.0, 4.900000000000091, 6.0, 9.090000000000146, 4.158379133954919, 2.698073336523094, 0.8104253247376797], "isController": false}, {"data": ["Delete Owner", 2465, 0, 0.0, 3.4494929006085173, 1, 141, 3.0, 5.0, 7.0, 12.0, 4.114388341509254, 1.3339618450987036, 0.8661216475663351], "isController": false}, {"data": ["Add Pet to Owner", 2542, 2542, 100.0, 1.9575137686860724, 0, 311, 1.0, 3.0, 4.0, 7.0, 4.240865123138574, 5.495240092378956, 1.1661382007771028], "isController": false}, {"data": ["Create Owner", 2555, 0, 0.0, 3.9001956947162433, 1, 611, 3.0, 5.0, 6.0, 11.0, 4.26049198260452, 2.417979666989608, 1.3605282014762479], "isController": false}, {"data": ["Delete Pet", 2477, 2477, 100.0, 2.7537343560758965, 1, 599, 2.0, 4.0, 4.0, 8.2199999999998, 4.135259893655206, 2.542926393897278, 0.848051345378509], "isController": false}, {"data": ["Update Owner", 2518, 0, 0.0, 4.929308975377295, 1, 552, 3.0, 6.0, 7.0, 14.809999999999945, 4.201063780089828, 1.612322329663381, 1.380820258537269], "isController": false}, {"data": ["Update Pet", 2503, 2503, 100.0, 1.926887734718341, 0, 140, 1.0, 3.0, 4.0, 6.0, 4.179586984001349, 2.5701096155339367, 1.1346925601097413], "isController": false}, {"data": ["Schedule Visit", 2529, 2529, 100.0, 2.502570185844211, 0, 146, 2.0, 4.0, 4.0, 7.0, 4.219416322417463, 5.087693283032074, 1.1290235081468605], "isController": false}]}, function(index, item){
+    createTable($("#statisticsTable"), {"supportsControllersDiscrimination": true, "overall": {"data": ["Total", 20079, 0, 0.0, 3.8363464315951825, 0, 256, 3.0, 7.0, 9.0, 15.0, 33.47917284983976, 15.315349057663578, 8.853284023048925], "isController": false}, "titles": ["Label", "#Samples", "FAIL", "Error %", "Average", "Min", "Max", "Median", "90th pct", "95th pct", "99th pct", "Transactions/s", "Received", "Sent"], "items": [{"data": ["Get Pet Belonging to Owner", 2490, 0, 0.0, 3.3935742971887564, 1, 26, 3.0, 6.0, 9.0, 15.0, 4.158031931681364, 2.4293068689142863, 0.8248518022730574], "isController": false}, {"data": ["Delete Owner", 2466, 0, 0.0, 3.601784266017839, 1, 64, 3.0, 6.0, 8.0, 14.0, 4.115514789818357, 1.3584414052330123, 0.8663594894241616], "isController": false}, {"data": ["Add Pet to Owner", 2542, 0, 0.0, 3.378835562549167, 1, 47, 3.0, 6.0, 8.0, 13.0, 4.240483101457979, 2.3593173960731324, 1.2198674119207287], "isController": false}, {"data": ["Create Owner", 2554, 0, 0.0, 3.5391542678152024, 1, 256, 3.0, 6.0, 7.0, 13.0, 4.259577377874881, 2.4424176833336113, 1.3602361353174668], "isController": false}, {"data": ["Delete Pet", 2477, 0, 0.0, 4.6039563988696015, 1, 40, 4.0, 8.0, 10.0, 19.0, 4.134935446930266, 1.364851739318779, 0.8623893180695176], "isController": false}, {"data": ["Update Owner", 2518, 0, 0.0, 4.913026211278783, 1, 61, 4.0, 8.0, 11.0, 19.0, 4.201056770992354, 1.6369352066659657, 1.3808179547627268], "isController": false}, {"data": ["Update Pet", 2503, 0, 0.0, 4.529764282860564, 1, 51, 3.0, 8.0, 11.0, 19.920000000000073, 4.179342726140344, 1.6284743630175755, 1.2022618652299724], "isController": false}, {"data": ["Schedule Visit", 2529, 0, 0.0, 2.7508896797153035, 0, 21, 2.0, 5.0, 6.0, 10.0, 4.2191065970878325, 2.108359102338776, 1.143675025983624], "isController": false}]}, function(index, item){
         switch(index){
             // Errors pct
             case 3:
@@ -217,7 +217,7 @@ $(document).ready(function() {
     }, [[0, 0]], 0, summaryTableHeader);
 
     // Create error table
-    createTable($("#errorsTable"), {"supportsControllersDiscrimination": false, "titles": ["Type of error", "Number of errors", "% in errors", "% in all samples"], "items": [{"data": ["400", 5071, 40.43537197990591, 25.255241794910106], "isController": false}, {"data": ["500", 7470, 59.56462802009409, 37.20304796055581], "isController": false}]}, function(index, item){
+    createTable($("#errorsTable"), {"supportsControllersDiscrimination": false, "titles": ["Type of error", "Number of errors", "% in errors", "% in all samples"], "items": []}, function(index, item){
         switch(index){
             case 2:
             case 3:
@@ -228,7 +228,7 @@ $(document).ready(function() {
     }, [[1, 1]]);
 
         // Create top5 errors by sampler
-    createTable($("#top5ErrorsBySamplerTable"), {"supportsControllersDiscrimination": false, "overall": {"data": ["Total", 20079, 12541, "500", 7470, "400", 5071, "", "", "", "", "", ""], "isController": false}, "titles": ["Sample", "#Samples", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors"], "items": [{"data": ["Get Pet Belonging to Owner", 2490, 2490, "500", 2490, "", "", "", "", "", "", "", ""], "isController": false}, {"data": [], "isController": false}, {"data": ["Add Pet to Owner", 2542, 2542, "400", 2542, "", "", "", "", "", "", "", ""], "isController": false}, {"data": [], "isController": false}, {"data": ["Delete Pet", 2477, 2477, "500", 2477, "", "", "", "", "", "", "", ""], "isController": false}, {"data": [], "isController": false}, {"data": ["Update Pet", 2503, 2503, "500", 2503, "", "", "", "", "", "", "", ""], "isController": false}, {"data": ["Schedule Visit", 2529, 2529, "400", 2529, "", "", "", "", "", "", "", ""], "isController": false}]}, function(index, item){
+    createTable($("#top5ErrorsBySamplerTable"), {"supportsControllersDiscrimination": false, "overall": {"data": ["Total", 20079, 0, "", "", "", "", "", "", "", "", "", ""], "isController": false}, "titles": ["Sample", "#Samples", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors", "Error", "#Errors"], "items": [{"data": [], "isController": false}, {"data": [], "isController": false}, {"data": [], "isController": false}, {"data": [], "isController": false}, {"data": [], "isController": false}, {"data": [], "isController": false}, {"data": [], "isController": false}, {"data": [], "isController": false}]}, function(index, item){
         return item;
     }, [[0, 0]], 0);
 

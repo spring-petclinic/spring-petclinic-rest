@@ -112,7 +112,7 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&quot;name&quot;:&quot;Buddy&quot;,&quot;birthDate&quot;:&quot;2022-06-15&quot;,&quot;type&quot;:{&quot;id&quot;:1}}</stringProp>
+                <stringProp name="Argument.value">{&quot;name&quot;:&quot;Buddy&quot;,&quot;birthDate&quot;:&quot;2022-06-15&quot;,&quot;type&quot;:{&quot;id&quot;:1,&quot;name&quot;:&quot;dog&quot;}}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -170,7 +170,7 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&quot;name&quot;:&quot;Buddy Updated&quot;,&quot;birthDate&quot;:&quot;2022-06-20&quot;,&quot;type&quot;:{&quot;id&quot;:1}}</stringProp>
+                <stringProp name="Argument.value">{&quot;name&quot;:&quot;Buddy Updated&quot;,&quot;birthDate&quot;:&quot;2022-06-20&quot;,&quot;type&quot;:{&quot;id&quot;:1,&quot;name&quot;:&quot;dog&quot;}}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
