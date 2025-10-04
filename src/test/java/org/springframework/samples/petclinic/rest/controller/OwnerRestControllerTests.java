@@ -33,7 +33,9 @@ import org.springframework.samples.petclinic.rest.dto.OwnerDto;
 import org.springframework.samples.petclinic.rest.dto.PetDto;
 import org.springframework.samples.petclinic.rest.dto.PetTypeDto;
 import org.springframework.samples.petclinic.rest.dto.VisitDto;
-import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.samples.petclinic.service.owner.OwnerService;
+import org.springframework.samples.petclinic.service.pet.PetService;
+import org.springframework.samples.petclinic.service.visit.VisitService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
@@ -76,7 +78,13 @@ class OwnerRestControllerTests {
     private VisitMapper visitMapper;
 
     @MockitoBean
-    private ClinicService clinicService;
+    private OwnerService ownerService;
+
+    @MockitoBean
+    private PetService petService;
+
+    @MockitoBean
+    private VisitService visitService;
 
     private MockMvc mockMvc;
 
@@ -150,7 +158,7 @@ class OwnerRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetOwnerSuccess() throws Exception {
-        given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        given(this.ownerService.findById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
         this.mockMvc.perform(get("/api/owners/1")
                 .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
@@ -162,7 +170,7 @@ class OwnerRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetOwnerNotFound() throws Exception {
-        given(this.clinicService.findOwnerById(2)).willReturn(null);
+        given(this.ownerService.findById(2)).willReturn(null);
         this.mockMvc.perform(get("/api/owners/2")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -173,7 +181,7 @@ class OwnerRestControllerTests {
     void testGetOwnersListSuccess() throws Exception {
         owners.remove(0);
         owners.remove(1);
-        given(this.clinicService.findOwnerByLastName("Davis")).willReturn(ownerMapper.toOwners(owners));
+        given(this.ownerService.findByLastName("Davis")).willReturn(ownerMapper.toOwners(owners));
         this.mockMvc.perform(get("/api/owners?lastName=Davis")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -188,7 +196,7 @@ class OwnerRestControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetOwnersListNotFound() throws Exception {
         owners.clear();
-        given(this.clinicService.findOwnerByLastName("0")).willReturn(ownerMapper.toOwners(owners));
+        given(this.ownerService.findByLastName("0")).willReturn(ownerMapper.toOwners(owners));
         this.mockMvc.perform(get("/api/owners?lastName=0")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -199,7 +207,7 @@ class OwnerRestControllerTests {
     void testGetAllOwnersSuccess() throws Exception {
         owners.remove(0);
         owners.remove(1);
-        given(this.clinicService.findAllOwners()).willReturn(ownerMapper.toOwners(owners));
+        given(this.ownerService.findAll()).willReturn(ownerMapper.toOwners(owners));
         this.mockMvc.perform(get("/api/owners")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -214,7 +222,7 @@ class OwnerRestControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetAllOwnersNotFound() throws Exception {
         owners.clear();
-        given(this.clinicService.findAllOwners()).willReturn(ownerMapper.toOwners(owners));
+        given(this.ownerService.findAll()).willReturn(ownerMapper.toOwners(owners));
         this.mockMvc.perform(get("/api/owners")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -252,7 +260,7 @@ class OwnerRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateOwnerSuccess() throws Exception {
-        given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        given(this.ownerService.findById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
         int ownerId = owners.get(0).getId();
         OwnerDto updatedOwnerDto = new OwnerDto();
         // body.id = ownerId which is used in url path
@@ -283,7 +291,7 @@ class OwnerRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateOwnerSuccessNoBodyId() throws Exception {
-        given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        given(this.ownerService.findById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
         int ownerId = owners.get(0).getId();
         OwnerDto updatedOwnerDto = new OwnerDto();
         updatedOwnerDto.setFirstName("GeorgeI");
@@ -329,7 +337,7 @@ class OwnerRestControllerTests {
         mapper.registerModule(new JavaTimeModule());
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         final Owner owner = ownerMapper.toOwner(owners.get(0));
-        given(this.clinicService.findOwnerById(1)).willReturn(owner);
+        given(this.ownerService.findById(1)).willReturn(owner);
         this.mockMvc.perform(delete("/api/owners/1")
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNoContent());
@@ -342,7 +350,7 @@ class OwnerRestControllerTests {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
-        given(this.clinicService.findOwnerById(999)).willReturn(null);
+        given(this.ownerService.findById(999)).willReturn(null);
         this.mockMvc.perform(delete("/api/owners/999")
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNotFound());
@@ -399,10 +407,10 @@ class OwnerRestControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetOwnerPetSuccess() throws Exception {
         var owner = ownerMapper.toOwner(owners.get(0));
-        given(this.clinicService.findOwnerById(2)).willReturn(owner);
+        given(this.ownerService.findById(2)).willReturn(owner);
         var pet = petMapper.toPet(pets.get(0));
         pet.setOwner(owner);
-        given(this.clinicService.findPetById(1)).willReturn(pet);
+        given(this.petService.findById(1)).willReturn(pet);
         this.mockMvc.perform(get("/api/owners/2/pets/1")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -413,7 +421,7 @@ class OwnerRestControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetOwnersPetsWithOwnerNotFound() throws Exception {
         owners.clear();
-        given(this.clinicService.findAllOwners()).willReturn(ownerMapper.toOwners(owners));
+        given(this.ownerService.findAll()).willReturn(ownerMapper.toOwners(owners));
         this.mockMvc.perform(get("/api/owners/1/pets/1")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -423,7 +431,7 @@ class OwnerRestControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetOwnersPetsWithPetNotFound() throws Exception {
         var owner1 = ownerMapper.toOwner(owners.get(0));
-        given(this.clinicService.findOwnerById(1)).willReturn(owner1);
+        given(this.ownerService.findById(1)).willReturn(owner1);
         this.mockMvc.perform(get("/api/owners/1/pets/2")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -435,8 +443,8 @@ class OwnerRestControllerTests {
     void testUpdateOwnersPetSuccess() throws Exception {
         int ownerId = owners.get(0).getId();
         int petId = pets.get(0).getId();
-        given(this.clinicService.findOwnerById(ownerId)).willReturn(ownerMapper.toOwner(owners.get(0)));
-        given(this.clinicService.findPetById(petId)).willReturn(petMapper.toPet(pets.get(0)));
+        given(this.ownerService.findById(ownerId)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        given(this.petService.findById(petId)).willReturn(petMapper.toPet(pets.get(0)));
         PetDto updatedPetDto = pets.get(0);
         updatedPetDto.setName("Rex");
         updatedPetDto.setBirthDate(LocalDate.of(2020, 1, 15));
@@ -457,7 +465,7 @@ class OwnerRestControllerTests {
     void testUpdateOwnersPetOwnerNotFound() throws Exception {
         int ownerId = 0;
         int petId = pets.get(0).getId();
-        given(this.clinicService.findOwnerById(ownerId)).willReturn(null);
+        given(this.ownerService.findById(ownerId)).willReturn(null);
         PetDto petDto = pets.get(0);
         petDto.setName("Thor");
         ObjectMapper mapper = new ObjectMapper();
@@ -476,8 +484,8 @@ class OwnerRestControllerTests {
     void testUpdateOwnersPetPetNotFound() throws Exception {
         int ownerId = owners.get(0).getId();
         int petId = 0;
-        given(this.clinicService.findOwnerById(ownerId)).willReturn(ownerMapper.toOwner(owners.get(0)));
-        given(this.clinicService.findPetById(petId)).willReturn(null);
+        given(this.ownerService.findById(ownerId)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        given(this.petService.findById(petId)).willReturn(null);
         PetDto petDto = pets.get(0);
         petDto.setName("Ghost");
         petDto.setBirthDate(LocalDate.of(2020, 1, 1));
