@@ -3,6 +3,7 @@ package org.springframework.samples.petclinic.service.pettype;
 import java.util.Collection;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.context.annotation.Profile;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.samples.petclinic.repository.PetTypeRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Profile({"jdbc", "jpa", "spring-data-jpa"})
 @Transactional(readOnly = true)
 public class PetTypeServiceImpl implements PetTypeService {
 

@@ -3,6 +3,7 @@ package org.springframework.samples.petclinic.service.vet;
 import java.util.Collection;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.context.annotation.Profile;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.VetRepository;
 import org.springframework.samples.petclinic.service.support.EntityFinder;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Profile({"jdbc", "jpa", "spring-data-jpa"})
 @Transactional(readOnly = true)
 public class VetServiceImpl implements VetService {
 

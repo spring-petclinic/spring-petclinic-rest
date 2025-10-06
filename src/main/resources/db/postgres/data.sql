@@ -52,9 +52,13 @@ INSERT INTO visits (pet_id, visit_date, description) SELECT 8, '2011-03-04', 'ra
 INSERT INTO visits (pet_id, visit_date, description) SELECT 8, '2009-06-04', 'neutered' WHERE NOT EXISTS (SELECT * FROM visits WHERE id=3);
 INSERT INTO visits (pet_id, visit_date, description) SELECT 7, '2008-09-04', 'spayed' WHERE NOT EXISTS (SELECT * FROM visits WHERE id=4);
 
-INSERT INTO users(username, password, enabled) VALUES
-('admin', '$2a$10$ymaklWBnpBKlgdMgkjWVF.GMGyvH8aDuTK.glFOaKw712LHtRRymS', TRUE);
+INSERT INTO users(username, password, enabled)
+VALUES ('admin', '$2a$10$ymaklWBnpBKlgdMgkjWVF.GMGyvH8aDuTK.glFOaKw712LHtRRymS', TRUE)
+ON CONFLICT (username) DO NOTHING;
 
-INSERT INTO roles (username, role) SELECT 'admin', 'ROLE_OWNER_ADMIN' WHERE NOT EXISTS (SELECT * FROM roles WHERE id=1);
-INSERT INTO roles (username, role) SELECT 'admin', 'ROLE_VET_ADMIN' WHERE NOT EXISTS (SELECT * FROM roles WHERE id=2);
-INSERT INTO roles (username, role) SELECT'admin', 'ROLE_ADMIN' WHERE NOT EXISTS (SELECT * FROM roles WHERE id=3);
+INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_OWNER_ADMIN')
+ON CONFLICT (username, role) DO NOTHING;
+INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_VET_ADMIN')
+ON CONFLICT (username, role) DO NOTHING;
+INSERT INTO roles (username, role) VALUES ('admin', 'ROLE_ADMIN')
+ON CONFLICT (username, role) DO NOTHING;

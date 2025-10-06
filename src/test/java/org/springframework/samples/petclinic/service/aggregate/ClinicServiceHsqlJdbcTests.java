@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.service.clinicService;
+package org.springframework.samples.petclinic.service.aggregate;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 /**
- * <p> Integration test using the JDBC and H2 profiles.
+ * <p> Integration test using the JDBC and HSQLDB profiles.
  *
  * @author Thomas Risberg
  * @author Michael Isvy
  * @see AbstractClinicServiceTests AbstractClinicServiceTests for more details. </p>
  */
 @SpringBootTest
-@ActiveProfiles({"h2", "jdbc"})
-@TestPropertySource(properties = {
-    "spring.sql.init.platform=h2",
-    "spring.h2.console.enabled=false"
-})
-class ClinicServiceH2JdbcTests extends AbstractClinicServiceTests {
+@ActiveProfiles({"hsqldb", "jdbc"})
+@TestPropertySource(properties = {"spring.sql.init.platform=hsqldb"})
+class ClinicServiceHsqlJdbcTests extends AbstractClinicServiceTests {
 
 }
