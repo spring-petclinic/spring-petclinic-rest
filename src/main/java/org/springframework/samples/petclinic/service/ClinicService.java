@@ -26,6 +26,8 @@ import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Mostly used as a facade so all controllers have a single point of entry
@@ -67,4 +69,6 @@ public interface ClinicService {
 	void deleteSpecialty(Specialty specialty) throws DataAccessException;
 
     List<Specialty> findSpecialtiesByNameIn(Set<String> names) throws DataAccessException;
+    Page<Owner> findAllOwners(Pageable pageable);
+    Page<Owner> findOwnerByLastName(String lastName, Pageable pageable);
 }
