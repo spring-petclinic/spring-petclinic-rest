@@ -29,7 +29,7 @@
         <!-- Maven plugins and supporting properties -->
         <maven.checkstyle-plugin.version>3.6.0</maven.checkstyle-plugin.version>
         <maven.exec-plugin.version>3.5.0</maven.exec-plugin.version>
-        <maven.jacoco-plugin.version>0.8.13</maven.jacoco-plugin.version>
+        <maven.jacoco-plugin.version>0.8.14</maven.jacoco-plugin.version>
         <maven.jxr-plugin.version>3.6.0</maven.jxr-plugin.version>
         <maven.license-plugin.version>2.7.0</maven.license-plugin.version>
         <maven.openapi-generator-plugin.version>7.17.0</maven.openapi-generator-plugin.version>
