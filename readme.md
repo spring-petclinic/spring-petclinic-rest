@@ -19,6 +19,12 @@ The [spring-petclinic-angular project](https://github.com/spring-petclinic/sprin
 ## Running Petclinic locally
 
 ### With Maven command line
+### 🧩 Running PetClinic on Java 21
+
+This project also runs smoothly on **Java 21** (tested on JDK 21.0.5).  
+If you're using Java 21, follow these steps to ensure a clean setup:
+
+1. **Clone the repository**
 ```sh
 git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
 cd spring-petclinic-rest
