@@ -1,0 +1,16 @@
+# Using version 16 with Alpine Linux for a smaller image size
+FROM postgres:16-alpine
+
+# Set environment variables for database initialization
+ENV POSTGRES_DB=petclinic
+ENV POSTGRES_USER=petclinic
+ENV POSTGRES_PASSWORD=petclinic
+
+# Copy the database schema and initial data scripts
+# PostgreSQL will automatically run any .sql files in /docker-entrypoint-initdb.d/
+# when the database is first initialized
+COPY src/main/resources/db/postgres/schema.sql /docker-entrypoint-initdb.d/1-schema.sql
+COPY src/main/resources/db/postgres/data.sql /docker-entrypoint-initdb.d/2-data.sql
+
+# PostgreSQL listens on port 5432 by default
+EXPOSE 5432
