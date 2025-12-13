@@ -15,8 +15,14 @@ RUN chmod +x ./mvnw
 # Build the application using Maven
 RUN ./mvnw clean package
 
+# Create logs directory
+RUN mkdir -p /app/logs
+
 # The Spring Boot app is configured to run on port 9966
 EXPOSE 9966
+
+# Define volume for logs
+VOLUME ["/app/logs"]
 
 # Run the Spring Boot application
 # Using the JAR file created during the build
