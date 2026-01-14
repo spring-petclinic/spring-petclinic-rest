@@ -317,7 +317,7 @@ This project contains **non-regression tests** for the Petclinic API, built with
     ```
   II. Without Permission to the script file:
     ```sh
-    zsh postman-tests.sh
+    zsh postman-tests.shme
     ```
 > Note: You can use your currently bash installed. Like: "bash postman-tests.sh"
 
@@ -336,3 +336,11 @@ that could be used to implement the Pet Clinic then please join the community th
 The [issue tracker](https://github.com/spring-petclinic/spring-petclinic-rest/issues) is the preferred channel for bug reports, features requests and submitting pull requests.
 
 For pull requests, editor preferences are available in the [editor config](https://github.com/spring-petclinic/spring-petclinic-rest/blob/master/.editorconfig) for easy use in common text editors. Read more and download plugins at <http://editorconfig.org>.
+
+
+## Performance Optimization
+This branch is used to practice Redis-based API performance improvements.
+
+## Git Practice
+Learning professional Git workflow.
+
