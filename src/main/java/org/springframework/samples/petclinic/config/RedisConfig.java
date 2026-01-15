@@ -22,7 +22,7 @@ public class RedisConfig {
 
         RedisCacheConfiguration cacheConfiguration =
                 RedisCacheConfiguration.defaultCacheConfig()
-                        .entryTtl(Duration.ofMinutes(10))   // cache TTL
+                        .entryTtl(Duration.ofMinutes(11))   // cache TTL
                         .disableCachingNullValues()
                         .serializeKeysWith(
                                 RedisSerializationContext.SerializationPair.fromSerializer(
