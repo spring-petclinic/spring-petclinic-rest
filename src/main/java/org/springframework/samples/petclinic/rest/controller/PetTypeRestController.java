@@ -31,6 +31,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.transaction.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.samples.petclinic.messaging.event.PetTypeWriteEvent;
+import org.springframework.samples.petclinic.messaging.event.PetTypeWriteOperation;
+
+import org.springframework.samples.petclinic.messaging.producer.PetTypeWriteEventProducer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +48,14 @@ public class PetTypeRestController implements PettypesApi {
 
     private final ClinicService clinicService;
     private final PetTypeMapper petTypeMapper;
+    private final PetTypeWriteEventProducer producer;
 
 
-    public PetTypeRestController(ClinicService clinicService, PetTypeMapper petTypeMapper) {
+
+    public PetTypeRestController(ClinicService clinicService, PetTypeMapper petTypeMapper, PetTypeWriteEventProducer producer) {
         this.clinicService = clinicService;
         this.petTypeMapper = petTypeMapper;
+        this.producer = producer;
     }
 
     @PreAuthorize("hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)")
@@ -71,35 +81,66 @@ public class PetTypeRestController implements PettypesApi {
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
     public ResponseEntity<PetTypeDto> addPetType(PetTypeFieldsDto petTypeFieldsDto) {
-        HttpHeaders headers = new HttpHeaders();
-        final PetType type = petTypeMapper.toPetType(petTypeFieldsDto);
-        this.clinicService.savePetType(type);
-        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/pettypes/{id}").buildAndExpand(type.getId()).toUri());
-        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(type), headers, HttpStatus.CREATED);
+        // 1. Map DTO -> Entity
+        PetType petType = petTypeMapper.toPetType(petTypeFieldsDto);
+
+        // 2. Convert to JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        String payload;
+        try {
+            payload = objectMapper.writeValueAsString(petType);
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        // 3. Publish CREATE event
+        producer.publish(
+            new PetTypeWriteEvent(
+                PetTypeWriteOperation.CREATE,
+                null,
+                payload
+            )
+        );
+
+        // 4. Return 202 Accepted
+        return ResponseEntity.accepted().build();
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
     public ResponseEntity<PetTypeDto> updatePetType(Integer petTypeId, PetTypeDto petTypeDto) {
-        PetType currentPetType = this.clinicService.findPetTypeById(petTypeId);
-        if (currentPetType == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String payload;
+        try {
+            payload = objectMapper.writeValueAsString(petTypeDto);
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        currentPetType.setName(petTypeDto.getName());
-        this.clinicService.savePetType(currentPetType);
-        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(currentPetType), HttpStatus.NO_CONTENT);
+
+        producer.publish(
+            new PetTypeWriteEvent(
+                PetTypeWriteOperation.UPDATE,
+                petTypeId,
+                payload
+            )
+        );
+
+        return ResponseEntity.accepted().build();
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Transactional
+
     @Override
     public ResponseEntity<PetTypeDto> deletePetType(Integer petTypeId) {
-        PetType petType = this.clinicService.findPetTypeById(petTypeId);
-        if (petType == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        this.clinicService.deletePetType(petType);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+        producer.publish(
+        new PetTypeWriteEvent(
+            PetTypeWriteOperation.DELETE,
+            petTypeId,
+            null
+        )
+        );
 
+        return ResponseEntity.accepted().build();
+    }
+    
 }
