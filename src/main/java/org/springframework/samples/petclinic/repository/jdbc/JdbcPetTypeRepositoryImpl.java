@@ -118,8 +118,7 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
         Map<String, Object> pettypeparams = new HashMap<>();
         pettypeparams.put("id", petType.getId());
         //diamond operator
-        List<Pet> pets = new ArrayList<>();
-        pets = this.namedParameterJdbcTemplate.
+        List<Pet> pets = this.namedParameterJdbcTemplate.
             query("SELECT pets.id, name, birth_date, type_id, owner_id FROM pets WHERE type_id=:id",
                 pettypeparams,
                 BeanPropertyRowMapper.newInstance(Pet.class));
@@ -128,8 +127,7 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
             Map<String, Object> petparams = new HashMap<>();
             petparams.put("id", pet.getId());
             //diamond operator
-            List<Visit> visits = new ArrayList<>();
-            visits = this.namedParameterJdbcTemplate.query(
+            List<Visit> visits = this.namedParameterJdbcTemplate.query(
                 "SELECT id, pet_id, visit_date, description FROM visits WHERE pet_id = :id",
                 petparams,
                 BeanPropertyRowMapper.newInstance(Visit.class));
