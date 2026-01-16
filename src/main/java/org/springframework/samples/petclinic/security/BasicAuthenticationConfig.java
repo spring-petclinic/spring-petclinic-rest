@@ -29,7 +29,6 @@ public class BasicAuthenticationConfig {
     }
 
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // @formatter:off
@@ -37,19 +36,23 @@ public class BasicAuthenticationConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authz) -> authz
                 .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults());
+            .httpBasic(Customizer.withDefaults());
         // @formatter:on
         return http.build();
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // @formatter:off
+    public void configureGlobal(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder) throws Exception {
         auth
             .jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("select username,password,enabled from users where username=?")
-                .authoritiesByUsernameQuery("select username,role from roles where username=?");
-        // @formatter:on
+            .dataSource(dataSource)
+            .usersByUsernameQuery("select username,password,enabled from users where username=?")
+            .authoritiesByUsernameQuery("select username,role from roles where username=?")
+            .passwordEncoder(passwordEncoder);
+        /*auth
+            .jdbcAuthentication()
+            .dataSource(dataSource)
+            .usersByUsernameQuery(...)
+            .authoritiesByUsernameQuery(...) */
     }
 }

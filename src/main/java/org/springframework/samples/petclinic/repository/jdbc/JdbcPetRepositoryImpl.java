@@ -124,12 +124,14 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             .addValue("type_id", pet.getType().getId())
             .addValue("owner_id", pet.getOwner().getId());
     }
-    
+
 	@Override
 	public Collection<Pet> findAll() throws DataAccessException {
 		Map<String, Object> params = new HashMap<>();
-		Collection<Pet> pets = new ArrayList<Pet>();
-		Collection<JdbcPet> jdbcPets = new ArrayList<JdbcPet>();
+		Collection<Pet> pets = new ArrayList<>();
+		//Collection<JdbcPet> jdbcPets = new ArrayList<JdbcPet>();
+        Collection<JdbcPet> jdbcPets= new ArrayList<>();
+
 		jdbcPets = this.namedParameterJdbcTemplate
 				.query("SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets",
 				params,
@@ -150,7 +152,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 		return pets;
 	}
 
-	@Override
+	/*@Override
 	public void delete(Pet pet) throws DataAccessException {
 		Map<String, Object> pet_params = new HashMap<>();
 		pet_params.put("id", pet.getId());
@@ -162,6 +164,20 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 			this.namedParameterJdbcTemplate.update("DELETE FROM visits WHERE id=:id", visit_params);
 		}
 		this.namedParameterJdbcTemplate.update("DELETE FROM pets WHERE id=:id", pet_params);
-	}
+	}*/
+
+    @Override
+    public void delete(Pet pet) throws DataAccessException {
+        Map<String, Object> petparams = new HashMap<>();
+        petparams.put("id", pet.getId());
+        List<Visit> visits = pet.getVisits();
+        // cascade delete visits
+        for (Visit visit : visits) {
+            Map<String, Object> visitparams = new HashMap<>();
+            visitparams.put("id", visit.getId());
+            this.namedParameterJdbcTemplate.update("DELETE FROM visits WHERE id=:id", visitparams);
+        }
+        this.namedParameterJdbcTemplate.update("DELETE FROM pets WHERE id=:id", petparams);
+    }
 
 }

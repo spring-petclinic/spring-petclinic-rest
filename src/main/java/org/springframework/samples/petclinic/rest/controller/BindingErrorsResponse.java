@@ -62,7 +62,8 @@ public class BindingErrorsResponse {
         addError(error);
     }
 
-	private final List<BindingError> bindingErrors = new ArrayList<BindingError>();
+	//private final List<BindingError> bindingErrors = new ArrayList<BindingError>();
+    private final List<BindingError> bindingErrors = new ArrayList<>();
 
 	public void addError(BindingError bindingError) {
 		this.bindingErrors.add(bindingError);
@@ -122,8 +123,12 @@ public class BindingErrorsResponse {
 			this.fieldValue = fieldValue;
 		}
 
-		protected void setErrorMessage(String error_message) {
-			this.errorMessage = error_message;
+        //protected void setErrorMessage(String error_message) {
+        //    this.errorMessage = error_message;
+       // }
+
+        protected void setErrorMessage(String errormessage) {
+			this.errorMessage = errormessage;
 		}
 
 		@Override

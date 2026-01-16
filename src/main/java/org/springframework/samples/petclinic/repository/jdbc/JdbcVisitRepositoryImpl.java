@@ -156,11 +156,18 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
             visit.setDescription(rs.getString("description"));
             Map<String, Object> params = new HashMap<>();
             params.put("id", rs.getInt("pets_id"));
-            pet = JdbcVisitRepositoryImpl.this.namedParameterJdbcTemplate.queryForObject(
-                "SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets WHERE pets.id=:id",
-                params,
-                new JdbcPetRowMapper());
+
+                pet = java.util.Objects.requireNonNull(
+                    JdbcVisitRepositoryImpl.this.namedParameterJdbcTemplate.queryForObject(
+                        "SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets WHERE pets.id=:id",
+                        params,
+                        new JdbcPetRowMapper()),
+                    "Pet must not be null");
             params.put("type_id", pet.getTypeId());
+
+
+
+
             petType = JdbcVisitRepositoryImpl.this.namedParameterJdbcTemplate.queryForObject(
                 "SELECT id, name FROM types WHERE id= :type_id",
                 params,

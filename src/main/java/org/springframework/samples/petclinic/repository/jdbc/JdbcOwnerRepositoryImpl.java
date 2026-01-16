@@ -168,7 +168,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
 	    return owners;
 	}
 
-	@Override
+	/*@Override
 	@Transactional
 	public void delete(Owner owner) throws DataAccessException {
 		Map<String, Object> owner_params = new HashMap<>();
@@ -188,7 +188,40 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
             this.namedParameterJdbcTemplate.update("DELETE FROM pets WHERE id=:id", pet_params);
         }
         this.namedParameterJdbcTemplate.update("DELETE FROM owners WHERE id=:id", owner_params);
-	}
+	}*/
 
+    @Override
+    @Transactional
+    public void delete(Owner owner) throws DataAccessException {
+        Map<String, Object> ownerParams = new HashMap<>();
+        ownerParams.put("id", owner.getId());
 
+        List<Pet> pets = owner.getPets();
+        // cascade delete pets
+        for (Pet pet : pets) {
+            Map<String, Object> petParams = new HashMap<>();
+            petParams.put("id", pet.getId());
+
+            // cascade delete visits
+            List<Visit> visits = pet.getVisits();
+            for (Visit visit : visits) {
+                Map<String, Object> visitParams = new HashMap<>();
+                visitParams.put("id", visit.getId());
+                this.namedParameterJdbcTemplate.update(
+                    "DELETE FROM visits WHERE id=:id",
+                    visitParams
+                );
+            }
+
+            this.namedParameterJdbcTemplate.update(
+                "DELETE FROM pets WHERE id=:id",
+                petParams
+            );
+        }
+
+        this.namedParameterJdbcTemplate.update(
+            "DELETE FROM owners WHERE id=:id",
+            ownerParams
+        );
+    }
 }
