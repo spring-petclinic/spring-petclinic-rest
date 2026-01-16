@@ -116,9 +116,6 @@ public class JdbcVetRepositoryImpl implements VetRepository {
                 throw new ObjectRetrievalFailureException(Vet.class, id);
             }
 
-            //if(vet==null){
-              //  throw new ObjectRetrievalFailureException(Vet.class, id);
-            //}
 
             final List<Specialty> specialties = this.namedParameterJdbcTemplate.query(
                 "SELECT id, name FROM specialties", vetparams, BeanPropertyRowMapper.newInstance(Specialty.class));
