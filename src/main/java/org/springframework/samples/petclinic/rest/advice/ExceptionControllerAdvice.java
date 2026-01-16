@@ -50,7 +50,7 @@ public class ExceptionControllerAdvice {
      * @param status HTTP response status.
      * @param url URL request.
      */
-    private ProblemDetail detailBuild(Exception ex, HttpStatus status, StringBuffer url) {
+    private ProblemDetail detailBuild(Exception ex, HttpStatus status, StringBuilder url) {
         ProblemDetail detail = ProblemDetail.forStatus(status);
         detail.setType(URI.create(url.toString()));
         detail.setTitle(ex.getClass().getSimpleName());
@@ -58,6 +58,7 @@ public class ExceptionControllerAdvice {
         detail.setProperty("timestamp", Instant.now());
         return detail;
     }
+
 
     /**
      * Handles all general exceptions by returning a 500 Internal Server Error status with error details.
@@ -70,7 +71,9 @@ public class ExceptionControllerAdvice {
     @ResponseBody
     public ResponseEntity<ProblemDetail> handleGeneralException(Exception e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        ProblemDetail detail = this.detailBuild(e, status, request.getRequestURL());
+
+        ProblemDetail detail = this.detailBuild(e, status, new StringBuilder(request.getRequestURL()));
+
         return ResponseEntity.status(status).body(detail);
     }
 
@@ -86,7 +89,7 @@ public class ExceptionControllerAdvice {
     @ResponseBody
     public ResponseEntity<ProblemDetail> handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        ProblemDetail detail = this.detailBuild(ex, status, request.getRequestURL());
+        ProblemDetail detail = this.detailBuild(ex, status, new StringBuilder(request.getRequestURL()));
         return ResponseEntity.status(status).body(detail);
     }
 
@@ -105,7 +108,7 @@ public class ExceptionControllerAdvice {
         BindingResult bindingResult = ex.getBindingResult();
         if (bindingResult.hasErrors()) {
             errors.addAllErrors(bindingResult);
-            ProblemDetail detail = this.detailBuild(ex, status, request.getRequestURL());
+            ProblemDetail detail = this.detailBuild(ex, status, new StringBuilder(request.getRequestURL()));
             return ResponseEntity.status(status).body(detail);
         }
         return ResponseEntity.status(status).build();

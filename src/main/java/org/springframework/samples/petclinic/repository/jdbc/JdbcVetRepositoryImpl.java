@@ -103,44 +103,50 @@ public class JdbcVetRepositoryImpl implements VetRepository {
 
     @Override
     public Vet findById(int id) throws DataAccessException {
-        Vet vet;
-        try {
-            Map<String, Object> vetparams = new HashMap<>();
-            vetparams.put("id", id);
-            try{
-                vet = this.namedParameterJdbcTemplate.queryForObject(
-                    "SELECT id, first_name, last_name FROM vets WHERE id= :id",
-                    vetparams,
-                    BeanPropertyRowMapper.newInstance(Vet.class));
-            }catch(EmptyResultDataAccessException e){
-                throw new ObjectRetrievalFailureException(Vet.class, id);
-            }
+        Vet vet = java.util.Objects.requireNonNull(
+            getRequiredVet(id),
+            "Vet must not be null"
+        );
 
+        final List<Specialty> specialties = this.namedParameterJdbcTemplate.query(
+            "SELECT id, name FROM specialties",
+            BeanPropertyRowMapper.newInstance(Specialty.class));
 
-            final List<Specialty> specialties = this.namedParameterJdbcTemplate.query(
-                "SELECT id, name FROM specialties", vetparams, BeanPropertyRowMapper.newInstance(Specialty.class));
-
-            final List<Integer> vetSpecialtiesIds = this.namedParameterJdbcTemplate.query(
-                "SELECT specialty_id FROM vet_specialties WHERE vet_id=:id",
-                vetparams,
-                new BeanPropertyRowMapper<Integer>() {
-                    @Override
-                    public Integer mapRow(ResultSet rs, int row) throws SQLException {
-                        return rs.getInt(1);
-                    }
-                });
-            for (int specialtyId : vetSpecialtiesIds) {
-                Specialty specialty = EntityUtils.getById(specialties, Specialty.class, specialtyId);
-                if(specialty!=null) {
-                    vet.addSpecialty(specialty);
+        final List<Integer> vetSpecialtiesIds = this.namedParameterJdbcTemplate.query(
+            "SELECT specialty_id FROM vet_specialties WHERE vet_id=:id",
+            Map.of("id", id),
+            new BeanPropertyRowMapper<Integer>() {
+                @Override
+                public Integer mapRow(ResultSet rs, int row) throws SQLException {
+                    return rs.getInt(1);
                 }
-            }
+            });
 
-        } catch (EmptyResultDataAccessException ex) {
-            throw new ObjectRetrievalFailureException(Vet.class, id);
+        for (int specialtyId : vetSpecialtiesIds) {
+            Specialty specialty =
+                EntityUtils.getById(specialties, Specialty.class, specialtyId);
+            vet.addSpecialty(specialty);
         }
+
         return vet;
     }
+
+
+    private Vet getRequiredVet(int id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+
+        try {
+            return this.namedParameterJdbcTemplate.queryForObject(
+                "SELECT id, first_name, last_name FROM vets WHERE id=:id",
+                params,
+                BeanPropertyRowMapper.newInstance(Vet.class));
+        } catch (EmptyResultDataAccessException e) {
+            throw new ObjectRetrievalFailureException(Vet.class, id);
+        }
+    }
+
+
 
     @Override
     public void save(Vet vet) throws DataAccessException {
