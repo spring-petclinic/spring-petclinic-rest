@@ -147,9 +147,6 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
         @Override
         public Visit mapRow(ResultSet rs, int rowNum) throws SQLException {
             Visit visit = new Visit();
-            JdbcPet pet = new JdbcPet();
-            PetType petType = new PetType();
-            Owner owner = new Owner();
             visit.setId(rs.getInt("visit_id"));
             Date visitDate = rs.getDate("visit_date");
             visit.setDate(new java.sql.Date(visitDate.getTime()).toLocalDate());
@@ -157,7 +154,7 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
             Map<String, Object> params = new HashMap<>();
             params.put("id", rs.getInt("pets_id"));
 
-                pet = java.util.Objects.requireNonNull(
+                JdbcPet pet = java.util.Objects.requireNonNull(
                     JdbcVisitRepositoryImpl.this.namedParameterJdbcTemplate.queryForObject(
                         "SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets WHERE pets.id=:id",
                         params,
@@ -168,13 +165,13 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
 
 
 
-            petType = JdbcVisitRepositoryImpl.this.namedParameterJdbcTemplate.queryForObject(
+            PetType petType = JdbcVisitRepositoryImpl.this.namedParameterJdbcTemplate.queryForObject(
                 "SELECT id, name FROM types WHERE id= :type_id",
                 params,
                 BeanPropertyRowMapper.newInstance(PetType.class));
             pet.setType(petType);
             params.put("owner_id", pet.getOwnerId());
-            owner = JdbcVisitRepositoryImpl.this.namedParameterJdbcTemplate.queryForObject(
+            Owner owner = JdbcVisitRepositoryImpl.this.namedParameterJdbcTemplate.queryForObject(
                 "SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE id= :owner_id",
                 params,
                 BeanPropertyRowMapper.newInstance(Owner.class));
