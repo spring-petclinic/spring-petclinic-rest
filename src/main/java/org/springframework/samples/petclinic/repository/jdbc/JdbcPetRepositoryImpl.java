@@ -129,7 +129,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 	public Collection<Pet> findAll() throws DataAccessException {
 		Map<String, Object> params = new HashMap<>();
 		Collection<Pet> pets = new ArrayList<>();
-		//Collection<JdbcPet> jdbcPets = new ArrayList<JdbcPet>();
+		//new code
         Collection<JdbcPet> jdbcPets= new ArrayList<>();
 
 		jdbcPets = this.namedParameterJdbcTemplate
@@ -152,19 +152,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 		return pets;
 	}
 
-	/*@Override
-	public void delete(Pet pet) throws DataAccessException {
-		Map<String, Object> pet_params = new HashMap<>();
-		pet_params.put("id", pet.getId());
-		List<Visit> visits = pet.getVisits();
-		// cascade delete visits
-		for (Visit visit : visits) {
-			Map<String, Object> visit_params = new HashMap<>();
-			visit_params.put("id", visit.getId());
-			this.namedParameterJdbcTemplate.update("DELETE FROM visits WHERE id=:id", visit_params);
-		}
-		this.namedParameterJdbcTemplate.update("DELETE FROM pets WHERE id=:id", pet_params);
-	}*/
+	//new code
 
     @Override
     public void delete(Pet pet) throws DataAccessException {
