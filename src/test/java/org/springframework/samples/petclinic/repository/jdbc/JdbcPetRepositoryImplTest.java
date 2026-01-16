@@ -27,8 +27,7 @@ class JdbcPetRepositoryImplTest {
         JdbcPetRepositoryImpl repo =
             new JdbcPetRepositoryImpl(
                 dataSource,
-                ownerRepository,
-                visitRepository
+                ownerRepository
             );
 
         assertNotNull(repo);

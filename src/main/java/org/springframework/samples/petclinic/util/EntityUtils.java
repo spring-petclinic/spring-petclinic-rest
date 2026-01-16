@@ -41,6 +41,9 @@ public abstract class EntityUtils {
      * @return the found entity
      * @throws ObjectRetrievalFailureException if the entity was not found
      */
+    private EntityUtils(){
+
+    }
     public static <T extends BaseEntity> T getById(Collection<T> entities, Class<T> entityClass, int entityId)
         throws ObjectRetrievalFailureException {
         for (T entity : entities) {

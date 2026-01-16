@@ -49,10 +49,5 @@ public class BasicAuthenticationConfig {
             .usersByUsernameQuery("select username,password,enabled from users where username=?")
             .authoritiesByUsernameQuery("select username,role from roles where username=?")
             .passwordEncoder(passwordEncoder);
-        /*auth
-            .jdbcAuthentication()
-            .dataSource(dataSource)
-            .usersByUsernameQuery(...)
-            .authoritiesByUsernameQuery(...) */
     }
 }

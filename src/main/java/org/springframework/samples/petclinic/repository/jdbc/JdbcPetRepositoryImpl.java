@@ -37,7 +37,7 @@ import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
-import org.springframework.samples.petclinic.repository.VisitRepository;
+
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Repository;
 
@@ -60,12 +60,10 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 
     private OwnerRepository ownerRepository;
 
-    private VisitRepository visitRepository;
 
 
     public JdbcPetRepositoryImpl(DataSource dataSource,
-    		OwnerRepository ownerRepository,
-    		VisitRepository visitRepository) {
+    		OwnerRepository ownerRepository) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 
         this.insertPet = new SimpleJdbcInsert(dataSource)
@@ -73,7 +71,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             .usingGeneratedKeyColumns("id");
 
         this.ownerRepository = ownerRepository;
-        this.visitRepository = visitRepository;
+
     }
 
     @Override
@@ -129,10 +127,8 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 	public Collection<Pet> findAll() throws DataAccessException {
 		Map<String, Object> params = new HashMap<>();
 		Collection<Pet> pets = new ArrayList<>();
-		//Collection<JdbcPet> jdbcPets = new ArrayList<JdbcPet>();
-        Collection<JdbcPet> jdbcPets= new ArrayList<>();
 
-		jdbcPets = this.namedParameterJdbcTemplate
+        Collection<JdbcPet> jdbcPets = this.namedParameterJdbcTemplate
 				.query("SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets",
 				params,
 				new JdbcPetRowMapper());
@@ -146,25 +142,13 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 		for (JdbcPet jdbcPet : jdbcPets) {
 			jdbcPet.setType(EntityUtils.getById(petTypes, PetType.class, jdbcPet.getTypeId()));
 			jdbcPet.setOwner(EntityUtils.getById(owners, Owner.class, jdbcPet.getOwnerId()));
-			// TODO add visits
+
 			pets.add(jdbcPet);
 		}
 		return pets;
 	}
 
-	/*@Override
-	public void delete(Pet pet) throws DataAccessException {
-		Map<String, Object> pet_params = new HashMap<>();
-		pet_params.put("id", pet.getId());
-		List<Visit> visits = pet.getVisits();
-		// cascade delete visits
-		for (Visit visit : visits) {
-			Map<String, Object> visit_params = new HashMap<>();
-			visit_params.put("id", visit.getId());
-			this.namedParameterJdbcTemplate.update("DELETE FROM visits WHERE id=:id", visit_params);
-		}
-		this.namedParameterJdbcTemplate.update("DELETE FROM pets WHERE id=:id", pet_params);
-	}*/
+
 
     @Override
     public void delete(Pet pet) throws DataAccessException {

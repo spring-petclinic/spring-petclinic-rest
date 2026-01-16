@@ -72,7 +72,7 @@ public class JpaPetRepositoryImpl implements PetRepository {
 
 	@Override
 	public void delete(Pet pet) throws DataAccessException {
-		//this.em.remove(this.em.contains(pet) ? pet : this.em.merge(pet));
+
 		String petId = pet.getId().toString();
 		this.em.createQuery("DELETE FROM Visit visit WHERE pet.id=" + petId).executeUpdate();
 		this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
