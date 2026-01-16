@@ -22,6 +22,9 @@ import org.springframework.samples.petclinic.model.*;
 import org.springframework.samples.petclinic.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.Collection;
 import java.util.List;
@@ -243,6 +246,34 @@ public class ClinicServiceImpl implements ClinicService {
         } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
             // Just ignore not found exceptions for Jdbc/Jpa realization
             return null;
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Owner> findAllOwners(Pageable pageable) {
+        try {
+            return ownerRepository.findAll(pageable);
+        } catch (UnsupportedOperationException ex) {
+            // Fallback for jdbc/jpa profiles
+            var all = new java.util.ArrayList<>(ownerRepository.findAll());
+            int start = Math.min((int) pageable.getOffset(), all.size());
+            int end = Math.min(start + pageable.getPageSize(), all.size());
+            return new PageImpl<>(all.subList(start, end), pageable, all.size());
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Owner> findOwnerByLastName(String lastName, Pageable pageable) {
+        try {
+            return ownerRepository.findByLastName(lastName, pageable);
+        } catch (UnsupportedOperationException ex) {
+            // Fallback for jdbc/jpa profiles
+            var filtered = new java.util.ArrayList<>(ownerRepository.findByLastName(lastName));
+            int start = Math.min((int) pageable.getOffset(), filtered.size());
+            int end = Math.min(start + pageable.getPageSize(), filtered.size());
+            return new PageImpl<>(filtered.subList(start, end), pageable, filtered.size());
         }
     }
 

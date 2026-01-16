@@ -29,15 +29,15 @@ import org.springframework.samples.petclinic.rest.api.OwnersApi;
 import org.springframework.samples.petclinic.rest.dto.*;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
 
 import jakarta.transaction.Transactional;
 
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Vitaliy Fedoriv
@@ -67,18 +67,21 @@ public class OwnerRestController implements OwnersApi {
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<List<OwnerDto>> listOwners(String lastName) {
-        Collection<Owner> owners;
-        if (lastName != null) {
-            owners = this.clinicService.findOwnerByLastName(lastName);
-        } else {
-            owners = this.clinicService.findAllOwners();
-        }
+    @GetMapping("/owners")
+    public ResponseEntity<Page<OwnerDto>> listOwners(
+        @RequestParam(required = false) String lastName,
+        @PageableDefault(sort = "lastName", direction = Sort.Direction.ASC) Pageable pageable) {
+
+        Page<Owner> owners = (lastName != null && !lastName.isBlank())
+            ? clinicService.findOwnerByLastName(lastName, pageable)
+            : clinicService.findAllOwners(pageable);
+
         if (owners.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(ownerMapper.toOwnerDtoCollection(owners), HttpStatus.OK);
+
+        Page<OwnerDto> body = owners.map(ownerMapper::toOwnerDto);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")

@@ -492,4 +492,17 @@ class OwnerRestControllerTests {
             .andExpect(status().isNotFound());
     }
 
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void listOwners_withPagingAndSorting_returnsPage() throws Exception {
+        mockMvc.perform(get("/api/owners")
+                .param("page", "0")
+                .param("size", "5")
+                .param("sort", "lastName,desc"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content").isArray())
+            .andExpect(jsonPath("$.size").value(5))
+            .andExpect(jsonPath("$.number").value(0));
+    }
+
 }
