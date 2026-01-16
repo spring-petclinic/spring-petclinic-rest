@@ -128,9 +128,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 		Map<String, Object> params = new HashMap<>();
 		Collection<Pet> pets = new ArrayList<>();
 		//new
-        Collection<JdbcPet> jdbcPets= new ArrayList<>();
-
-		jdbcPets = this.namedParameterJdbcTemplate
+        Collection<JdbcPet> jdbcPets= this.namedParameterJdbcTemplate
 				.query("SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets",
 				params,
 				new JdbcPetRowMapper());
