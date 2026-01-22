@@ -1,96 +1,120 @@
-/*
- * Copyright 2002-2017 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.springframework.samples.petclinic.repository.jpa;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
-import org.springframework.orm.hibernate5.support.OpenSessionInViewFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
-import org.springframework.stereotype.Repository;
 
 /**
- * JPA implementation of the {@link OwnerRepository} interface.
+ * JPA implementation of the OwnerRepository.
  *
- * @author Mike Keith
- * @author Rod Johnson
- * @author Sam Brannen
- * @author Michael Isvy
- * @author Vitaliy Fedoriv
+ * Uses EntityManager directly instead of Spring Data JPA
+ * to keep control over queries and fetch strategies.
  */
 @Repository
 @Profile("jpa")
+@Transactional
 public class JpaOwnerRepositoryImpl implements OwnerRepository {
 
     @PersistenceContext
     private EntityManager em;
 
-
     /**
-     * Important: in the current version of this method, we load Owners with all their Pets and Visits while
-     * we do not need Visits at all and we only need one property from the Pet objects (the 'name' property).
-     * There are some ways to improve it such as:
-     * - creating a Ligtweight class (example here: https://community.jboss.org/wiki/LightweightClass)
-     * - Turning on lazy-loading and using {@link OpenSessionInViewFilter}
+     * Find owners whose last name starts with the given value.
+     * Fetch pets eagerly to avoid N+1 problem.
      */
-    @SuppressWarnings("unchecked")
-    public Collection<Owner> findByLastName(String lastName) {
-        // using 'join fetch' because a single query should load both owners and pets
-        // using 'left join fetch' because it might happen that an owner does not have pets yet
-        Query query = this.em.createQuery("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName");
+    @Override
+    public Collection<Owner> findByLastName(String lastName) throws DataAccessException {
+        TypedQuery<Owner> query = em.createQuery(
+                """
+                        SELECT DISTINCT o
+                        FROM Owner o
+                        LEFT JOIN FETCH o.pets
+                        WHERE o.lastName LIKE :lastName
+                        """,
+                Owner.class);
         query.setParameter("lastName", lastName + "%");
         return query.getResultList();
     }
 
+    /**
+     * Find owner by id with pets eagerly loaded.
+     */
     @Override
-    public Owner findById(int id) {
-        // using 'join fetch' because a single query should load both owners and pets
-        // using 'left join fetch' because it might happen that an owner does not have pets yet
-        Query query = this.em.createQuery("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id");
+    public Owner findById(int id) throws DataAccessException {
+        TypedQuery<Owner> query = em.createQuery(
+                """
+                        SELECT o
+                        FROM Owner o
+                        LEFT JOIN FETCH o.pets
+                        WHERE o.id = :id
+                        """,
+                Owner.class);
         query.setParameter("id", id);
-        return (Owner) query.getSingleResult();
+        return query.getSingleResult();
     }
 
-
+    /**
+     * Save or update an owner.
+     */
     @Override
-    public void save(Owner owner) {
+    public void save(Owner owner) throws DataAccessException {
         if (owner.getId() == null) {
-            this.em.persist(owner);
+            em.persist(owner);
         } else {
-            this.em.merge(owner);
+            em.merge(owner);
         }
-
     }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Collection<Owner> findAll() throws DataAccessException {
-		Query query = this.em.createQuery("SELECT owner FROM Owner owner");
+    /**
+     * Fetch all owners (without pagination).
+     */
+    @Override
+    public Collection<Owner> findAll() throws DataAccessException {
+        TypedQuery<Owner> query = em.createQuery("SELECT o FROM Owner o", Owner.class);
         return query.getResultList();
-	}
+    }
 
-	@Override
-	public void delete(Owner owner) throws DataAccessException {
-		this.em.remove(this.em.contains(owner) ? owner : this.em.merge(owner));
-	}
+    /**
+     * Fetch owners with pagination support.
+     */
+    @Override
+    public Page<Owner> findAll(Pageable pageable) throws DataAccessException {
 
+        TypedQuery<Owner> query = em.createQuery("SELECT o FROM Owner o ORDER BY o.lastName", Owner.class);
+
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+
+        List<Owner> owners = query.getResultList();
+
+        Long total = em.createQuery(
+                "SELECT COUNT(o) FROM Owner o",
+                Long.class).getSingleResult();
+
+        return new PageImpl<>(owners, pageable, total);
+    }
+
+    /**
+     * Delete an owner safely.
+     */
+    @Override
+    public void delete(Owner owner) throws DataAccessException {
+        Owner managedOwner = em.contains(owner) ? owner : em.merge(owner);
+        em.remove(managedOwner);
+    }
 }
