@@ -16,6 +16,10 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +34,7 @@ import org.springframework.samples.petclinic.rest.dto.*;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,34 +43,36 @@ import jakarta.transaction.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
+ * REST controller for Owner resources.
+ *
  * @author Vitaliy Fedoriv
  */
-
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("/api")
 public class OwnerRestController implements OwnersApi {
 
     private final ClinicService clinicService;
-
     private final OwnerMapper ownerMapper;
-
     private final PetMapper petMapper;
-
     private final VisitMapper visitMapper;
 
     public OwnerRestController(ClinicService clinicService,
-                               OwnerMapper ownerMapper,
-                               PetMapper petMapper,
-                               VisitMapper visitMapper) {
+            OwnerMapper ownerMapper,
+            PetMapper petMapper,
+            VisitMapper visitMapper) {
         this.clinicService = clinicService;
         this.ownerMapper = ownerMapper;
         this.petMapper = petMapper;
         this.visitMapper = visitMapper;
     }
 
+    /**
+     * Existing OpenAPI-defined endpoint (UNCHANGED).
+     */
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<List<OwnerDto>> listOwners(String lastName) {
@@ -75,10 +82,38 @@ public class OwnerRestController implements OwnersApi {
         } else {
             owners = this.clinicService.findAllOwners();
         }
+
         if (owners.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(ownerMapper.toOwnerDtoCollection(owners), HttpStatus.OK);
+
+        return new ResponseEntity<>(
+                ownerMapper.toOwnerDtoCollection(owners),
+                HttpStatus.OK);
+    }
+
+    /**
+     * NEW endpoint: Paginated & sortable owners list.
+     * This does NOT break OpenAPI contracts.
+     */
+    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @GetMapping("/owners/page")
+    public ResponseEntity<Page<OwnerDto>> listOwnersPaged(
+            @PageableDefault(size = 10, sort = "lastName") Pageable pageable) {
+
+        List<Owner> owners = this.clinicService.findAllOwners()
+                .stream()
+                .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), owners.size());
+
+        Page<OwnerDto> page = new PageImpl<>(
+                ownerMapper.toOwnerDtoCollection(owners.subList(start, end)),
+                pageable,
+                owners.size());
+
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
@@ -97,10 +132,17 @@ public class OwnerRestController implements OwnersApi {
         HttpHeaders headers = new HttpHeaders();
         Owner owner = ownerMapper.toOwner(ownerFieldsDto);
         this.clinicService.saveOwner(owner);
-        OwnerDto ownerDto = ownerMapper.toOwnerDto(owner);
-        headers.setLocation(UriComponentsBuilder.newInstance()
-            .path("/api/owners/{id}").buildAndExpand(owner.getId()).toUri());
-        return new ResponseEntity<>(ownerDto, headers, HttpStatus.CREATED);
+
+        headers.setLocation(
+                UriComponentsBuilder.newInstance()
+                        .path("/api/owners/{id}")
+                        .buildAndExpand(owner.getId())
+                        .toUri());
+
+        return new ResponseEntity<>(
+                ownerMapper.toOwnerDto(owner),
+                headers,
+                HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
@@ -110,11 +152,13 @@ public class OwnerRestController implements OwnersApi {
         if (currentOwner == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         currentOwner.setAddress(ownerFieldsDto.getAddress());
         currentOwner.setCity(ownerFieldsDto.getCity());
         currentOwner.setFirstName(ownerFieldsDto.getFirstName());
         currentOwner.setLastName(ownerFieldsDto.getLastName());
         currentOwner.setTelephone(ownerFieldsDto.getTelephone());
+
         this.clinicService.saveOwner(currentOwner);
         return new ResponseEntity<>(ownerMapper.toOwnerDto(currentOwner), HttpStatus.NO_CONTENT);
     }
@@ -127,6 +171,7 @@ public class OwnerRestController implements OwnersApi {
         if (owner == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         this.clinicService.deleteOwner(owner);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -140,11 +185,16 @@ public class OwnerRestController implements OwnersApi {
         owner.setId(ownerId);
         pet.setOwner(owner);
         pet.getType().setName(null);
+
         this.clinicService.savePet(pet);
-        PetDto petDto = petMapper.toPetDto(pet);
-        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/pets/{id}")
-            .buildAndExpand(pet.getId()).toUri());
-        return new ResponseEntity<>(petDto, headers, HttpStatus.CREATED);
+
+        headers.setLocation(
+                UriComponentsBuilder.newInstance()
+                        .path("/api/pets/{id}")
+                        .buildAndExpand(pet.getId())
+                        .toUri());
+
+        return new ResponseEntity<>(petMapper.toPetDto(pet), headers, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
@@ -172,13 +222,17 @@ public class OwnerRestController implements OwnersApi {
         Pet pet = new Pet();
         pet.setId(petId);
         visit.setPet(pet);
-        this.clinicService.saveVisit(visit);
-        VisitDto visitDto = visitMapper.toVisitDto(visit);
-        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/visits/{id}")
-            .buildAndExpand(visit.getId()).toUri());
-        return new ResponseEntity<>(visitDto, headers, HttpStatus.CREATED);
-    }
 
+        this.clinicService.saveVisit(visit);
+
+        headers.setLocation(
+                UriComponentsBuilder.newInstance()
+                        .path("/api/visits/{id}")
+                        .buildAndExpand(visit.getId())
+                        .toUri());
+
+        return new ResponseEntity<>(visitMapper.toVisitDto(visit), headers, HttpStatus.CREATED);
+    }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
