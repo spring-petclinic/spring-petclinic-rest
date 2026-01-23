@@ -1,26 +1,25 @@
 package org.springframework.samples.petclinic.rest.controller;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.rest.api.PetsApi;
 import org.springframework.samples.petclinic.rest.dto.PetDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("/api")
-public class PetRestController implements PetsApi {
+public class PetRestController {
 
     private final ClinicService clinicService;
     private final PetMapper petMapper;
@@ -32,28 +31,35 @@ public class PetRestController implements PetsApi {
 
     /*
      * -------------------------------------------------
-     * GET ALL PETS (PAGINATED)
+     * LIST PETS (PAGINATION)
      * -------------------------------------------------
      */
+    @GetMapping(value = "/pets", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<List<PetDto>> listPets(Pageable pageable) {
+    public ResponseEntity<List<PetDto>> listPets(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
 
+        int pageNumber = (page != null) ? page : 0;
+        int pageSize = (size != null) ? size : 10;
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Pet> petPage = clinicService.findAllPets(pageable);
-        List<PetDto> petDtos = petMapper.toPetDtoList(petPage.getContent());
 
-        // IMPORTANT: Always return 200 (tests expect this)
+        List<PetDto> petDtos = new ArrayList<>(
+                petMapper.toPetsDto(petPage.getContent()));
+
         return ResponseEntity.ok(petDtos);
     }
 
     /*
      * -------------------------------------------------
-     * GET PET BY ID
+     * GET PET
      * -------------------------------------------------
      */
+    @GetMapping(value = "/pets/{petId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> getPet(Integer petId) {
+    public ResponseEntity<PetDto> getPet(@PathVariable Integer petId) {
 
         Pet pet = clinicService.findPetById(petId);
         if (pet == null) {
@@ -65,12 +71,14 @@ public class PetRestController implements PetsApi {
 
     /*
      * -------------------------------------------------
-     * UPDATE PET (TEST-COMPATIBLE)
+     * UPDATE PET
      * -------------------------------------------------
      */
+    @PutMapping(value = "/pets/{petId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> updatePet(Integer petId, PetDto petDto) {
+    public ResponseEntity<PetDto> updatePet(
+            @PathVariable Integer petId,
+            @RequestBody PetDto petDto) {
 
         Pet pet = clinicService.findPetById(petId);
         if (pet == null) {
@@ -83,7 +91,6 @@ public class PetRestController implements PetsApi {
 
         clinicService.savePet(pet);
 
-        // ✅ Return JSON + 200 → Content-Type is set → tests PASS
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -95,9 +102,9 @@ public class PetRestController implements PetsApi {
      * DELETE PET
      * -------------------------------------------------
      */
+    @DeleteMapping("/pets/{petId}")
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> deletePet(Integer petId) {
+    public ResponseEntity<Void> deletePet(@PathVariable Integer petId) {
 
         Pet pet = clinicService.findPetById(petId);
         if (pet == null) {
