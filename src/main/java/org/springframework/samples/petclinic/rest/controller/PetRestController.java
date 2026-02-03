@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -30,9 +31,7 @@ public class PetRestController {
     }
 
     /*
-     * -------------------------------------------------
-     * LIST PETS (PAGINATION)
-     * -------------------------------------------------
+     * ✅ SUPPORTS BOTH PAGINATED + NON PAGINATED
      */
     @GetMapping(value = "/pets", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
@@ -40,49 +39,76 @@ public class PetRestController {
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
 
-        int pageNumber = (page != null) ? page : 0;
-        int pageSize = (size != null) ? size : 10;
+        Collection<Pet> pets;
 
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Pet> petPage = clinicService.findAllPets(pageable);
+        // ⭐ If pagination params exist → use pageable
+        if (page != null || size != null) {
 
-        List<PetDto> petDtos = new ArrayList<>(
-                petMapper.toPetsDto(petPage.getContent()));
+            int pageNumber = (page != null) ? page : 0;
+            int pageSize = (size != null) ? size : 10;
 
-        return ResponseEntity.ok(petDtos);
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Page<Pet> petPage = clinicService.findAllPets(pageable);
+
+            if (petPage == null || petPage.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            pets = petPage.getContent();
+
+        } else {
+            // ⭐ fallback for OLD tests
+            pets = clinicService.findAllPets();
+
+            if (pets == null || pets.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+
+        List<PetDto> petDtos = new ArrayList<>(petMapper.toPetsDto(pets));
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(petDtos);
     }
 
     /*
-     * -------------------------------------------------
-     * GET PET
-     * -------------------------------------------------
+     * SINGLE PET
      */
-    @GetMapping(value = "/pets/{petId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @GetMapping(value = "/pets/{petId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PetDto> getPet(@PathVariable Integer petId) {
 
         Pet pet = clinicService.findPetById(petId);
+
         if (pet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity.ok(petMapper.toPetDto(pet));
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(petMapper.toPetDto(pet));
     }
 
     /*
-     * -------------------------------------------------
      * UPDATE PET
-     * -------------------------------------------------
      */
-    @PutMapping(value = "/pets/{petId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    public ResponseEntity<PetDto> updatePet(
+    @PutMapping(value = "/pets/{petId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> updatePet(
             @PathVariable Integer petId,
             @RequestBody PetDto petDto) {
 
+        if (petDto == null || petDto.getName() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         Pet pet = clinicService.findPetById(petId);
+
         if (pet == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         pet.setName(petDto.getName());
@@ -92,26 +118,26 @@ public class PetRestController {
         clinicService.savePet(pet);
 
         return ResponseEntity
-                .ok()
+                .status(HttpStatus.NO_CONTENT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(petMapper.toPetDto(pet));
+                .build();
     }
 
     /*
-     * -------------------------------------------------
      * DELETE PET
-     * -------------------------------------------------
      */
-    @DeleteMapping("/pets/{petId}")
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @DeleteMapping("/pets/{petId}")
     public ResponseEntity<Void> deletePet(@PathVariable Integer petId) {
 
         Pet pet = clinicService.findPetById(petId);
+
         if (pet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         clinicService.deletePet(pet);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return ResponseEntity.noContent().build();
     }
 }

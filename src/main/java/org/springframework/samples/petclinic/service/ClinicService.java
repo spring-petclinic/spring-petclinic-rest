@@ -7,30 +7,24 @@ import java.util.Set;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.model.Specialty;
-import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.model.*;
 
-/**
- * Facade for all Petclinic business services.
- * Controllers should access data only through this interface.
- *
- * Supports both non-paginated and paginated access.
- *
- * @author Michael Isvy
- * @author Vitaliy Fedoriv
- * @author You
- */
 public interface ClinicService {
 
 	/* ===================== PET ===================== */
 
 	Pet findPetById(int id) throws DataAccessException;
 
+	/**
+	 * ✅ REQUIRED — DO NOT DELETE
+	 * Old controllers still use this.
+	 */
 	Collection<Pet> findAllPets() throws DataAccessException;
+
+	/**
+	 * ✅ NEW — Pagination support
+	 */
+	Page<Pet> findAllPets(Pageable pageable) throws DataAccessException;
 
 	void savePet(Pet pet) throws DataAccessException;
 
@@ -64,14 +58,14 @@ public interface ClinicService {
 
 	Owner findOwnerById(int id) throws DataAccessException;
 
+	/**
+	 * ✅ REQUIRED legacy method
+	 */
 	Collection<Owner> findAllOwners() throws DataAccessException;
 
 	/**
-	 * ✅ NEW: Paginated owners
-	 * 
+	 * ✅ NEW pagination
 	 */
-	Page<Pet> findAllPets(Pageable pageable);
-
 	Page<Owner> findAllOwners(Pageable pageable) throws DataAccessException;
 
 	Collection<Owner> findOwnerByLastName(String lastName) throws DataAccessException;

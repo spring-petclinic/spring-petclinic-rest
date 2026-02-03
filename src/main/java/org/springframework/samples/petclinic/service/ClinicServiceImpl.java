@@ -53,22 +53,27 @@ public class ClinicServiceImpl implements ClinicService {
         return findEntityById(() -> petRepository.findById(id));
     }
 
+    // NON-PAGINATED (BACKWARD COMPATIBLE — DO NOT REMOVE)
     @Override
     @Transactional(readOnly = true)
     public Collection<Pet> findAllPets() throws DataAccessException {
         return petRepository.findAll();
     }
 
+    // ✅ PAGINATED (CI expects this)
     @Override
     @Transactional(readOnly = true)
-    public Page<Pet> findAllPets(Pageable pageable) {
+    public Page<Pet> findAllPets(Pageable pageable) throws DataAccessException {
         return petRepository.findAll(pageable);
     }
 
     @Override
     @Transactional
     public void savePet(Pet pet) throws DataAccessException {
+
+        // ensures valid type before saving
         pet.setType(findPetTypeById(pet.getType().getId()));
+
         petRepository.save(pet);
     }
 
@@ -128,12 +133,6 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<Vet> findVets() throws DataAccessException {
-        return vetRepository.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Collection<Vet> findAllVets() throws DataAccessException {
         return vetRepository.findAll();
     }
@@ -162,16 +161,17 @@ public class ClinicServiceImpl implements ClinicService {
         return findEntityById(() -> ownerRepository.findById(id));
     }
 
+    // KEEP — older controllers use this
     @Override
     @Transactional(readOnly = true)
     public Collection<Owner> findAllOwners() throws DataAccessException {
         return ownerRepository.findAll();
     }
 
-    // 🔥 NEW — PAGINATION SUPPORT (ISSUE #11)
+    // ✅ PAGINATION (CI NEEDS THIS)
     @Override
     @Transactional(readOnly = true)
-    public Page<Owner> findAllOwners(Pageable pageable) {
+    public Page<Owner> findAllOwners(Pageable pageable) throws DataAccessException {
         return ownerRepository.findAll(pageable);
     }
 
@@ -201,8 +201,8 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
-    public PetType findPetTypeById(int petTypeId) {
-        return findEntityById(() -> petTypeRepository.findById(petTypeId));
+    public Collection<PetType> findPetTypes() throws DataAccessException {
+        return petRepository.findPetTypes();
     }
 
     @Override
@@ -213,8 +213,8 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<PetType> findPetTypes() throws DataAccessException {
-        return petRepository.findPetTypes();
+    public PetType findPetTypeById(int petTypeId) throws DataAccessException {
+        return findEntityById(() -> petTypeRepository.findById(petTypeId));
     }
 
     @Override
@@ -254,6 +254,12 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Specialty> findSpecialtiesByNameIn(Set<String> names) {
+        return specialtyRepository.findSpecialtiesByNameIn(names);
+    }
+
+    @Override
     @Transactional
     public void deleteSpecialty(Specialty specialty) throws DataAccessException {
         specialtyRepository.delete(specialty);
@@ -261,13 +267,13 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Specialty> findSpecialtiesByNameIn(Set<String> names) {
-        return specialtyRepository.findSpecialtiesByNameIn(names);
+    public Collection<Vet> findVets() throws DataAccessException {
+        return vetRepository.findAll();
     }
 
     /*
      * =========================
-     * INTERNAL HELPER
+     * INTERNAL SAFE FIND
      * =========================
      */
 
