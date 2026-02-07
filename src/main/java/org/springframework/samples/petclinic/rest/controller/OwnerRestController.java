@@ -138,8 +138,9 @@ public class OwnerRestController implements OwnersApi {
         Pet pet = petMapper.toPet(petFieldsDto);
         Owner owner = clinicService.findOwnerById(ownerId);
 
-        if (owner == null)
-             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (owner == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
         owner.setId(ownerId);
         pet.setOwner(owner);
@@ -147,7 +148,7 @@ public class OwnerRestController implements OwnersApi {
         this.clinicService.savePet(pet);
         PetDto petDto = petMapper.toPetDto(pet);
         headers.setLocation(UriComponentsBuilder.newInstance().path("/api/pets/{id}")
-                .buildAndExpand(pet.getId()).toUri());
+            .buildAndExpand(pet.getId()).toUri());
         return new ResponseEntity<>(petDto, headers, HttpStatus.CREATED);
     }
 
