@@ -142,7 +142,6 @@ public class OwnerRestController implements OwnersApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        owner.setId(ownerId);
         pet.setOwner(owner);
         pet.getType().setName(null);
         this.clinicService.savePet(pet);
