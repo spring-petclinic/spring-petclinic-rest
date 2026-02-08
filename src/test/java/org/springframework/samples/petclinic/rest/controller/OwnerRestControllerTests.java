@@ -26,6 +26,7 @@ import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.rest.advice.ExceptionControllerAdvice;
 import org.springframework.samples.petclinic.rest.dto.OwnerDto;
 import org.springframework.samples.petclinic.rest.dto.PetDto;
@@ -47,7 +48,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -366,6 +369,26 @@ class OwnerRestControllerTests {
         this.mockMvc.perform(post("/api/owners/1/pets")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetOwnerNotFound() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null); // como no seu outro teste
+        ObjectMapper mapper = JsonMapper.builder()
+           .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
+           .build();
+
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        given(this.clinicService.findOwnerById(999)).willReturn(null);
+
+        this.mockMvc.perform(post("/api/owners/999/pets")
+           .content(newPetAsJSON)
+           .accept(MediaType.APPLICATION_JSON_VALUE)
+           .contentType(MediaType.APPLICATION_JSON_VALUE))
+           .andExpect(status().isNotFound())
+           .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
