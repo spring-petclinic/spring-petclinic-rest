@@ -375,7 +375,7 @@ class OwnerRestControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testCreatePetOwnerNotFound() throws Exception {
         PetDto newPet = pets.get(0);
-        newPet.setId(null); // como no seu outro teste
+        newPet.setId(null);
         ObjectMapper mapper = JsonMapper.builder()
            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
            .build();
