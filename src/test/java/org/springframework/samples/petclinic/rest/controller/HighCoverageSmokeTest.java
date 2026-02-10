@@ -39,6 +39,13 @@ class HighCoverageSmokeTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void getExistingOwner_shouldReturn200AndCoverHappyPath() throws Exception {
+        mockMvc.perform(get("/api/owners/1")) // ID 1 usually exists in sample data
+                .andExpect(status().isOk());
+    }
+
     // Bad update
     @Test
     void shouldReturnBadRequestOnInvalidPetUpdate() throws Exception {
@@ -48,4 +55,12 @@ class HighCoverageSmokeTest {
                         .content("{}"))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void shouldDeleteUnknownOwner() throws Exception {
+
+        mockMvc.perform(delete("/api/owners/999999"))
+                .andExpect(status().isNotFound());
+    }
+
 }

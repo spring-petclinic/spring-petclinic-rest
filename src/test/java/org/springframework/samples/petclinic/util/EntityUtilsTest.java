@@ -81,6 +81,17 @@ class EntityUtilsTest {
         assertThat(found).isSameAs(o3);
     }
 
+    @Test
+    void shouldThrowWhenIdNegative() {
+
+        Owner owner = createOwner(1);
+
+        assertThatThrownBy(() -> EntityUtils.getById(
+                List.of(owner),
+                Owner.class,
+                -1)).isInstanceOf(Exception.class);
+    }
+
     private Owner createOwner(int id) {
         Owner o = new Owner();
         o.setId(id);
