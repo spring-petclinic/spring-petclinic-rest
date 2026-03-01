@@ -32,7 +32,7 @@
         <maven.jacoco-plugin.version>0.8.14</maven.jacoco-plugin.version>
         <maven.jxr-plugin.version>3.6.0</maven.jxr-plugin.version>
         <maven.license-plugin.version>2.7.1</maven.license-plugin.version>
-        <maven.openapi-generator-plugin.version>7.19.0</maven.openapi-generator-plugin.version>
+        <maven.openapi-generator-plugin.version>7.20.0</maven.openapi-generator-plugin.version>
         <maven.project-info-reports-plugin.version>3.9.0</maven.project-info-reports-plugin.version>
         <maven.rat-plugin.version>0.17</maven.rat-plugin.version>
         <maven.refactor-first-plugin.version>0.7.1</maven.refactor-first-plugin.version>
