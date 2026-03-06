@@ -16,6 +16,7 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -341,6 +346,8 @@ class OwnerRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testCreatePetSuccess() throws Exception {
+        final Owner owner = ownerMapper.toOwner(owners.get(0));
+        given(this.clinicService.findOwnerById(1)).willReturn(owner);
         PetDto newPet = pets.get(0);
         newPet.setId(999);
         ObjectMapper mapper =  JsonMapper.builder()
@@ -366,6 +373,42 @@ class OwnerRestControllerTests {
         this.mockMvc.perform(post("/api/owners/1/pets")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetShouldNotExposeTechnicalDetails() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        ObjectMapper mapper =  JsonMapper.builder()
+            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
+            .build();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        String technicalMessage = "could not execute statement [Referential integrity constraint violation: " +
+                "\"CONSTRAINT_256: PUBLIC.PETS FOREIGN KEY(OWNER_ID) REFERENCES PUBLIC.OWNERS(ID) (1000000)\"; " +
+                "SQL statement: insert into pets (birth_date,name,owner_id,type_id,id) values (?,?,?,?,default)]";
+        doThrow(new DataIntegrityViolationException(technicalMessage)).when(this.clinicService).savePet(any());
+        this.mockMvc.perform(post("/api/owners/1000000/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print())
+            .andExpect(content().string(not(containsString("SQL"))))
+            .andExpect(content().string(not(containsString("constraint"))))
+            .andExpect(content().string(not(containsString("PUBLIC.PETS"))));
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithUnknownOwnerShouldReturnNotFound() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        ObjectMapper mapper = JsonMapper.builder()
+            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
+            .build();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        given(this.clinicService.findOwnerById(1000000)).willReturn(null);
+        this.mockMvc.perform(post("/api/owners/1000000/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNotFound());
     }
 
     @Test
