@@ -57,9 +57,9 @@ public class OwnerRestController implements OwnersApi {
     private final VisitMapper visitMapper;
 
     public OwnerRestController(ClinicService clinicService,
-                               OwnerMapper ownerMapper,
-                               PetMapper petMapper,
-                               VisitMapper visitMapper) {
+            OwnerMapper ownerMapper,
+            PetMapper petMapper,
+            VisitMapper visitMapper) {
         this.clinicService = clinicService;
         this.ownerMapper = ownerMapper;
         this.petMapper = petMapper;
@@ -99,7 +99,7 @@ public class OwnerRestController implements OwnersApi {
         this.clinicService.saveOwner(owner);
         OwnerDto ownerDto = ownerMapper.toOwnerDto(owner);
         headers.setLocation(UriComponentsBuilder.newInstance()
-            .path("/api/owners/{id}").buildAndExpand(owner.getId()).toUri());
+                .path("/api/owners/{id}").buildAndExpand(owner.getId()).toUri());
         return new ResponseEntity<>(ownerDto, headers, HttpStatus.CREATED);
     }
 
@@ -136,8 +136,12 @@ public class OwnerRestController implements OwnersApi {
     public ResponseEntity<PetDto> addPetToOwner(Integer ownerId, PetFieldsDto petFieldsDto) {
         HttpHeaders headers = new HttpHeaders();
         Pet pet = petMapper.toPet(petFieldsDto);
-        Owner owner = new Owner();
-        owner.setId(ownerId);
+        Owner owner = clinicService.findOwnerById(ownerId);
+
+        if (owner == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         pet.setOwner(owner);
         pet.getType().setName(null);
         this.clinicService.savePet(pet);
@@ -175,10 +179,9 @@ public class OwnerRestController implements OwnersApi {
         this.clinicService.saveVisit(visit);
         VisitDto visitDto = visitMapper.toVisitDto(visit);
         headers.setLocation(UriComponentsBuilder.newInstance().path("/api/visits/{id}")
-            .buildAndExpand(visit.getId()).toUri());
+                .buildAndExpand(visit.getId()).toUri());
         return new ResponseEntity<>(visitDto, headers, HttpStatus.CREATED);
     }
-
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override

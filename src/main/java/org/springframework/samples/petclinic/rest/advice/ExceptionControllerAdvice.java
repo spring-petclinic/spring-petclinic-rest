@@ -17,6 +17,9 @@
 package org.springframework.samples.petclinic.rest.advice;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -42,6 +45,9 @@ import java.time.Instant;
 @ControllerAdvice
 public class ExceptionControllerAdvice {
 
+    private static final Logger log =
+        LoggerFactory.getLogger(ExceptionControllerAdvice.class);
+
     /**
      * Private method for constructing the {@link ProblemDetail} object passing the name and details of the exception
      * class.
@@ -53,9 +59,12 @@ public class ExceptionControllerAdvice {
     private ProblemDetail detailBuild(Exception ex, HttpStatus status, StringBuffer url) {
         ProblemDetail detail = ProblemDetail.forStatus(status);
         detail.setType(URI.create(url.toString()));
-        detail.setTitle(ex.getClass().getSimpleName());
-        detail.setDetail(ex.getLocalizedMessage());
+        detail.setTitle(status.getReasonPhrase());
+        detail.setDetail("An unexpected error occurred.");
         detail.setProperty("timestamp", Instant.now());
+
+        log.error("Request failed. status={}, url={}, ex={}", status, url, ex.getLocalizedMessage(), ex);
+
         return detail;
     }
 
