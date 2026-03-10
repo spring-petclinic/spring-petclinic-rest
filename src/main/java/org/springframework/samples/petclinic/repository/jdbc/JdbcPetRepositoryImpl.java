@@ -146,7 +146,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
 		for (JdbcPet jdbcPet : jdbcPets) {
 			jdbcPet.setType(EntityUtils.getById(petTypes, PetType.class, jdbcPet.getTypeId()));
 			jdbcPet.setOwner(EntityUtils.getById(owners, Owner.class, jdbcPet.getOwnerId()));
-			// TODO add visits
+			jdbcPet.setVisitsInternal(new java.util.LinkedHashSet<>(this.visitRepository.findByPetId(jdbcPet.getId())));
 			pets.add(jdbcPet);
 		}
 		return pets;
