@@ -1,4 +1,4 @@
-# REST version of Spring PetClinic Sample Application (spring-framework-petclinic extend ) 
+# REST version of Spring PetClinic Sample Application (spring-framework-petclinic extended)
 
 [![Java Build Status](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/maven-build.yml/badge.svg)](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/maven-build.yml)
 [![Docker Build Status](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/docker-build.yml/badge.svg)](https://github.com/spring-petclinic/spring-petclinic-rest/actions/workflows/docker-build.yml)
