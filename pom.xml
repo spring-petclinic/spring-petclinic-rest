@@ -21,7 +21,7 @@
 
         <!-- Third-party libraries -->
         <spring-data-jdbc.version>1.2.1.RELEASE</spring-data-jdbc.version>
-        <springdoc-openapi-ui.version>3.0.1</springdoc-openapi-ui.version>
+        <springdoc-openapi-ui.version>3.0.2</springdoc-openapi-ui.version>
         <jackson-databind-nullable.version>0.2.9</jackson-databind-nullable.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
@@ -35,7 +35,7 @@
         <maven.openapi-generator-plugin.version>7.20.0</maven.openapi-generator-plugin.version>
         <maven.project-info-reports-plugin.version>3.9.0</maven.project-info-reports-plugin.version>
         <maven.rat-plugin.version>0.17</maven.rat-plugin.version>
-        <maven.refactor-first-plugin.version>0.7.1</maven.refactor-first-plugin.version>
+        <maven.refactor-first-plugin.version>0.8.0</maven.refactor-first-plugin.version>
         <maven.release-plugin.version>3.1.1</maven.release-plugin.version>
         <maven.site-plugin.version>3.21.0</maven.site-plugin.version>
         <maven.spotbugs-plugin.version>4.8.6.6</maven.spotbugs-plugin.version>
