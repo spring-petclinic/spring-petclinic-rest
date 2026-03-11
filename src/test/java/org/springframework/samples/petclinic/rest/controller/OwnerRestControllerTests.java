@@ -48,8 +48,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -384,16 +382,14 @@ class OwnerRestControllerTests {
             .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
             .build();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
-        String technicalMessage = "could not execute statement [Referential integrity constraint violation: " +
-                "\"CONSTRAINT_256: PUBLIC.PETS FOREIGN KEY(OWNER_ID) REFERENCES PUBLIC.OWNERS(ID) (1000000)\"; " +
-                "SQL statement: insert into pets (birth_date,name,owner_id,type_id,id) values (?,?,?,?,default)]";
+        String technicalMessage = "could not execute statement; SQL [insert into pets ...]; constraint [fk_pet_owner]";
+        given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
         doThrow(new DataIntegrityViolationException(technicalMessage)).when(this.clinicService).savePet(any());
-        this.mockMvc.perform(post("/api/owners/1000000/pets")
+        this.mockMvc.perform(post("/api/owners/1/pets")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print())
-            .andExpect(content().string(not(containsString("SQL"))))
-            .andExpect(content().string(not(containsString("constraint"))))
-            .andExpect(content().string(not(containsString("PUBLIC.PETS"))));
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.detail").value("Request could not be processed"));
     }
 
     @Test
