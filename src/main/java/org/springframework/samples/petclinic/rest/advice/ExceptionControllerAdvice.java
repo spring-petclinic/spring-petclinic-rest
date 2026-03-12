@@ -86,7 +86,11 @@ public class ExceptionControllerAdvice {
     @ResponseBody
     public ResponseEntity<ProblemDetail> handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        ProblemDetail detail = this.detailBuild(ex, status, request.getRequestURL());
+        ProblemDetail detail = ProblemDetail.forStatus(status);
+        detail.setType(URI.create(request.getRequestURL().toString()));
+        detail.setTitle(ex.getClass().getSimpleName());
+        detail.setDetail("Request could not be processed");
+        detail.setProperty("timestamp", Instant.now());
         return ResponseEntity.status(status).body(detail);
     }
 

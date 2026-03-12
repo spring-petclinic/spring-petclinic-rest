@@ -134,9 +134,12 @@ public class OwnerRestController implements OwnersApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<PetDto> addPetToOwner(Integer ownerId, PetFieldsDto petFieldsDto) {
+        Owner owner = this.clinicService.findOwnerById(ownerId);
+        if (owner == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         HttpHeaders headers = new HttpHeaders();
         Pet pet = petMapper.toPet(petFieldsDto);
-        Owner owner = new Owner();
         owner.setId(ownerId);
         pet.setOwner(owner);
         pet.getType().setName(null);
