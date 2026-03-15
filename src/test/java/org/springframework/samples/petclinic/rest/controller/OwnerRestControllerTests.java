@@ -389,7 +389,7 @@ class OwnerRestControllerTests {
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.detail").value("Request could not be processed"));
+            .andExpect(jsonPath("$.detail").value("The requested resource could not be processed due to a data constraint violation"));
     }
 
     @Test
@@ -405,6 +405,63 @@ class OwnerRestControllerTests {
         this.mockMvc.perform(post("/api/owners/1000000/pets")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithNullTypeShouldReturnBadRequestWithGenericDetail() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        newPet.setType(null);
+        ObjectMapper mapper = JsonMapper.builder()
+            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
+            .build();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors").doesNotExist());
+    }
+
+        @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithEmptyTypeNameShouldReturnBadRequestWithGenericDetail() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        newPet.getType().setName("");
+        ObjectMapper mapper = JsonMapper.builder()
+            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
+            .build();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors").doesNotExist());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithNullTypeIdShouldReturnBadRequestWithGenericDetail() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        newPet.getType().setId(null);
+        ObjectMapper mapper = JsonMapper.builder()
+            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
+            .build();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors").doesNotExist());
     }
 
     @Test
