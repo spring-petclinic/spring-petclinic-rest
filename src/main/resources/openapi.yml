@@ -1953,6 +1953,7 @@ components:
           type: string
           format: date
           example: '2010-09-07'
+          x-field-extra-annotation: "@org.springframework.samples.petclinic.rest.validation.PetAgeValidation"
         type:
           $ref: '#/components/schemas/PetType'
       required:
