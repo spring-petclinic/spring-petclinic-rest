@@ -488,10 +488,10 @@ class OwnerRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testCreateOwnerWithUnexpectedErrorShouldReturnInternalServerErrorWithGenericDetail() throws Exception {
-        OwnerDto newOwnwerDto = owners.get(0);
-        newOwnwerDto.setId(null);
+        OwnerDto newOwnerDto = owners.get(0);
+        newOwnerDto.setId(null);
         ObjectMapper mapper = new ObjectMapper();
-        String newOwnerAsJSON = mapper.writeValueAsString(newOwnwerDto);
+        String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         doThrow(new RuntimeException("Low-level persistence exception details"))
             .when(this.clinicService).saveOwner(any());
         this.mockMvc.perform(post("/api/owners")
