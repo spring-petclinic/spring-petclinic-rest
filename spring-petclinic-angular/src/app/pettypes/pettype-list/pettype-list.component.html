@@ -1,0 +1,51 @@
+<!--
+  ~ /*
+  ~  * Copyright 2016-2018 the original author or authors.
+  ~  *
+  ~  * Licensed under the Apache License, Version 2.0 (the "License");
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *
+  ~  *      http://www.apache.org/licenses/LICENSE-2.0
+  ~  *
+  ~  * Unless required by applicable law or agreed to in writing, software
+  ~  * distributed under the License is distributed on an "AS IS" BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  * limitations under the License.
+  ~  */
+  -->
+
+<div class="container-fluid">
+  <div class="container xd-container">
+
+    <h2>Pet Types</h2>
+    <table id="pettypes" class="table table-striped">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let pettype of pettypes; let element_id=index">
+        <td>
+          <input [id]=element_id [readonly]="true" type="text" class="form-control" [(ngModel)]="pettype.name" name="pettype_name" />
+        </td>
+        <td>
+          <button class="btn btn-default" (click)="showEditPettypeComponent(pettype)">Edit</button>
+          <button class="btn btn-default" (click)="deletePettype(pettype)">Delete</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div *ngIf="isInsert">
+      <app-pettype-add (newPetType)="onNewPettype($event)">...</app-pettype-add>
+    </div>
+    <div>
+      <button *ngIf="isPetTypesDataReceived" class="btn btn-default" (click)="gotoHome()">Home</button>
+      <button *ngIf="isPetTypesDataReceived" class="btn btn-default" (click)="showAddPettypeComponent()"> Add </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="container xd-container">
+    <h2>New Specialty</h2>
+    <form class="form-horizontal" (ngSubmit)="onSubmit(specialityForm.value)" #specialityForm="ngForm">
+      <div class="form-group" hidden="true">
+        <input type="text" hidden="true" class="form-control" id="id" [(ngModel)]="speciality.id" name="id" />
+      </div>
+
+      <div class="form-group has-feedback"   [class.has-success]="specialityName.dirty && specialityName.valid" [class.has-error]="specialityName.dirty &&  !specialityName.valid">
+        <div class="form-group">
+          <label class="col-sm-1 control-label">Name</label>
+          <div class="col-sm-6">
+            <input id="name" name="name" class="form-control"  minlength="1" maxlength="80" pattern="^[A-Za-z0-9].{0,79}$" required type="text" [(ngModel)]="speciality.name" #specialityName="ngModel" />
+            <span class="glyphicon form-control-feedback" [class.glyphicon-ok]="specialityName.valid" [class.glyphicon-remove]="!specialityName.valid" aria-hidden="true"></span>
+            <span class="help-block" *ngIf="specialityName.dirty && specialityName.hasError('maxlength')">Name may be only 80 characters long</span>
+            <span class="help-block" *ngIf="specialityName.dirty && specialityName.hasError('minlength')">Name must be at least 1 characters long</span>
+            <span class="help-block" *ngIf="specialityName.dirty && specialityName.hasError('pattern')">Name must begin with a letter or digit</span>
+            <span class="help-block" *ngIf="specialityForm.submitted || specialityName.dirty && specialityName.hasError('required')">Name is required</span>
+          </div>
+          <button class="btn btn-default" type="submit" [disabled]="!specialityForm.valid">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
