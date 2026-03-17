@@ -389,7 +389,7 @@ class OwnerRestControllerTests {
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.detail").value("Request could not be processed"));
+            .andExpect(jsonPath("$.detail").value("The requested resource could not be processed due to a data constraint violation"));
     }
 
     @Test
@@ -405,6 +405,114 @@ class OwnerRestControllerTests {
         this.mockMvc.perform(post("/api/owners/1000000/pets")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithNullTypeShouldReturnBadRequestWithGenericDetail() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        newPet.setType(null);
+        ObjectMapper mapper = JsonMapper.builder()
+            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
+            .build();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors").isArray())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].message").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].rejectedValue").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].defaultMessage").exists());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithEmptyTypeNameShouldReturnBadRequestWithGenericDetail() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        newPet.getType().setName("");
+        ObjectMapper mapper = JsonMapper.builder()
+            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
+            .build();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors").isArray())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].message").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].rejectedValue").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].defaultMessage").exists());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithNullTypeIdShouldReturnBadRequestWithGenericDetail() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        newPet.getType().setId(null);
+        ObjectMapper mapper = JsonMapper.builder()
+            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
+            .build();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors").isArray())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].message").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].rejectedValue").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].defaultMessage").exists());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithUnexpectedErrorShouldReturnInternalServerErrorWithGenericDetail() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        ObjectMapper mapper = JsonMapper.builder()
+            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
+            .build();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        doThrow(new IllegalStateException("JDBC timeout while executing insert into pets"))
+            .when(this.clinicService).savePet(any());
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isInternalServerError())
+            .andExpect(jsonPath("$.detail").value("An unexpected error occurred while processing your request"))
+            .andExpect(jsonPath("$.title").value("IllegalStateException"))
+            .andExpect(jsonPath("$.timestamp").exists());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateOwnerWithUnexpectedErrorShouldReturnInternalServerErrorWithGenericDetail() throws Exception {
+        OwnerDto newOwnerDto = owners.get(0);
+        newOwnerDto.setId(null);
+        ObjectMapper mapper = new ObjectMapper();
+        String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
+        doThrow(new RuntimeException("Low-level persistence exception details"))
+            .when(this.clinicService).saveOwner(any());
+        this.mockMvc.perform(post("/api/owners")
+                .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isInternalServerError())
+            .andExpect(jsonPath("$.detail").value("An unexpected error occurred while processing your request"))
+            .andExpect(jsonPath("$.title").value("RuntimeException"))
+            .andExpect(jsonPath("$.timestamp").exists());
     }
 
     @Test
