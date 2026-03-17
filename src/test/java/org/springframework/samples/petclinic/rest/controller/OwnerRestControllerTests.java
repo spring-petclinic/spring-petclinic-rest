@@ -423,10 +423,14 @@ class OwnerRestControllerTests {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
             .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
-            .andExpect(jsonPath("$.schemaValidationErrors").doesNotExist());
+            .andExpect(jsonPath("$.schemaValidationErrors").isArray())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].message").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].rejectedValue").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].defaultMessage").exists());
     }
 
-        @Test
+    @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testCreatePetWithEmptyTypeNameShouldReturnBadRequestWithGenericDetail() throws Exception {
         PetDto newPet = pets.get(0);
@@ -442,7 +446,11 @@ class OwnerRestControllerTests {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
             .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
-            .andExpect(jsonPath("$.schemaValidationErrors").doesNotExist());
+            .andExpect(jsonPath("$.schemaValidationErrors").isArray())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].message").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].rejectedValue").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].defaultMessage").exists());
     }
 
     @Test
@@ -461,7 +469,11 @@ class OwnerRestControllerTests {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
             .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
-            .andExpect(jsonPath("$.schemaValidationErrors").doesNotExist());
+            .andExpect(jsonPath("$.schemaValidationErrors").isArray())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].message").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].rejectedValue").exists())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].defaultMessage").exists());
     }
 
     @Test

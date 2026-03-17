@@ -31,7 +31,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 import java.time.Instant;
+import java.util.Objects;
 
 /**
  * Global Exception handler for REST controllers.
@@ -53,16 +56,17 @@ public class ExceptionControllerAdvice {
      * Private method for constructing the {@link ProblemDetail} object passing the name and details of the exception
      * class.
      *
-     * @param ex     Object referring to the thrown exception.
+     * @param e     Object referring to the thrown exception.
      * @param status HTTP response status.
      * @param url URL request.
      */
-    private ProblemDetail detailBuild(Exception ex, HttpStatus status, StringBuffer url, String detail) {
+    private ProblemDetail detailBuild(Exception e, HttpStatus status, StringBuffer url, String detail) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
         problemDetail.setType(URI.create(url.toString()));
-        problemDetail.setTitle(ex.getClass().getSimpleName());
+        problemDetail.setTitle(e.getClass().getSimpleName());
         problemDetail.setDetail(detail);
         problemDetail.setProperty("timestamp", Instant.now());
+        problemDetail.setProperty("schemaValidationErrors", List.of());
         return problemDetail;
     }
 
@@ -76,7 +80,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<ProblemDetail> handleGeneralException(Exception e, HttpServletRequest request) {
-        logger.error("Unexpected error occurred", e);
+        logger.error("Unexpected error at {} {}", request.getMethod(), request.getRequestURI(), e);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         ProblemDetail detail = this.detailBuild(e, status, request.getRequestURL(), ERROR_UNEXPECTED);
         return ResponseEntity.status(status).body(detail);
@@ -93,7 +97,11 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseBody
     public ResponseEntity<ProblemDetail> handleDataIntegrityViolationException(DataIntegrityViolationException e, HttpServletRequest request) {
-        logger.error("Data integrity violation: {}", e.getMessage());
+        logger.warn("Data integrity violation at {} {}: {}",
+            request.getMethod(),
+            request.getRequestURI(),
+            e.getMessage());
+        logger.debug("Data integrity violation stacktrace", e);
         HttpStatus status = HttpStatus.NOT_FOUND;
         ProblemDetail detail = this.detailBuild(e, status, request.getRequestURL(), ERROR_DATA_INTEGRITY);
         return ResponseEntity.status(status).body(detail);
@@ -112,13 +120,27 @@ public class ExceptionControllerAdvice {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         BindingErrorsResponse errors = new BindingErrorsResponse();
         BindingResult bindingResult = e.getBindingResult();
+        ProblemDetail detail = this.detailBuild(e, status, request.getRequestURL(), ERROR_INVALID_REQUEST);
         if (bindingResult.hasErrors()) {
             errors.addAllErrors(bindingResult);
-            logger.error("Invalid request: {}", bindingResult.getAllErrors());
-            ProblemDetail detail = this.detailBuild(e, status, request.getRequestURL(), ERROR_INVALID_REQUEST);
+            List<Map<String, String>> schemaValidationErrors = bindingResult.getFieldErrors().stream()
+                .map(fieldError -> Map.of(
+                    "field", fieldError.getField(),
+                    "rejectedValue", Objects.toString(fieldError.getRejectedValue(), "null"),
+                    "defaultMessage", Objects.toString(fieldError.getDefaultMessage(), "Validation failed"),
+                    "message", "Field '%s' %s (rejected value: %s)".formatted(
+                        fieldError.getField(),
+                        Objects.toString(fieldError.getDefaultMessage(), "Validation failed"),
+                        Objects.toString(fieldError.getRejectedValue(), "null"))))
+                .toList();
+            logger.debug("Validation error at {} {}: {}",
+                request.getMethod(),
+                request.getRequestURI(),
+                bindingResult.getFieldErrors());
+            detail.setProperty("schemaValidationErrors", schemaValidationErrors);
             return ResponseEntity.status(status).body(detail);
         }
-        return ResponseEntity.status(status).build();
+        return ResponseEntity.status(status).body(detail);
     }
 
 }
