@@ -16,6 +16,11 @@
 
 package org.springframework.samples.petclinic.rest.advice;
 
+import java.net.URI;
+import java.time.Instant;
+import java.util.List;
+import java.util.Objects;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +29,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.rest.controller.BindingErrorsResponse;
+import org.springframework.samples.petclinic.rest.dto.ValidationMessageDto;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.time.Instant;
-import java.util.Objects;
 
 /**
  * Global Exception handler for REST controllers.
@@ -66,7 +66,7 @@ public class ExceptionControllerAdvice {
         problemDetail.setTitle(e.getClass().getSimpleName());
         problemDetail.setDetail(detail);
         problemDetail.setProperty("timestamp", Instant.now());
-        problemDetail.setProperty("schemaValidationErrors", List.of());
+        problemDetail.setProperty("schemaValidationErrors", List.<ValidationMessageDto>of());
         return problemDetail;
     }
 
@@ -123,15 +123,19 @@ public class ExceptionControllerAdvice {
         ProblemDetail detail = this.detailBuild(e, status, request.getRequestURL(), ERROR_INVALID_REQUEST);
         if (bindingResult.hasErrors()) {
             errors.addAllErrors(bindingResult);
-            List<Map<String, String>> schemaValidationErrors = bindingResult.getFieldErrors().stream()
-                .map(fieldError -> Map.of(
-                    "field", fieldError.getField(),
-                    "rejectedValue", Objects.toString(fieldError.getRejectedValue(), "null"),
-                    "defaultMessage", Objects.toString(fieldError.getDefaultMessage(), "Validation failed"),
-                    "message", "Field '%s' %s (rejected value: %s)".formatted(
+            List<ValidationMessageDto> schemaValidationErrors = bindingResult.getFieldErrors().stream()
+                .map(fieldError -> {
+                    String rejectedValue = Objects.toString(fieldError.getRejectedValue(), "null");
+                    String defaultMessage = Objects.toString(fieldError.getDefaultMessage(), "Validation failed");
+                    String message = "Field '%s' %s (rejected value: %s)".formatted(
                         fieldError.getField(),
-                        Objects.toString(fieldError.getDefaultMessage(), "Validation failed"),
-                        Objects.toString(fieldError.getRejectedValue(), "null"))))
+                        defaultMessage,
+                        rejectedValue);
+                    return new ValidationMessageDto(message)
+                        .putAdditionalProperty("field", fieldError.getField())
+                        .putAdditionalProperty("rejectedValue", rejectedValue)
+                        .putAdditionalProperty("defaultMessage", defaultMessage);
+                })
                 .toList();
             logger.debug("Validation error at {} {}: {}",
                 request.getMethod(),
