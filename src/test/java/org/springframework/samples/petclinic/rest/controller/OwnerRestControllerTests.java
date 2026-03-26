@@ -459,7 +459,7 @@ class OwnerRestControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateOwnersPetSuccess() throws Exception {
         int ownerId = owners.get(0).getId();
-        int petId = pets.get(0).getId();
+        int petId = owners.get(0).getPets().get(0).getId();
         given(this.clinicService.findOwnerById(ownerId)).willReturn(ownerMapper.toOwner(owners.get(0)));
         given(this.clinicService.findPetById(petId)).willReturn(petMapper.toPet(pets.get(0)));
         PetDto updatedPetDto = pets.get(0);
