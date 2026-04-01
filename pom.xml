@@ -34,7 +34,7 @@
         <maven.license-plugin.version>2.7.1</maven.license-plugin.version>
         <maven.openapi-generator-plugin.version>7.20.0</maven.openapi-generator-plugin.version>
         <maven.project-info-reports-plugin.version>3.9.0</maven.project-info-reports-plugin.version>
-        <maven.rat-plugin.version>0.17</maven.rat-plugin.version>
+        <maven.rat-plugin.version>0.18</maven.rat-plugin.version>
         <maven.refactor-first-plugin.version>0.8.0</maven.refactor-first-plugin.version>
         <maven.release-plugin.version>3.1.1</maven.release-plugin.version>
         <maven.site-plugin.version>3.21.0</maven.site-plugin.version>
