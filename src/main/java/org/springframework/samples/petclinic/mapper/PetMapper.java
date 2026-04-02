@@ -21,7 +21,7 @@ public interface PetMapper {
 
     Collection<PetDto> toPetsDto(Collection<Pet> pets);
 
-    Collection<Pet> toPets(Collection<PetDto> pets);
+        Collection<Pet> toPets(Collection<PetDto> pets);
 
     @Mapping(source = "ownerId", target = "owner.id")
     Pet toPet(PetDto petDto);

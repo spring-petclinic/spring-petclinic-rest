@@ -16,6 +16,9 @@
 package org.springframework.samples.petclinic.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -32,6 +35,9 @@ import java.util.*;
 public class Pet extends NamedEntity {
 
     @Column(name = "birth_date", columnDefinition = "DATE")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyy-MM-dd")
+    @PastOrPresent(message = "Birth Date cannot be in the future")
     private LocalDate birthDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
