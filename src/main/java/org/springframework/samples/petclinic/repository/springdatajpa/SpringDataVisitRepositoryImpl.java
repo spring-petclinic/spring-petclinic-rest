@@ -16,8 +16,14 @@
 
 package org.springframework.samples.petclinic.repository.springdatajpa;
 
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
@@ -42,6 +48,34 @@ public class SpringDataVisitRepositoryImpl implements VisitRepositoryOverride {
             em.remove(visit);
         }
 	}
+
+    @Override
+    public Collection<Visit> findByCriteria(Integer petId, LocalDate dateFrom, LocalDate dateTo) throws DataAccessException {
+        StringBuilder jpql = new StringBuilder("SELECT v FROM Visit v WHERE 1=1");
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (petId != null) {
+            jpql.append(" AND v.pet.id = :petId");
+            parameters.put("petId", petId);
+        }
+
+        if (dateFrom != null) {
+            jpql.append(" AND v.date >= :dateFrom");
+            parameters.put("dateFrom", dateFrom);
+        }
+
+        if (dateTo != null) {
+            jpql.append(" AND v.date <= :dateTo");
+            parameters.put("dateTo", dateTo);
+        }
+
+        TypedQuery<Visit> query = this.em.createQuery(jpql.toString(), Visit.class);
+        for (Map.Entry<String, Object> param : parameters.entrySet()) {
+            query.setParameter(param.getKey(), param.getValue());
+        }
+
+        return query.getResultList();
+    }
 
 
 }

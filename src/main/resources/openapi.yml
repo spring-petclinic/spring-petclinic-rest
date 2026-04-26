@@ -972,6 +972,31 @@ paths:
       operationId: listVisits
       summary: Lists visits
       description: Returns an array of visit .
+      parameters:
+        - name: petId
+          in: query
+          description: Pet ID to filter visits by.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - name: dateFrom
+          in: query
+          description: Start date to filter visits (inclusive).
+          required: false
+          schema:
+            type: string
+            format: date
+            example: 2023-01-01
+        - name: dateTo
+          in: query
+          description: End date to filter visits (inclusive).
+          required: false
+          schema:
+            type: string
+            format: date
+            example: 2023-12-31
       responses:
         200:
           description: visits found and returned.

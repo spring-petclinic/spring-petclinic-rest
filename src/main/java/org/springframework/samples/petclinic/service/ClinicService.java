@@ -43,6 +43,7 @@ public interface ClinicService {
 	Collection<Visit> findVisitsByPetId(int petId);
 	Visit findVisitById(int visitId) throws DataAccessException;
 	Collection<Visit> findAllVisits() throws DataAccessException;
+    Collection<Visit> findVisitsByCriteria(Integer petId, java.time.LocalDate dateFrom, java.time.LocalDate dateTo) throws DataAccessException;
 	void saveVisit(Visit visit) throws DataAccessException;
 	void deleteVisit(Visit visit) throws DataAccessException;
 	Vet findVetById(int id) throws DataAccessException;

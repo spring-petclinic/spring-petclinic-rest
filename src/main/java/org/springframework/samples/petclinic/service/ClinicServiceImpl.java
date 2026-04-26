@@ -233,6 +233,15 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
+    public Collection<Visit> findVisitsByCriteria(Integer petId, java.time.LocalDate dateFrom, java.time.LocalDate dateTo) throws DataAccessException {
+        if (petId == null && dateFrom == null && dateTo == null) {
+            return visitRepository.findAll();
+        }
+        return visitRepository.findByCriteria(petId, dateFrom, dateTo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Specialty> findSpecialtiesByNameIn(Set<String> names) {
         return findEntityById(() -> specialtyRepository.findSpecialtiesByNameIn(names));
     }
