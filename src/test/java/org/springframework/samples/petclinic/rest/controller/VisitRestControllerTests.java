@@ -137,7 +137,7 @@ class VisitRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetAllVisitsSuccess() throws Exception {
-    	given(this.clinicService.findAllVisits()).willReturn(visits);
+    	given(this.clinicService.findVisitsByCriteria(null, null, null)).willReturn(visits);
         this.mockMvc.perform(get("/api/visits")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -152,10 +152,66 @@ class VisitRestControllerTests {
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetAllVisitsNotFound() throws Exception {
     	visits.clear();
-    	given(this.clinicService.findAllVisits()).willReturn(visits);
+    	given(this.clinicService.findVisitsByCriteria(null, null, null)).willReturn(visits);
         this.mockMvc.perform(get("/api/visits")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsByPetIdSuccess() throws Exception {
+        List<Visit> petVisits = new ArrayList<>();
+        petVisits.add(visits.get(0));
+        given(this.clinicService.findVisitsByCriteria(8, null, null)).willReturn(petVisits);
+        this.mockMvc.perform(get("/api/visits?petId=8")
+        	.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+        	.andExpect(jsonPath("$.[0].id").value(2))
+        	.andExpect(jsonPath("$.[0].description").value("rabies shot"));
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsByDateFromSuccess() throws Exception {
+        LocalDate fromDate = LocalDate.now().minusDays(7);
+        given(this.clinicService.findVisitsByCriteria(null, fromDate, null)).willReturn(visits);
+        this.mockMvc.perform(get("/api/visits?dateFrom=" + fromDate)
+        	.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+        	.andExpect(jsonPath("$.[0].id").value(2))
+        	.andExpect(jsonPath("$.[1].id").value(3));
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsByDateToSuccess() throws Exception {
+        LocalDate toDate = LocalDate.now().plusDays(7);
+        given(this.clinicService.findVisitsByCriteria(null, null, toDate)).willReturn(visits);
+        this.mockMvc.perform(get("/api/visits?dateTo=" + toDate)
+        	.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+        	.andExpect(jsonPath("$.[0].id").value(2))
+        	.andExpect(jsonPath("$.[1].id").value(3));
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsByCombinedCriteriaSuccess() throws Exception {
+        LocalDate fromDate = LocalDate.now().minusDays(7);
+        LocalDate toDate = LocalDate.now().plusDays(7);
+        List<Visit> filteredVisits = new ArrayList<>();
+        filteredVisits.add(visits.get(0));
+        given(this.clinicService.findVisitsByCriteria(8, fromDate, toDate)).willReturn(filteredVisits);
+        this.mockMvc.perform(get("/api/visits?petId=8&dateFrom=" + fromDate + "&dateTo=" + toDate)
+        	.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+        	.andExpect(jsonPath("$.[0].id").value(2))
+        	.andExpect(jsonPath("$.[0].description").value("rabies shot"));
     }
 
     @Test
