@@ -18,6 +18,7 @@ package org.springframework.samples.petclinic.rest.controller;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -159,7 +160,9 @@ public class OwnerRestController implements OwnersApi {
     @Override
     public ResponseEntity<Void> updateOwnersPet(Integer ownerId, Integer petId, PetFieldsDto petFieldsDto) {
         Owner currentOwner = this.clinicService.findOwnerById(ownerId);
-        if (currentOwner != null) {
+        if (currentOwner != null
+            && currentOwner.getPets().stream().anyMatch((pet -> Objects.equals(pet.getId(), petId)))
+        ) {
             Pet currentPet = this.clinicService.findPetById(petId);
             if (currentPet != null) {
                 currentPet.setBirthDate(petFieldsDto.getBirthDate());
