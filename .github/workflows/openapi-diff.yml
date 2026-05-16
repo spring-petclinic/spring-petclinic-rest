@@ -1,0 +1,24 @@
+name: openapi-diff.yaml
+on:
+  pull_request:
+    branches:
+      - master
+  issue_comment:
+    types:
+      - created
+
+jobs:
+  breaking-changes:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+
+    - run: git fetch --depth=1 origin ${{ github.base_ref }}
+
+    - uses: oasdiff/oasdiff-action/breaking@v0.0.47
+      with:
+        base: 'origin/${{ github.base_ref }}:openapi/openapi.yaml'
+        revision: 'HEAD:openapi/openapi.yaml'
+        fail-on: WARN
+        err-ignore: './openapi/error-ignore.txt'
+        warn-ignore: './openapi/warning-ignore.txt'
