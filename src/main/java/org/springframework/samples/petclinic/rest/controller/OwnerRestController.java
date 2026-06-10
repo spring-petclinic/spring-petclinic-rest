@@ -183,7 +183,7 @@ public class OwnerRestController implements OwnersApi, V2Api {
     public ResponseEntity<Void> updateOwnersPet(Integer ownerId, Integer petId, PetFieldsDto petFieldsDto) {
         Owner currentOwner = this.clinicService.findOwnerById(ownerId);
         if (currentOwner != null) {
-            Pet currentPet = this.clinicService.findPetById(petId);
+            Pet currentPet = currentOwner.getPet(petId);
             if (currentPet != null) {
                 currentPet.setBirthDate(petFieldsDto.getBirthDate());
                 currentPet.setName(petFieldsDto.getName());
