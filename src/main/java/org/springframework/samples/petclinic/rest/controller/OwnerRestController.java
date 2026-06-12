@@ -182,17 +182,18 @@ public class OwnerRestController implements OwnersApi, V2Api {
     @Override
     public ResponseEntity<Void> updateOwnersPet(Integer ownerId, Integer petId, PetFieldsDto petFieldsDto) {
         Owner currentOwner = this.clinicService.findOwnerById(ownerId);
-        if (currentOwner != null) {
-            Pet currentPet = currentOwner.getPet(petId);
-            if (currentPet != null) {
-                currentPet.setBirthDate(petFieldsDto.getBirthDate());
-                currentPet.setName(petFieldsDto.getName());
-                currentPet.setType(petMapper.toPetType(petFieldsDto.getType()));
-                this.clinicService.savePet(currentPet);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+        if(currentOwner==null){
+            return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Pet currentPet = currentOwner.getPet(petId);
+        if(currentPet==null){
+            return ResponseEntity.notFound().build();
+        }
+        currentPet.setBirthDate(petFieldsDto.getBirthDate());
+        currentPet.setName(petFieldsDto.getName());
+        currentPet.setType(petMapper.toPetType(petFieldsDto.getType()));
+        clinicService.savePet(currentPet);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")

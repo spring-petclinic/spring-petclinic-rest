@@ -591,20 +591,34 @@ class OwnerRestControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateOwnersPetSuccess() throws Exception {
         int ownerId = owners.get(0).getId();
-        int petId = pets.get(0).getId();
-        given(this.clinicService.findOwnerById(ownerId)).willReturn(ownerMapper.toOwner(owners.get(0)));
-        given(this.clinicService.findPetById(petId)).willReturn(petMapper.toPet(pets.get(0)));
-        PetDto updatedPetDto = pets.get(0);
+
+        // Owner 1 owns pet 1 in the test fixture
+        int petId = 1;
+
+        given(this.clinicService.findOwnerById(ownerId))
+            .willReturn(ownerMapper.toOwner(owners.get(0)));
+
+        PetDto updatedPetDto = new PetDto();
+        updatedPetDto.setId(petId);
         updatedPetDto.setName("Rex");
         updatedPetDto.setBirthDate(LocalDate.of(2020, 1, 15));
-        ObjectMapper mapper =  JsonMapper.builder()
+
+        PetTypeDto petType = new PetTypeDto();
+        petType.setId(2);
+        petType.setName("dog");
+        updatedPetDto.setType(petType);
+
+        ObjectMapper mapper = JsonMapper.builder()
             .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
             .build();
+
         String updatedPetAsJSON = mapper.writeValueAsString(updatedPetDto);
-        this.mockMvc.perform(put("/api/owners/" + ownerId + "/pets/" + petId)
-                .content(updatedPetAsJSON)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+
+        this.mockMvc.perform(
+                put("/api/owners/" + ownerId + "/pets/" + petId)
+                    .content(updatedPetAsJSON)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNoContent());
     }
 
