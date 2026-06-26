@@ -1,0 +1,6 @@
+composition:
+  authorize: "hasRole('OWNER_ADMIN')"
+service:
+  class: org.springframework.samples.petclinic.rest.endpoint.VisitEndpoints
+  method: updateVisit
+  govern: [ transaction ]

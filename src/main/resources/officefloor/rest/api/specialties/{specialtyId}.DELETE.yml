@@ -1,0 +1,6 @@
+composition:
+  authorize: "hasRole('VET_ADMIN')"
+service:
+  class: org.springframework.samples.petclinic.rest.endpoint.SpecialtyEndpoints
+  method: deleteSpecialty
+  govern: [ transaction ]

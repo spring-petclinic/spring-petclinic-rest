@@ -1,0 +1,6 @@
+composition:
+  authorize: "hasAnyRole('OWNER_ADMIN', 'VET_ADMIN')"
+service:
+  class: org.springframework.samples.petclinic.rest.endpoint.PetTypeEndpoints
+  method: getPetType
+  govern: [ readonly-transaction ]

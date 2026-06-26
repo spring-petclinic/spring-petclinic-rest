@@ -1,0 +1,3 @@
+handle:
+  class: org.springframework.samples.petclinic.rest.endpoint.GlobalExceptionHandler
+  method: handleMethodArgumentNotValidException
