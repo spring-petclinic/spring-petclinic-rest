@@ -1,0 +1,4 @@
+{
+  "http-request": { "method": "GET", "path": "/specialties/1" },
+  "http-response": { "status": 200, "body": { "id": 1, "name": "radiology" } }
+}

@@ -1,0 +1,38 @@
+version: 3
+
+specmatic:
+  settings:
+    test:
+      schemaResiliencyTests: all
+      maxTestRequestCombinations: 1
+      parallelism: 1
+
+systemUnderTest:
+  service:
+    $ref: "#/components/services/petclinicService"
+    runOptions:
+      $ref: "#/components/runOptions/petclinicServiceTest"
+
+components:
+  services:
+    petclinicService:
+      description: Spring Petclinic REST Service
+      definitions:
+        - definition:
+            specs:
+              - spec:
+                  path: openapi.yml
+            source:
+              filesystem:
+                directory: src/main/resources
+      data:
+        examples:
+          - directories:
+              - src/main/resources/openapi_examples
+
+  runOptions:
+    petclinicServiceTest:
+      openapi:
+        type: test
+        baseUrl: http://localhost:9966/petclinic/api
+        actuatorUrl: http://localhost:9966/petclinic/actuator

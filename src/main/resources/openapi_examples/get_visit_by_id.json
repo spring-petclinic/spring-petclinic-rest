@@ -1,0 +1,7 @@
+{
+  "http-request": { "method": "GET", "path": "/visits/2" },
+  "http-response": {
+    "status": 200,
+    "body": { "id": 2, "petId": 8, "date": "2013-01-02", "description": "rabies shot" }
+  }
+}

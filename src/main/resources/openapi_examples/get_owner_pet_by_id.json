@@ -1,0 +1,23 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/owners/1/pets/1"
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "name": "Leo",
+      "birthDate": "2010-09-07",
+      "type": {
+        "name": "cat",
+        "id": 1
+      },
+      "id": 1,
+      "visits": [],
+      "ownerId": 1
+    }
+  }
+}

@@ -1,0 +1,40 @@
+OwnerFields:
+  firstName:
+    - James
+    - Mary
+    - Robert
+    - Patricia
+  lastName:
+    - Smith
+    - Johnson
+    - Williams
+    - Brown
+  address:
+    - 123 Main St.
+    - 456 Oak Ave.
+    - 789 Elm Dr.
+  city:
+    - Madison
+    - Sun Prairie
+    - Monona
+    - McFarland
+  telephone:
+    - "6085551234"
+    - "6085555678"
+    - "6085559012"
+
+VetFields:
+  firstName:
+    - James
+    - Helen
+    - Linda
+  lastName:
+    - Carter
+    - Leary
+    - Douglas
+
+VisitCreate:
+  petId:
+    - 1
+    - 2
+    - 3

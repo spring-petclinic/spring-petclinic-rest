@@ -1,0 +1,1 @@
+{"http-request":{"method":"GET","path":"/pets/2","headers":{"If-None-Match":"\"1986788528\""}},"http-response":{"status":304}}

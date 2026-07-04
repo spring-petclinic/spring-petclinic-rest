@@ -150,6 +150,7 @@ abstract class AbstractClinicServiceTests {
         assertThat(owner6.getPets().size()).isEqualTo(found + 1);
         // checks that id has been generated
         assertThat(pet.getId()).isNotNull();
+        clearCache();
     }
 
     @Test
@@ -407,6 +408,7 @@ abstract class AbstractClinicServiceTests {
 
         petTypes = this.clinicService.findAllPetTypes();
         assertThat(petTypes.size()).isEqualTo(found + 1);
+        clearCache();
     }
 
     @Test
@@ -424,6 +426,7 @@ abstract class AbstractClinicServiceTests {
     @Test
     @Transactional
     void shouldDeletePetType(){
+        clearCache();
     	PetType petType = this.clinicService.findPetTypeById(1);
         this.clinicService.deletePetType(petType);
         clearCache();

@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
@@ -85,7 +86,12 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
         // using 'left join fetch' because it might happen that an owner does not have pets yet
         Query query = this.em.createQuery("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id");
         query.setParameter("id", id);
-        return (Owner) query.getSingleResult();
+        try {
+            return (Owner) query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+        
     }
 
 

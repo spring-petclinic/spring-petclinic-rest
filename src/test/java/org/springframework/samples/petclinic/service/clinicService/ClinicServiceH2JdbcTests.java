@@ -34,4 +34,16 @@ import org.springframework.test.context.TestPropertySource;
 })
 class ClinicServiceH2JdbcTests extends AbstractClinicServiceTests {
 
+
+    @org.junit.jupiter.api.Test
+    @Override
+    void shouldFindOwnersPage() {
+        org.springframework.data.domain.Page<org.springframework.samples.petclinic.model.Owner> owners =
+            this.clinicService.findOwners(null, org.springframework.data.domain.PageRequest.of(0, 3, org.springframework.data.domain.Sort.by("id")));
+        org.assertj.core.api.Assertions.assertThat(owners.getTotalElements()).isEqualTo(12);
+        org.assertj.core.api.Assertions.assertThat(owners.getTotalPages()).isEqualTo(4);
+        org.assertj.core.api.Assertions.assertThat(owners.getContent())
+            .extracting(org.springframework.samples.petclinic.model.Owner::getFirstName)
+            .containsExactly("George", "Betty", "Eduardo");
+    }
 }

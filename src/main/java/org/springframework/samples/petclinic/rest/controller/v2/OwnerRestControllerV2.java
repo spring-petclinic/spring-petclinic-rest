@@ -30,7 +30,7 @@ public class OwnerRestControllerV2 implements OwnerV2Api {
 
     @Override
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    public ResponseEntity<OwnerPageDto> listOwnersPage(String lastName, Integer page, Integer size) {
+    public ResponseEntity<OwnerPageDto> listOwnersPage(String lastName, Integer page, Integer size, String ifNoneMatch) {
         int pageNumber = page == null ? 0 : page;
         int pageSize = size == null ? 20 : size;
         Page<Owner> owners = this.clinicService.findOwners(

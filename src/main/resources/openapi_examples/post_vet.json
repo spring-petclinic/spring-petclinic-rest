@@ -1,0 +1,12 @@
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/vets",
+    "body": { "firstName": "James", "lastName": "Carter", "specialties": [] },
+    "headers": { "Content-Type": "application/json" }
+  },
+  "http-response": {
+    "status": 201,
+    "body": { "id": 1, "firstName": "James", "lastName": "Carter", "specialties": [] }
+  }
+}

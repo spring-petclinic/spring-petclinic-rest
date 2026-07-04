@@ -1,0 +1,1 @@
+{"http-request":{"method":"GET","path":"/vets/1","headers":{"If-None-Match":"\"-72204439\""}},"http-response":{"status":304}}

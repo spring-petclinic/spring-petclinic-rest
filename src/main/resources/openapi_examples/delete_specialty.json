@@ -1,0 +1,7 @@
+{
+  "http-request": { "method": "DELETE", "path": "/specialties/4" },
+  "http-response": {
+    "status": 200,
+    "body": { "id": 4, "name": "ophthalmology" }
+  }
+}

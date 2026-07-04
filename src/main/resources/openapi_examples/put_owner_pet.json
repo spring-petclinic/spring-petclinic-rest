@@ -1,0 +1,13 @@
+{
+  "http-request": {
+    "method": "PUT",
+    "path": "/owners/1/pets/1",
+    "body": {
+      "name": "Leo",
+      "birthDate": "2010-09-07",
+      "type": { "id": 1, "name": "cat" }
+    },
+    "headers": { "Content-Type": "application/json" }
+  },
+  "http-response": { "status": 204 }
+}

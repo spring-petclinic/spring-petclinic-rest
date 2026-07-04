@@ -1,0 +1,43 @@
+name: Specmatic Contract Tests
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  contract-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+      - name: Start application
+        run: |
+          nohup ./mvnw spring-boot:run \
+            "-Dspring-boot.run.profiles=h2,spring-data-jpa" \
+            "-Dspring-boot.run.main-class=org.springframework.samples.petclinic.PetClinicApplication" \
+            "-DskipTests" > app.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -s http://localhost:9966/petclinic/actuator/health && break
+            echo "Waiting for app to start... ($i)"
+            sleep 5
+          done
+      - name: Run Specmatic contract tests (named examples + full schema resiliency)
+        run: ./mvnw test -Dtest=ContractTest
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: specmatic-report
+          path: build/reports/specmatic/test/html/
+      - name: Upload app log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-log
+          path: app.log

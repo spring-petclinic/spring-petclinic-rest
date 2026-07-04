@@ -1,0 +1,12 @@
+{
+  "http-request": { "method": "DELETE", "path": "/vets/7" },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "id": 7,
+      "firstName": "Alice",
+      "lastName": "Nguyen",
+      "specialties": []
+    }
+  }
+}

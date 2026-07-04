@@ -1,0 +1,9 @@
+{
+  "http-request": {
+    "method": "PUT",
+    "path": "/visits/2",
+    "body": { "date": "2013-01-01", "description": "rabies shot" },
+    "headers": { "Content-Type": "application/json" }
+  },
+  "http-response": { "status": 204 }
+}

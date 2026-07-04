@@ -33,6 +33,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
@@ -50,7 +51,7 @@ public class PetTypeRestControllerV1 implements PettypesApi {
 
     @PreAuthorize("hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<List<PetTypeDto>> listPetTypes() {
+    public ResponseEntity<List<PetTypeDto>> listPetTypes(String ifNoneMatch) {
         List<PetType> petTypes = new ArrayList<>(this.clinicService.findAllPetTypes());
         if (petTypes.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -60,12 +61,26 @@ public class PetTypeRestControllerV1 implements PettypesApi {
 
     @PreAuthorize("hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<PetTypeDto> getPetType(Integer petTypeId) {
+    public ResponseEntity<PetTypeDto> getPetType(Integer petTypeId, String ifNoneMatch) {
         PetType petType = this.clinicService.findPetTypeById(petTypeId);
         if (petType == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(petType), HttpStatus.OK);
+
+        String eTag = "\"" + Objects.hash(
+            petType.getId(),
+            petType.getName()
+        ) + "\"";
+
+        if (eTag.equals(ifNoneMatch)) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+                .eTag(eTag)
+                .build();
+        }
+
+        return ResponseEntity.ok()
+            .eTag(eTag)
+            .body(petTypeMapper.toPetTypeDto(petType));
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
@@ -80,14 +95,14 @@ public class PetTypeRestControllerV1 implements PettypesApi {
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
-    public ResponseEntity<PetTypeDto> updatePetType(Integer petTypeId, PetTypeDto petTypeDto) {
+    public ResponseEntity<Void> updatePetType(Integer petTypeId, PetTypeDto petTypeDto) {
         PetType currentPetType = this.clinicService.findPetTypeById(petTypeId);
         if (currentPetType == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         currentPetType.setName(petTypeDto.getName());
         this.clinicService.savePetType(currentPetType);
-        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(currentPetType), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
@@ -99,7 +114,8 @@ public class PetTypeRestControllerV1 implements PettypesApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         this.clinicService.deletePetType(petType);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(petType), HttpStatus.OK);
     }
 
 }
+

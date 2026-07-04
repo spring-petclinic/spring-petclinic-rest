@@ -1,0 +1,18 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/owners/13"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "id": 13,
+      "firstName": "George",
+      "lastName": "Franklin",
+      "address": "110 W. Liberty St.",
+      "city": "Madison",
+      "telephone": "6085551023",
+      "pets": []
+    }
+  }
+}

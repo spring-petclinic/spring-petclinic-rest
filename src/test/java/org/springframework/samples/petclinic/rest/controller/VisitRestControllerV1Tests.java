@@ -129,8 +129,8 @@ class VisitRestControllerV1Tests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetVisitNotFound() throws Exception {
-        given(this.clinicService.findVisitById(999)).willReturn(null);
-        this.mockMvc.perform(get("/api/visits/999")
+        given(this.clinicService.findVisitById(8)).willReturn(null);
+        this.mockMvc.perform(get("/api/visits/8")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -194,8 +194,7 @@ class VisitRestControllerV1Tests {
     	ObjectMapper mapper = new ObjectMapper();
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	this.mockMvc.perform(put("/api/visits/2")
-    		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        	.andExpect(content().contentType("application/json"))
+    		.content(newVisitAsJSON).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
 
     	this.mockMvc.perform(get("/api/visits/2")
@@ -214,7 +213,7 @@ class VisitRestControllerV1Tests {
     	ObjectMapper mapper = new ObjectMapper();
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	this.mockMvc.perform(put("/api/visits/2")
-    		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+    		.content(newVisitAsJSON).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isBadRequest());
      }
 
@@ -226,8 +225,8 @@ class VisitRestControllerV1Tests {
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
     	this.mockMvc.perform(delete("/api/visits/2")
-    		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        	.andExpect(status().isNoContent());
+    		.content(newVisitAsJSON).contentType(MediaType.APPLICATION_JSON_VALUE))
+        	.andExpect(status().isOk());
     }
 
     @Test

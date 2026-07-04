@@ -107,8 +107,8 @@ class VetRestControllerV1Tests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testGetVetNotFound() throws Exception {
-    	given(this.clinicService.findVetById(999)).willReturn(null);
-        this.mockMvc.perform(get("/api/vets/999")
+    	given(this.clinicService.findVetById(10)).willReturn(null);
+        this.mockMvc.perform(get("/api/vets/10")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -171,8 +171,7 @@ class VetRestControllerV1Tests {
     	ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
     	this.mockMvc.perform(put("/api/vets/1")
-    		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        	.andExpect(content().contentType("application/json"))
+    		.content(newVetAsJSON).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
 
     	this.mockMvc.perform(get("/api/vets/1")
@@ -192,7 +191,7 @@ class VetRestControllerV1Tests {
     	ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
     	this.mockMvc.perform(put("/api/vets/1")
-    		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+    		.content(newVetAsJSON).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isBadRequest());
      }
 
@@ -204,8 +203,8 @@ class VetRestControllerV1Tests {
         String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
     	given(this.clinicService.findVetById(1)).willReturn(vets.get(0));
     	this.mockMvc.perform(delete("/api/vets/1")
-    		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        	.andExpect(status().isNoContent());
+    		.content(newVetAsJSON).contentType(MediaType.APPLICATION_JSON_VALUE))
+        	.andExpect(status().isOk());
     }
 
     @Test

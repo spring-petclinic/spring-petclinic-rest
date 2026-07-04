@@ -22,6 +22,7 @@ import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.rest.api.PetsApi;
 import org.springframework.samples.petclinic.rest.dto.PetDto;
+import org.springframework.samples.petclinic.rest.dto.PetFieldsDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Vitaliy Fedoriv
@@ -51,17 +53,32 @@ public class PetRestControllerV1 implements PetsApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<PetDto> getPet(Integer petId) {
-        PetDto pet = petMapper.toPetDto(this.clinicService.findPetById(petId));
+    public ResponseEntity<PetDto> getPet(Integer petId, String ifNoneMatch) {
+        Pet pet = this.clinicService.findPetById(petId);
         if (pet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(pet, HttpStatus.OK);
+
+        String eTag = "\"" + Objects.hash(
+            pet.getId(),
+            pet.getName(),
+            pet.getBirthDate()
+        ) + "\"";
+
+        if (eTag.equals(ifNoneMatch)) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+                .eTag(eTag)
+                .build();
+        }
+
+        return ResponseEntity.ok()
+            .eTag(eTag)
+            .body(petMapper.toPetDto(pet));
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<List<PetDto>> listPets() {
+    public ResponseEntity<List<PetDto>> listPets(String ifNoneMatch) {
         List<PetDto> pets = new ArrayList<>(petMapper.toPetsDto(this.clinicService.findAllPets()));
         if (pets.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -72,16 +89,20 @@ public class PetRestControllerV1 implements PetsApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<PetDto> updatePet(Integer petId, PetDto petDto) {
+    public ResponseEntity<PetDto> updatePet(Integer petId, PetFieldsDto petFieldsDto) {
         Pet currentPet = this.clinicService.findPetById(petId);
         if (currentPet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        currentPet.setBirthDate(petDto.getBirthDate());
-        currentPet.setName(petDto.getName());
-        currentPet.setType(petMapper.toPetType(petDto.getType()));
+        if (petFieldsDto.getType() == null
+                || this.clinicService.findPetTypeById(petFieldsDto.getType().getId()) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        currentPet.setBirthDate(petFieldsDto.getBirthDate());
+        currentPet.setName(petFieldsDto.getName());
+        currentPet.setType(petMapper.toPetType(petFieldsDto.getType()));
         this.clinicService.savePet(currentPet);
-        return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
@@ -92,7 +113,10 @@ public class PetRestControllerV1 implements PetsApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         this.clinicService.deletePet(pet);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(petMapper.toPetDto(pet), HttpStatus.OK);
     }
 
 }
+
+
+

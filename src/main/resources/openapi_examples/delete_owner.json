@@ -1,0 +1,15 @@
+{
+  "http-request": { "method": "DELETE", "path": "/owners/11" },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "id": 11,
+      "firstName": "Delete",
+      "lastName": "TestOwner",
+      "address": "1 Delete St.",
+      "city": "Testville",
+      "telephone": "6085550001",
+      "pets": []
+    }
+  }
+}

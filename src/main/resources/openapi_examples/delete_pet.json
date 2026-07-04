@@ -1,0 +1,14 @@
+{
+  "http-request": { "method": "DELETE", "path": "/pets/14" },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "id": 14,
+      "name": "DeleteTestPet",
+      "birthDate": "2015-01-01",
+      "type": { "id": 1, "name": "cat" },
+      "ownerId": 12,
+      "visits": []
+    }
+  }
+}

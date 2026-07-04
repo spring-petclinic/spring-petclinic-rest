@@ -1,0 +1,7 @@
+{
+  "http-request": { "method": "GET", "path": "/vets/1" },
+  "http-response": {
+    "status": 200,
+    "body": { "id": 1, "firstName": "James", "lastName": "Carter", "specialties": [] }
+  }
+}

@@ -2,16 +2,14 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: Java CI on master branch
-
 on:
   push:
     branches: [ master ]
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    env:
+      SONAR_TOKEN_PRESENT: ${{ secrets.SONAR_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -20,8 +18,30 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Build and analyze
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+      - name: Start application
+        run: |
+          nohup ./mvnw spring-boot:run \
+            "-Dspring-boot.run.profiles=h2,spring-data-jpa" \
+            "-Dspring-boot.run.main-class=org.springframework.samples.petclinic.PetClinicApplication" \
+            "-DskipTests" > app.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -s http://localhost:9966/petclinic/actuator/health && break
+            echo "Waiting for app to start... ($i)"
+            sleep 5
+          done
+      - name: Build, test, and check coverage
+        run: ./mvnw -B verify
+      - name: SonarCloud analysis (optional, skipped if no token configured)
+        if: ${{ env.SONAR_TOKEN_PRESENT == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic_spring-petclinic-rest -Dsonar.organization=spring-petclinic
+        run: ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic_spring-petclinic-rest -Dsonar.organization=spring-petclinic
+      - name: Upload app log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-log-maven-build
+          path: app.log

@@ -1,0 +1,12 @@
+{
+  "http-request": { "method": "DELETE", "path": "/visits/5" },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "id": 5,
+      "petId": 1,
+      "date": "2015-01-01",
+      "description": "Delete test visit"
+    }
+  }
+}

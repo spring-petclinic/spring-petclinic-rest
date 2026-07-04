@@ -1,0 +1,25 @@
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/owners/1/pets/1/visits",
+    "body": {
+      "date": "2026-07-07",
+      "description": "contract test visit"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "http-response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "description": "contract test visit",
+      "id": 159,
+      "petId": 1,
+      "date": "2026-07-07"
+    }
+  }
+}

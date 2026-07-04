@@ -1,0 +1,4 @@
+{
+  "http-request": { "method": "DELETE", "path": "/pettypes/7" },
+  "http-response": { "status": 200, "body": { "id": 7, "name": "parakeet" } }
+}
