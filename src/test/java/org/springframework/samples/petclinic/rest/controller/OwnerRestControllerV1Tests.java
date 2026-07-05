@@ -18,7 +18,6 @@ package org.springframework.samples.petclinic.rest.controller;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.samples.petclinic.rest.controller.v1.OwnerRestControllerV1;
-import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import tools.jackson.databind.json.JsonMapper;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -228,7 +226,7 @@ class OwnerRestControllerV1Tests {
     void testCreateOwnerSuccess() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
         newOwnerDto.setId(null);
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         this.mockMvc.perform(post("/api/owners")
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -241,7 +239,7 @@ class OwnerRestControllerV1Tests {
         OwnerDto newOwnerDto = owners.get(0);
         newOwnerDto.setId(null);
         newOwnerDto.setFirstName(null);
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         this.mockMvc.perform(post("/api/owners")
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -261,7 +259,7 @@ class OwnerRestControllerV1Tests {
         updatedOwnerDto.setAddress("110 W. Liberty St.");
         updatedOwnerDto.setCity("Madison");
         updatedOwnerDto.setTelephone("6085551023");
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newOwnerAsJSON = mapper.writeValueAsString(updatedOwnerDto);
         this.mockMvc.perform(put("/api/owners/" + ownerId)
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -289,7 +287,7 @@ class OwnerRestControllerV1Tests {
         updatedOwnerDto.setCity("Madison");
 
         updatedOwnerDto.setTelephone("6085551023");
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newOwnerAsJSON = mapper.writeValueAsString(updatedOwnerDto);
         this.mockMvc.perform(put("/api/owners/" + ownerId)
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -310,7 +308,7 @@ class OwnerRestControllerV1Tests {
     void testUpdateOwnerError() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
         newOwnerDto.setFirstName("");
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         this.mockMvc.perform(put("/api/owners/1")
                 .content(newOwnerAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -321,7 +319,7 @@ class OwnerRestControllerV1Tests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testDeleteOwnerSuccess() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         final Owner owner = ownerMapper.toOwner(owners.get(0));
         given(this.clinicService.findOwnerById(1)).willReturn(owner);
@@ -334,7 +332,7 @@ class OwnerRestControllerV1Tests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testDeleteOwnerError() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         given(this.clinicService.findOwnerById(999)).willReturn(null);
         this.mockMvc.perform(delete("/api/owners/999")
@@ -349,9 +347,7 @@ class OwnerRestControllerV1Tests {
         given(this.clinicService.findOwnerById(1)).willReturn(owner);
         PetDto newPet = pets.get(0);
         newPet.setId(999);
-        ObjectMapper mapper =  JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         System.err.println("--> newPetAsJSON=" + newPetAsJSON);
         this.mockMvc.perform(post("/api/owners/1/pets")
@@ -365,9 +361,7 @@ class OwnerRestControllerV1Tests {
         PetDto newPet = pets.get(0);
         newPet.setId(null);
         newPet.setName(null);
-        ObjectMapper mapper =  JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         this.mockMvc.perform(post("/api/owners/1/pets")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -379,9 +373,7 @@ class OwnerRestControllerV1Tests {
     void testCreatePetShouldNotExposeTechnicalDetails() throws Exception {
         PetDto newPet = pets.get(0);
         newPet.setId(null);
-        ObjectMapper mapper =  JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         String technicalMessage = "could not execute statement; SQL [insert into pets ...]; constraint [fk_pet_owner]";
         given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
@@ -398,9 +390,7 @@ class OwnerRestControllerV1Tests {
     void testCreatePetWithUnknownOwnerShouldReturnNotFound() throws Exception {
         PetDto newPet = pets.get(0);
         newPet.setId(null);
-        ObjectMapper mapper = JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         given(this.clinicService.findOwnerById(1000000)).willReturn(null);
         this.mockMvc.perform(post("/api/owners/1000000/pets")
@@ -414,9 +404,7 @@ class OwnerRestControllerV1Tests {
         PetDto newPet = pets.get(0);
         newPet.setId(null);
         newPet.setType(null);
-        ObjectMapper mapper = JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         this.mockMvc.perform(post("/api/owners/1/pets")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -437,9 +425,7 @@ class OwnerRestControllerV1Tests {
         PetDto newPet = pets.get(0);
         newPet.setId(null);
         newPet.getType().setName("");
-        ObjectMapper mapper = JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         this.mockMvc.perform(post("/api/owners/1/pets")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -460,9 +446,7 @@ class OwnerRestControllerV1Tests {
         PetDto newPet = pets.get(0);
         newPet.setId(null);
         newPet.getType().setId(null);
-        ObjectMapper mapper = JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         this.mockMvc.perform(post("/api/owners/1/pets")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -482,9 +466,7 @@ class OwnerRestControllerV1Tests {
     void testCreatePetWithUnexpectedErrorShouldReturnInternalServerErrorWithGenericDetail() throws Exception {
         PetDto newPet = pets.get(0);
         newPet.setId(null);
-        ObjectMapper mapper = JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
         given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
         doThrow(new IllegalStateException("JDBC timeout while executing insert into pets"))
@@ -503,7 +485,7 @@ class OwnerRestControllerV1Tests {
     void testCreateOwnerWithUnexpectedErrorShouldReturnInternalServerErrorWithGenericDetail() throws Exception {
         OwnerDto newOwnerDto = owners.get(0);
         newOwnerDto.setId(null);
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
         doThrow(new RuntimeException("Low-level persistence exception details"))
             .when(this.clinicService).saveOwner(any());
@@ -521,7 +503,7 @@ class OwnerRestControllerV1Tests {
     void testCreateVisitSuccess() throws Exception {
         VisitDto newVisit = visits.get(0);
         newVisit.setId(999);
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisit(newVisit));
         System.out.println("newVisitAsJSON " + newVisitAsJSON);
         this.mockMvc.perform(post("/api/owners/1/pets/1/visits")
@@ -574,9 +556,7 @@ class OwnerRestControllerV1Tests {
         PetDto updatedPetDto = pets.get(0);
         updatedPetDto.setName("Rex");
         updatedPetDto.setBirthDate(LocalDate.of(2020, 1, 15));
-        ObjectMapper mapper =  JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String updatedPetAsJSON = mapper.writeValueAsString(updatedPetDto);
         this.mockMvc.perform(put("/api/owners/" + ownerId + "/pets/" + petId)
                 .content(updatedPetAsJSON)
@@ -593,9 +573,7 @@ class OwnerRestControllerV1Tests {
         given(this.clinicService.findOwnerById(ownerId)).willReturn(null);
         PetDto petDto = pets.get(0);
         petDto.setName("Thor");
-        ObjectMapper mapper =  JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String updatedPetAsJSON = mapper.writeValueAsString(petDto);
         this.mockMvc.perform(put("/api/owners/" + ownerId + "/pets/" + petId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -613,9 +591,7 @@ class OwnerRestControllerV1Tests {
         PetDto petDto = pets.get(0);
         petDto.setName("Ghost");
         petDto.setBirthDate(LocalDate.of(2020, 1, 1));
-        ObjectMapper mapper =  JsonMapper.builder()
-            .defaultDateFormat(new SimpleDateFormat("dd/MM/yyyy"))
-            .build();
+        JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
         String updatedPetAsJSON = mapper.writeValueAsString(petDto);
         this.mockMvc.perform(put("/api/owners/" + ownerId + "/pets/" + petId)
                 .contentType(MediaType.APPLICATION_JSON)
