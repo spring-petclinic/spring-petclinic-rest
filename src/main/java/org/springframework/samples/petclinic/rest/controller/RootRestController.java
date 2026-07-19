@@ -43,5 +43,11 @@ public class RootRestController {
 		response.sendRedirect(this.servletContextPath + "/swagger-ui/index.html");
 	}
 
+	public String redirectToSwagger() {
+		return "redirect:" + this.servletContextPath + "/swagger-ui/index.html";
+	}
+
+
+
 }
 
