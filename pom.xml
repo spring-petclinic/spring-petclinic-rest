@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.2</version>
+        <version>4.0.7</version>
         <relativePath/> <!-- lookup parent from Maven repository -->
     </parent>
 
@@ -21,7 +21,7 @@
 
         <!-- Third-party libraries -->
         <spring-data-jdbc.version>1.2.1.RELEASE</spring-data-jdbc.version>
-        <springdoc-openapi-ui.version>3.0.1</springdoc-openapi-ui.version>
+        <springdoc-openapi-ui.version>3.0.3</springdoc-openapi-ui.version>
         <jackson-databind-nullable.version>0.2.8</jackson-databind-nullable.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
@@ -29,7 +29,7 @@
         <!-- Maven plugins and supporting properties -->
         <maven.checkstyle-plugin.version>3.6.0</maven.checkstyle-plugin.version>
         <maven.exec-plugin.version>3.5.0</maven.exec-plugin.version>
-        <maven.jacoco-plugin.version>0.8.14</maven.jacoco-plugin.version>
+        <maven.jacoco-plugin.version>0.8.15</maven.jacoco-plugin.version>
         <maven.jxr-plugin.version>3.6.0</maven.jxr-plugin.version>
         <maven.license-plugin.version>2.7.0</maven.license-plugin.version>
         <maven.openapi-generator-plugin.version>7.18.0</maven.openapi-generator-plugin.version>
@@ -124,6 +124,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -370,13 +375,14 @@
                                 <interfaceOnly>true</interfaceOnly>
                                 <!-- Activating Java 8 features -->
                                 <performBeanValidation>true</performBeanValidation>
-                                <useSpringBoot3>true</useSpringBoot3>
                                 <useJakartaEe>true</useJakartaEe>
                                 <openApiNullable>false</openApiNullable>
                                 <!-- override the default library to jersey2 -->
                                 <serializationLibrary>jackson</serializationLibrary>
                                 <!-- switch documentation provider to springdoc -->
                                 <documentationProvider>springdoc</documentationProvider>
+                                <useSpringBoot4>true</useSpringBoot4>
+                                <useJackson3>true</useJackson3>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -468,6 +474,24 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>${maven.site-plugin.version}</version>
             </plugin>
+      <plugin>
+        <groupId>org.openrewrite.maven</groupId>
+        <artifactId>rewrite-maven-plugin</artifactId>
+        <version>6.45.0</version>
+        <configuration>
+          <exportDatatables>true</exportDatatables>
+          <activeRecipes>
+            <recipe>org.openrewrite.java.spring.boot4.UpgradeSpringBoot_4_0</recipe>
+          </activeRecipes>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.openrewrite.recipe</groupId>
+            <artifactId>rewrite-spring</artifactId>
+            <version>6.36.1</version>
+          </dependency>
+        </dependencies>
+      </plugin>
         </plugins>
     </build>
 </project>
