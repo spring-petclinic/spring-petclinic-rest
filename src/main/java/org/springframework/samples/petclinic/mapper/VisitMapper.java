@@ -18,6 +18,8 @@ public interface VisitMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "pet", ignore = true)
+    @Mapping(target = "cancelled", ignore = true)
+    @Mapping(target = "cancellationReason", ignore = true)
     Visit toVisit(VisitFieldsDto visitFieldsDto);
 
     @Mapping(source = "pet.id", target = "petId")

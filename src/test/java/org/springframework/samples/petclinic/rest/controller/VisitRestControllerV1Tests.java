@@ -242,4 +242,75 @@ class VisitRestControllerV1Tests {
         	.andExpect(status().isNotFound());
     }
 
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testCancelVisitSuccess() throws Exception {
+        given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
+        org.springframework.samples.petclinic.rest.dto.VisitCancellationRequestDto request = new org.springframework.samples.petclinic.rest.dto.VisitCancellationRequestDto();
+        request.setReason("Owner unavailable");
+        ObjectMapper mapper = new ObjectMapper();
+        String requestAsJSON = mapper.writeValueAsString(request);
+        this.mockMvc.perform(put("/api/visits/2/cancel")
+            .content(requestAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(2))
+            .andExpect(jsonPath("$.cancelled").value(true))
+            .andExpect(jsonPath("$.cancellationReason").value("Owner unavailable"));
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testCancelVisitInvalidReasonEmpty() throws Exception {
+        org.springframework.samples.petclinic.rest.dto.VisitCancellationRequestDto request = new org.springframework.samples.petclinic.rest.dto.VisitCancellationRequestDto();
+        request.setReason("   ");
+        ObjectMapper mapper = new ObjectMapper();
+        String requestAsJSON = mapper.writeValueAsString(request);
+        this.mockMvc.perform(put("/api/visits/2/cancel")
+            .content(requestAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testCancelVisitInvalidReasonTooLong() throws Exception {
+        org.springframework.samples.petclinic.rest.dto.VisitCancellationRequestDto request = new org.springframework.samples.petclinic.rest.dto.VisitCancellationRequestDto();
+        request.setReason("a".repeat(256));
+        ObjectMapper mapper = new ObjectMapper();
+        String requestAsJSON = mapper.writeValueAsString(request);
+        this.mockMvc.perform(put("/api/visits/2/cancel")
+            .content(requestAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testCancelVisitNotFound() throws Exception {
+        given(this.clinicService.findVisitById(999)).willReturn(null);
+        org.springframework.samples.petclinic.rest.dto.VisitCancellationRequestDto request = new org.springframework.samples.petclinic.rest.dto.VisitCancellationRequestDto();
+        request.setReason("Owner unavailable");
+        ObjectMapper mapper = new ObjectMapper();
+        String requestAsJSON = mapper.writeValueAsString(request);
+        this.mockMvc.perform(put("/api/visits/999/cancel")
+            .content(requestAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testCancelVisitAlreadyCancelled() throws Exception {
+        Visit cancelledVisit = visits.get(0);
+        cancelledVisit.setCancelled(true);
+        cancelledVisit.setCancellationReason("Initial reason");
+        given(this.clinicService.findVisitById(2)).willReturn(cancelledVisit);
+
+        org.springframework.samples.petclinic.rest.dto.VisitCancellationRequestDto request = new org.springframework.samples.petclinic.rest.dto.VisitCancellationRequestDto();
+        request.setReason("Second attempt");
+        ObjectMapper mapper = new ObjectMapper();
+        String requestAsJSON = mapper.writeValueAsString(request);
+
+        this.mockMvc.perform(put("/api/visits/2/cancel")
+            .content(requestAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isConflict());
+    }
+
 }
