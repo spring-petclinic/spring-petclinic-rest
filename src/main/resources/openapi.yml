@@ -1984,6 +1984,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
+          pattern: "^[A-Za-z0-9].{0,79}$"
           example: radiology
       required:
         - id
@@ -2316,6 +2317,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
+          pattern: "^[A-Za-z0-9].{0,79}$"
           example: cat
       required:
         - name
@@ -2378,6 +2380,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
+          pattern: "^[A-Za-z0-9].{0,79}$"
           example: admin
       required:
         - name
