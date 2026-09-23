@@ -364,6 +364,7 @@
                             <modelNameSuffix>Dto</modelNameSuffix>
                             <apiPackage>org.springframework.samples.petclinic.rest.api</apiPackage>
                             <generateModels>true</generateModels>
+                            <modelsToGenerate>Owner,OwnerFields,OwnerPage,PetFields,PetPage,PetType,PetTypeFields,ProblemDetail,Role,Specialty,User,ValidationMessage,Vet,VetFields,VisitFields</modelsToGenerate>
                             <modelPackage>org.springframework.samples.petclinic.rest.dto</modelPackage>
                             <generateApis>true</generateApis>
                             <importMappings>

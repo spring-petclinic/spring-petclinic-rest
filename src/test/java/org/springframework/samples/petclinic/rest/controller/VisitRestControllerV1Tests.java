@@ -163,7 +163,6 @@ class VisitRestControllerV1Tests {
     @WithMockUser(roles="OWNER_ADMIN")
     void testCreateVisitSuccess() throws Exception {
     	Visit newVisit = visits.get(0);
-    	newVisit.setId(999);
     	ObjectMapper mapper = new ObjectMapper();
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	System.out.println("newVisitAsJSON " + newVisitAsJSON);
@@ -175,11 +174,8 @@ class VisitRestControllerV1Tests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testCreateVisitError() throws Exception {
-    	Visit newVisit = visits.get(0);
-    	newVisit.setId(null);
-        newVisit.setDescription(null);
     	ObjectMapper mapper = new ObjectMapper();
-        String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
+        String newVisitAsJSON = "{\"date\":\"2020-01-01\",\"description\":null,\"petId\":8}";
     	this.mockMvc.perform(post("/api/visits")
         		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         		.andExpect(status().isBadRequest());
@@ -190,7 +186,7 @@ class VisitRestControllerV1Tests {
     void testUpdateVisitSuccess() throws Exception {
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
     	Visit newVisit = visits.get(0);
-    	newVisit.setDescription("rabies shot test");
+        newVisit.setDescription("rabies shot test");
     	ObjectMapper mapper = new ObjectMapper();
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	this.mockMvc.perform(put("/api/visits/2")
@@ -209,10 +205,8 @@ class VisitRestControllerV1Tests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testUpdateVisitError() throws Exception {
-    	Visit newVisit = visits.get(0);
-        newVisit.setDescription(null);
     	ObjectMapper mapper = new ObjectMapper();
-        String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
+        String newVisitAsJSON = "{\"date\":\"2020-01-01\",\"description\":null,\"petId\":8}";
     	this.mockMvc.perform(put("/api/visits/2")
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isBadRequest());
