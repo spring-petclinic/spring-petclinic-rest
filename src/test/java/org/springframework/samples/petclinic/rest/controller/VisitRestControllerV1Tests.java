@@ -20,6 +20,8 @@ import org.springframework.samples.petclinic.rest.controller.v1.VisitRestControl
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -43,6 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -163,6 +167,7 @@ class VisitRestControllerV1Tests {
     @WithMockUser(roles="OWNER_ADMIN")
     void testCreateVisitSuccess() throws Exception {
     	Visit newVisit = visits.get(0);
+        given(this.clinicService.findPetById(8)).willReturn(newVisit.getPet());
     	ObjectMapper mapper = new ObjectMapper();
         String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
     	System.out.println("newVisitAsJSON " + newVisitAsJSON);
@@ -181,10 +186,67 @@ class VisitRestControllerV1Tests {
         		.andExpect(status().isBadRequest());
      }
 
+    @ParameterizedTest
+    @CsvSource({"2020-01-01", "2025-12-31"})
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateVisitRejectsPastDate(String date) throws Exception {
+        when(this.clinicService.findPetById(8)).thenReturn(visits.get(0).getPet());
+
+        var result = this.mockMvc.perform(post("/api/visits")
+                .content("""
+                    {"date":"%s","description":"rabies shot","petId":8}
+                    """.formatted(date))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(400);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"999", "1000"})
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateVisitRejectsUnknownPet(String petId) throws Exception {
+        when(this.clinicService.findPetById(Integer.parseInt(petId))).thenReturn(null);
+
+        var result = this.mockMvc.perform(post("/api/visits")
+                .content("""
+                    {"date":"2099-01-01","description":"rabies shot","petId":%s}
+                    """.formatted(petId))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(400);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"8,2026-09-23", "8,2099-01-01"})
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateVisitRejectsDuplicateSlot(int petId, String date) throws Exception {
+        Visit existingVisit = new Visit();
+        existingVisit.setId(42);
+        existingVisit.setDate(LocalDate.parse(date));
+        existingVisit.setPet(visits.get(0).getPet());
+        when(this.clinicService.findPetById(petId)).thenReturn(existingVisit.getPet());
+        given(this.clinicService.findVisitsByPetId(petId)).willReturn(List.of(existingVisit));
+
+        var result = this.mockMvc.perform(post("/api/visits")
+                .content("""
+                    {"date":"%s","description":"duplicate","petId":%d}
+                    """.formatted(date, petId))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(400);
+    }
+
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testUpdateVisitSuccess() throws Exception {
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
+        given(this.clinicService.findPetById(8)).willReturn(visits.get(0).getPet());
     	Visit newVisit = visits.get(0);
         newVisit.setDescription("rabies shot test");
     	ObjectMapper mapper = new ObjectMapper();

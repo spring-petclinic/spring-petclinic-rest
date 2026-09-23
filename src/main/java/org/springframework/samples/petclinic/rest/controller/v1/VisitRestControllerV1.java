@@ -30,8 +30,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Vitaliy Fedoriv
@@ -75,6 +78,9 @@ public class VisitRestControllerV1 implements VisitsApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<VisitDto> addVisit(VisitDto visitDto) {
+        if (!isValidVisit(visitDto.date(), visitDto.petId(), null)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         HttpHeaders headers = new HttpHeaders();
         Visit visit = visitMapper.toVisit(visitDto);
         this.clinicService.saveVisit(visit);
@@ -89,6 +95,10 @@ public class VisitRestControllerV1 implements VisitsApi {
         Visit currentVisit = this.clinicService.findVisitById(visitId);
         if (currentVisit == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Integer petId = currentVisit.getPet() == null ? null : currentVisit.getPet().getId();
+        if (!isValidVisit(visitDto.getDate(), petId, currentVisit.getId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         currentVisit.setDate(visitDto.getDate());
         currentVisit.setDescription(visitDto.getDescription());
@@ -106,6 +116,19 @@ public class VisitRestControllerV1 implements VisitsApi {
         }
         this.clinicService.deleteVisit(visit);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    private boolean isValidVisit(LocalDate date, Integer petId, Integer visitId) {
+        if (date != null && date.isBefore(LocalDate.now())) {
+            return false;
+        }
+        if (petId == null || this.clinicService.findPetById(petId) == null) {
+            return false;
+        }
+        Collection<Visit> visits = this.clinicService.findVisitsByPetId(petId);
+        return visits == null || visits.stream()
+            .filter(existingVisit -> !Objects.equals(existingVisit.getId(), visitId))
+            .noneMatch(existingVisit -> date != null && date.equals(existingVisit.getDate()));
     }
 
 }
