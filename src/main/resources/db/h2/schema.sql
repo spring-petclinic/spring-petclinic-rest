@@ -31,6 +31,7 @@ CREATE INDEX idx_types_name ON types(name);
 CREATE TABLE IF NOT EXISTS owners (
   id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   first_name VARCHAR(30) NOT NULL,
+    middle_name VARCHAR(30),
   last_name VARCHAR(30) NOT NULL,
   address VARCHAR(255) NOT NULL,
   city VARCHAR(80) NOT NULL,

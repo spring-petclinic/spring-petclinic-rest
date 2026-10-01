@@ -2001,6 +2001,12 @@ components:
           maxLength: 30
           pattern: "^[\\p{L}]+([ '-][\\p{L}]+){0,2}$"
           example: George
+        middleName:
+          title: Middle name
+          description: The middle name of the pet owner.
+          type: string
+          maxLength: 30
+          example: Washington
         lastName:
           title: Last name
           description: The last name of the pet owner.
