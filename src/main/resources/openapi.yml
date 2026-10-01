@@ -2027,9 +2027,9 @@ components:
           title: Telephone number
           description: The telephone number of the pet owner.
           type: string
-          minLength: 1
-          maxLength: 20
-          pattern: '^[0-9]*$'
+          minLength: 10
+          maxLength: 10
+          pattern: '^[0-9]{10}$'
           example: '6085551023'
       required:
         - firstName
