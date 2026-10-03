@@ -30,10 +30,13 @@ public interface OwnerMapper {
 
     Collection<Owner> toOwners(Collection<OwnerDto> ownerDtos);
 
-    @Mapping(target = "content", expression = "java(toOwnerDtoCollection(ownerPage.getContent()))")
-    @Mapping(source = "number", target = "page")
-    @Mapping(source = "size", target = "size")
-    @Mapping(source = "totalElements", target = "totalElements")
-    @Mapping(source = "totalPages", target = "totalPages")
-    OwnerPageDto toOwnerPageDto(@NonNull Page<Owner> ownerPage);
+    default OwnerPageDto toOwnerPageDto(@NonNull Page<Owner> ownerPage) {
+        OwnerPageDto ownerPageDto = new OwnerPageDto();
+        ownerPageDto.setContent(toOwnerDtoCollection(ownerPage.getContent()));
+        ownerPageDto.setPage(ownerPage.getNumber());
+        ownerPageDto.setSize(ownerPage.getSize());
+        ownerPageDto.setTotalElements(ownerPage.getTotalElements());
+        ownerPageDto.setTotalPages(ownerPage.getTotalPages());
+        return ownerPageDto;
+    }
 }
