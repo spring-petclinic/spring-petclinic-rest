@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS specialties (
 CREATE TABLE IF NOT EXISTS vet_specialties (
   vet_id INT(4) UNSIGNED NOT NULL,
   specialty_id INT(4) UNSIGNED NOT NULL,
-  FOREIGN KEY (vet_id) REFERENCES vets(id),
-  FOREIGN KEY (specialty_id) REFERENCES specialties(id),
+  FOREIGN KEY (vet_id) REFERENCES vets(id) ON DELETE CASCADE,
+  FOREIGN KEY (specialty_id) REFERENCES specialties(id) ON DELETE CASCADE,
   UNIQUE (vet_id,specialty_id)
 ) engine=InnoDB;
 
@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS pets (
   type_id INT(4) UNSIGNED NOT NULL,
   owner_id INT(4) UNSIGNED NOT NULL,
   INDEX(name),
-  FOREIGN KEY (owner_id) REFERENCES owners(id),
-  FOREIGN KEY (type_id) REFERENCES types(id)
+  FOREIGN KEY (owner_id) REFERENCES owners(id) ON DELETE CASCADE,
+  FOREIGN KEY (type_id) REFERENCES types(id) ON DELETE CASCADE
 ) engine=InnoDB;
 
 CREATE TABLE IF NOT EXISTS visits (
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS visits (
   pet_id INT(4) UNSIGNED NOT NULL,
   visit_date DATE,
   description VARCHAR(255),
-  FOREIGN KEY (pet_id) REFERENCES pets(id)
+  FOREIGN KEY (pet_id) REFERENCES pets(id) ON DELETE CASCADE
 ) engine=InnoDB;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -68,5 +68,5 @@ CREATE TABLE IF NOT EXISTS roles (
   PRIMARY KEY (id),
   UNIQUE KEY uni_username_role (role,username),
   KEY fk_username_idx (username),
-  CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users (username)
+  CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users (username) ON DELETE CASCADE
 ) engine=InnoDB;

@@ -16,17 +16,17 @@
 
 package org.springframework.samples.petclinic.repository.jdbc;
 
-import java.util.*;
-
-import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.repository.SpecialtyRepository;
@@ -41,79 +41,65 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcSpecialtyRepositoryImpl implements SpecialtyRepository {
 
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-	private SimpleJdbcInsert insertSpecialty;
-
-	public JdbcSpecialtyRepositoryImpl(DataSource dataSource) {
-		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		this.insertSpecialty = new SimpleJdbcInsert(dataSource)
-	            .withTableName("specialties")
-	            .usingGeneratedKeyColumns("id");
-	}
-
-	@Override
-	public Specialty findById(int id) {
-		Specialty specialty;
-        try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("id", id);
-            specialty = this.namedParameterJdbcTemplate.queryForObject(
-                "SELECT id, name FROM specialties WHERE id= :id",
-                params,
-                BeanPropertyRowMapper.newInstance(Specialty.class));
-        } catch (EmptyResultDataAccessException ex) {
-            throw new ObjectRetrievalFailureException(Specialty.class, id);
-        }
+    private final RowMapper<Specialty> specialtyRowMapper = (rs, rowNum) -> {
+        Specialty specialty = new Specialty();
+        specialty.setId(rs.getInt("id"));
+        specialty.setName(rs.getString("name"));
         return specialty;
-	}
+    };
 
-    @Override
-    public List<Specialty> findSpecialtiesByNameIn(Set<String> names) {
-        List<Specialty> specialties;
-        try{
-            String sql = "SELECT id, name FROM specialties WHERE specialties.name IN (:names)";
-            Map<String, Object> params = new HashMap<>();
-            params.put("names", names);
-            specialties = this.namedParameterJdbcTemplate.query(
-                sql,
-                params,
-                new BeanPropertyRowMapper<>(Specialty.class));
-        } catch (EmptyResultDataAccessException ex){
-            throw new ObjectRetrievalFailureException(Specialty.class, names);
-        }
-
-        return specialties;
+    public JdbcSpecialtyRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-	public Collection<Specialty> findAll() throws DataAccessException {
-		Map<String, Object> params = new HashMap<>();
-        return this.namedParameterJdbcTemplate.query(
-            "SELECT id, name FROM specialties",
-            params,
-            BeanPropertyRowMapper.newInstance(Specialty.class));
-	}
+    public Specialty findById(int id) {
+        return jdbcTemplate.query("SELECT id, name FROM specialties WHERE id = ?", specialtyRowMapper, id)
+            .stream()
+            .findFirst()
+            .orElseThrow(() -> new ObjectRetrievalFailureException(Specialty.class, id));
+    }
 
-	@Override
-	public void save(Specialty specialty) throws DataAccessException {
-		BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(specialty);
-		if (specialty.isNew()) {
-            Number newKey = this.insertSpecialty.executeAndReturnKey(parameterSource);
-            specialty.setId(newKey.intValue());
-        } else {
-            this.namedParameterJdbcTemplate.update("UPDATE specialties SET name=:name WHERE id=:id",
-                parameterSource);
+    @Override
+    public List<Specialty> findSpecialtiesByNameIn(Set<String> names) {
+        if (names.isEmpty()) {
+            return List.of();
         }
+        // one "?" per name: IN (?, ?, ?)
+        String placeholders = String.join(", ", Collections.nCopies(names.size(), "?"));
+        return jdbcTemplate.query(
+            "SELECT id, name FROM specialties WHERE name IN (" + placeholders + ")",
+            specialtyRowMapper,
+            names.toArray());
+    }
 
-	}
+    @Override
+    public Collection<Specialty> findAll() {
+        return jdbcTemplate.query("SELECT id, name FROM specialties", specialtyRowMapper);
+    }
 
-	@Override
-	public void delete(Specialty specialty) throws DataAccessException {
-		Map<String, Object> params = new HashMap<>();
-        params.put("id", specialty.getId());
-        this.namedParameterJdbcTemplate.update("DELETE FROM vet_specialties WHERE specialty_id=:id", params);
-        this.namedParameterJdbcTemplate.update("DELETE FROM specialties WHERE id=:id", params);
-	}
+    @Override
+    public void save(Specialty specialty) {
+        if (specialty.isNew()) {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO specialties (name) VALUES (?)", new String[]{"id"});
+                ps.setString(1, specialty.getName());
+                return ps;
+            }, keyHolder);
+            specialty.setId(keyHolder.getKey().intValue());
+        } else {
+            jdbcTemplate.update("UPDATE specialties SET name = ? WHERE id = ?", specialty.getName(), specialty.getId());
+        }
+    }
+
+    @Override
+    public void delete(Specialty specialty) {
+        // links in vet_specialties are removed by ON DELETE CASCADE
+        jdbcTemplate.update("DELETE FROM specialties WHERE id = ?", specialty.getId());
+    }
 
 }

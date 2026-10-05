@@ -30,8 +30,6 @@ public interface PetTypeRepository {
 
 	PetType findById(int id) throws DataAccessException;
 
-    PetType findByName(String name) throws DataAccessException;
-
 	Collection<PetType> findAll() throws DataAccessException;
 
 	void save(PetType petType) throws DataAccessException;
