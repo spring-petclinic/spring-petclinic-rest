@@ -545,4 +545,90 @@ abstract class AbstractClinicServiceTests {
                     && actual.getId().equals(expected.getId()))).isTrue();
         }
     }
+
+    @Test
+    void shouldFindNoSpecialtiesForUnknownNames(){
+        assertThat(this.clinicService.findSpecialtiesByNameIn(Set.of("unknown"))).isEmpty();
+    }
+
+    @Test
+    void shouldReturnNullWhenEntityNotFound(){
+        assertThat(this.clinicService.findOwnerById(999)).isNull();
+        assertThat(this.clinicService.findPetById(999)).isNull();
+        assertThat(this.clinicService.findVisitById(999)).isNull();
+        assertThat(this.clinicService.findVetById(999)).isNull();
+        assertThat(this.clinicService.findPetTypeById(999)).isNull();
+        assertThat(this.clinicService.findSpecialtyById(999)).isNull();
+    }
+
+    @Test
+    void shouldLoadOwnerWithPetsTypesAndVisits(){
+        Owner owner = this.clinicService.findOwnerById(6);
+        assertThat(owner.getPets()).extracting(Pet::getName).containsExactly("Max", "Samantha");
+        Pet samantha = owner.getPet("Samantha");
+        assertThat(samantha.getType().getName()).isEqualTo("cat");
+        assertThat(samantha.getOwner()).isSameAs(owner);
+        assertThat(samantha.getVisits()).extracting(Visit::getId).containsExactly(4, 1);
+        assertThat(samantha.getVisits()).allMatch(visit -> visit.getPet() == samantha);
+    }
+
+    @Test
+    void shouldLoadPetOwnerAndTypeForVisits(){
+        Visit visit = EntityUtils.getById(this.clinicService.findAllVisits(), Visit.class, 1);
+        assertThat(visit.getPet().getType().getName()).isEqualTo("cat");
+        assertThat(visit.getPet().getOwner().getFirstName()).isEqualTo("Jean");
+        assertThat(this.clinicService.findVisitById(2).getPet().getName()).isEqualTo("Max");
+        assertThat(this.clinicService.findVisitsByPetId(7))
+            .extracting(Visit::getId).containsExactlyInAnyOrder(1, 4);
+    }
+
+    @Test
+    @Transactional
+    void shouldDeleteOwnerWithPetsAndVisits(){
+        Owner owner = this.clinicService.findOwnerById(6);
+        this.clinicService.deleteOwner(owner);
+        assertThat(this.clinicService.findOwnerById(6)).isNull();
+        assertThat(this.clinicService.findPetById(7)).isNull();
+        assertThat(this.clinicService.findPetById(8)).isNull();
+        assertThat(this.clinicService.findVisitById(1)).isNull();
+        assertThat(this.clinicService.findVisitById(3)).isNull();
+    }
+
+    @Test
+    @Transactional
+    void shouldDeletePetTypeWithItsPetsAndVisits(){
+        PetType cat = this.clinicService.findPetTypeById(1);
+        this.clinicService.deletePetType(cat);
+        assertThat(this.clinicService.findPetById(7)).isNull();
+        assertThat(this.clinicService.findVisitById(1)).isNull();
+        assertThat(this.clinicService.findPetById(2)).isNotNull();
+    }
+
+    @Test
+    @Transactional
+    void shouldDeleteSpecialtyAndUnlinkItFromVets(){
+        Specialty radiology = this.clinicService.findSpecialtyById(1);
+        this.clinicService.deleteSpecialty(radiology);
+        assertThat(this.clinicService.findVetById(2).getSpecialties()).isEmpty();
+    }
+
+    @Test
+    @Transactional
+    void shouldSaveVetSpecialties(){
+        Vet vet = new Vet();
+        vet.setFirstName("John");
+        vet.setLastName("Dow");
+        vet.addSpecialty(this.clinicService.findSpecialtyById(1));
+        vet.addSpecialty(this.clinicService.findSpecialtyById(3));
+        this.clinicService.saveVet(vet);
+
+        Vet saved = this.clinicService.findVetById(vet.getId());
+        assertThat(saved.getSpecialties()).extracting(Specialty::getName).containsExactly("dentistry", "radiology");
+
+        saved.clearSpecialties();
+        saved.addSpecialty(this.clinicService.findSpecialtyById(2));
+        this.clinicService.saveVet(saved);
+        assertThat(this.clinicService.findVetById(vet.getId()).getSpecialties())
+            .extracting(Specialty::getName).containsExactly("surgery");
+    }
 }
