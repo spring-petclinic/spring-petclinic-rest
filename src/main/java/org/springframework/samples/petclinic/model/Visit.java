@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
@@ -24,30 +23,23 @@ import java.time.LocalDate;
  *
  * @author Ken Krebs
  */
-@Entity
-@Table(name = "visits")
 public class Visit extends BaseEntity {
 
     /**
      * Holds value of property date.
      */
-    @Column(name = "visit_date", columnDefinition = "DATE")
     private LocalDate date;
 
     /**
      * Holds value of property description.
      */
     @NotEmpty
-    @Column(name = "description")
     private String description;
 
     /**
      * Holds value of property pet.
      */
-    @ManyToOne
-    @JoinColumn(name = "pet_id")
     private Pet pet;
-
 
     /**
      * Creates a new instance of Visit for the current date
@@ -55,7 +47,6 @@ public class Visit extends BaseEntity {
     public Visit() {
         this.date = LocalDate.now();
     }
-
 
     /**
      * Getter for property date.

@@ -258,7 +258,7 @@ public class ClinicServiceImpl implements ClinicService {
         try {
             return supplier.get();
         } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
-            // Just ignore not found exceptions for Jdbc/Jpa realization
+            // Just ignore not found exceptions
             return null;
         }
     }

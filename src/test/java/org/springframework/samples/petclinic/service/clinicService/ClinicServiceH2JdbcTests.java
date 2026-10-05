@@ -27,7 +27,7 @@ import org.springframework.test.context.TestPropertySource;
  * @see AbstractClinicServiceTests AbstractClinicServiceTests for more details. </p>
  */
 @SpringBootTest
-@ActiveProfiles({"h2", "jdbc"})
+@ActiveProfiles("h2")
 @TestPropertySource(properties = {
     "spring.sql.init.platform=h2",
     "spring.h2.console.enabled=false"

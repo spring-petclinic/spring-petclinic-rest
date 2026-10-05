@@ -27,7 +27,7 @@ import org.springframework.test.context.TestPropertySource;
  * @see AbstractClinicServiceTests AbstractClinicServiceTests for more details. </p>
  */
 @SpringBootTest
-@ActiveProfiles({"hsqldb", "jdbc"})
+@ActiveProfiles("hsqldb")
 @TestPropertySource(properties = {"spring.sql.init.platform=hsqldb"})
 class ClinicServiceHsqlJdbcTests extends AbstractClinicServiceTests {
 

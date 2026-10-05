@@ -15,10 +15,8 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
-
 
 /**
  * Simple business object representing a pet.
@@ -27,22 +25,14 @@ import java.util.*;
  * @author Juergen Hoeller
  * @author Sam Brannen
  */
-@Entity
-@Table(name = "pets")
 public class Pet extends NamedEntity {
 
-    @Column(name = "birth_date", columnDefinition = "DATE")
     private LocalDate birthDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "type_id")
     private PetType type;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
     private Owner owner;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
     private Set<Visit> visits;
 
     public LocalDate getBirthDate() {

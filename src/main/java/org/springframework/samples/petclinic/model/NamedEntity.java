@@ -15,11 +15,7 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
-
 import jakarta.validation.constraints.NotEmpty;
-
 
 /**
  * Simple JavaBean domain object adds a name property to <code>BaseEntity</code>. Used as a base class for objects
@@ -28,10 +24,8 @@ import jakarta.validation.constraints.NotEmpty;
  * @author Ken Krebs
  * @author Juergen Hoeller
  */
-@MappedSuperclass
 public class NamedEntity extends BaseEntity {
 
-    @Column(name = "name")
     @NotEmpty
     private String name;
 

@@ -119,10 +119,10 @@ You can change the database by updating the `spring.profiles.active` property in
 
 | Database  | Profile Configuration |
 |-----------|----------------------|
-| **H2** (Default)  | `spring.profiles.active=h2,spring-data-jpa` |
-| **HSQLDB** (Alternative In-Memory) | `spring.profiles.active=hsqldb,spring-data-jpa` |
-| **MySQL** (Persistent) | `spring.profiles.active=mysql,spring-data-jpa` |
-| **PostgreSQL** (Persistent) | `spring.profiles.active=postgres,spring-data-jpa` |
+| **H2** (Default)  | `spring.profiles.active=h2` |
+| **HSQLDB** (Alternative In-Memory) | `spring.profiles.active=hsqldb` |
+| **MySQL** (Persistent) | `spring.profiles.active=mysql` |
+| **PostgreSQL** (Persistent) | `spring.profiles.active=postgres` |
 
 For more details, see the [Spring Boot documentation](https://docs.spring.io/spring-boot/how-to/properties-and-configuration.html#howto.properties-and-configuration.set-active-spring-profiles).
 
@@ -148,14 +148,14 @@ For more details, see the [Spring Boot documentation](https://docs.spring.io/spr
 - Swtich to **HSQLDB** by modifying `application.properties`:
 
     ```properties
-    spring.profiles.active=hsqldb,spring-data-jpa
+    spring.profiles.active=hsqldb
     ```
 
 ### **Using MySQL**
 Modify `application.properties`:
 
 ```properties
-spring.profiles.active=mysql,spring-data-jpa
+spring.profiles.active=mysql
 ```
 Start a MySQL database using Docker:
 ```bash
@@ -166,7 +166,7 @@ docker run -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_ROOT_PAS
 Modify application.properties:
 
 ```properties
-spring.profiles.active=postgres,spring-data-jpa
+spring.profiles.active=postgres
 ```
 Start a PostgreSQL database using Docker:
 ```bash
@@ -278,9 +278,7 @@ File -> Import -> Maven -> Existing Maven project
 |--|--|
 | REST API controllers | [REST folder](src/main/java/org/springframework/samples/petclinic/rest) |
 | Service | [ClinicServiceImpl.java](src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java) |
-| JDBC | [jdbc folder](src/main/java/org/springframework/samples/petclinic/repository/jdbc) |
-| JPA | [jpa folder](src/main/java/org/springframework/samples/petclinic/repository/jpa) |
-| Spring Data JPA | [springdatajpa folder](src/main/java/org/springframework/samples/petclinic/repository/springdatajpa) |
+| Repository (Spring JDBC) | [jdbc folder](src/main/java/org/springframework/samples/petclinic/repository/jdbc) |
 | Tests | [AbstractClinicServiceTests.java](src/test/java/org/springframework/samples/petclinic/service/clinicService/AbstractClinicServiceTests.java) |
 
 ## Publishing a Docker image

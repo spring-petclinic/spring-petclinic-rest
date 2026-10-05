@@ -226,6 +226,29 @@ abstract class AbstractClinicServiceTests {
     }
 
     @Test
+    void shouldFindPetsPage(){
+        Page<Pet> pets = this.clinicService.findPets(PageRequest.of(1, 5, Sort.by("id")));
+        assertThat(pets.getTotalElements()).isEqualTo(13);
+        assertThat(pets.getTotalPages()).isEqualTo(3);
+        assertThat(pets.getContent())
+            .extracting(Pet::getName)
+            .containsExactly("George", "Samantha", "Max", "Lucky", "Mulligan");
+        assertThat(pets.getContent().get(1).getOwner().getFirstName()).isEqualTo("Jean");
+        assertThat(pets.getContent().get(1).getType().getName()).isEqualTo("cat");
+    }
+
+    @Test
+    @Transactional
+    void shouldDeletePetWithVisits(){
+        Pet pet = this.clinicService.findPetById(7);
+        assertThat(pet.getVisits()).hasSize(2);
+        this.clinicService.deletePet(pet);
+        assertThat(this.clinicService.findPetById(7)).isNull();
+        assertThat(this.clinicService.findVisitById(1)).isNull();
+        assertThat(this.clinicService.findVisitById(4)).isNull();
+    }
+
+    @Test
     void shouldFindVisitDyId(){
     	Visit visit = this.clinicService.findVisitById(1);
     	assertThat(visit.getId()).isEqualTo(1);
@@ -426,7 +449,6 @@ abstract class AbstractClinicServiceTests {
     void shouldDeletePetType(){
     	PetType petType = this.clinicService.findPetTypeById(1);
         this.clinicService.deletePetType(petType);
-        clearCache();
         try {
         	petType = this.clinicService.findPetTypeById(1);
 		} catch (Exception e) {
@@ -523,6 +545,4 @@ abstract class AbstractClinicServiceTests {
                     && actual.getId().equals(expected.getId()))).isTrue();
         }
     }
-
-    void clearCache() {}
 }
