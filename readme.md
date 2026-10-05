@@ -109,9 +109,7 @@ By default, Petclinic uses an **in-memory H2 database**, which is automatically 
 Petclinic supports the following databases:
 
 - **H2 (Default, In-Memory)**
-- **HSQLDB (Alternative In-Memory Option)**
 - **MySQL (Persistent)**
-- **PostgreSQL (Persistent)**
 
 ### **Switching Databases**
 
@@ -120,9 +118,7 @@ You can change the database by updating the `spring.profiles.active` property in
 | Database  | Profile Configuration |
 |-----------|----------------------|
 | **H2** (Default)  | `spring.profiles.active=h2` |
-| **HSQLDB** (Alternative In-Memory) | `spring.profiles.active=hsqldb` |
 | **MySQL** (Persistent) | `spring.profiles.active=mysql` |
-| **PostgreSQL** (Persistent) | `spring.profiles.active=postgres` |
 
 For more details, see the [Spring Boot documentation](https://docs.spring.io/spring-boot/how-to/properties-and-configuration.html#howto.properties-and-configuration.set-active-spring-profiles).
 
@@ -142,15 +138,6 @@ For more details, see the [Spring Boot documentation](https://docs.spring.io/spr
    - **Username**: `sa`
    - **Password**: _(leave blank)_
 
-### **Using HSQLDB**
-- HSQLDB works similarly to H2 as an **in-memory database**.
-- No additional setup is required—schema and sample data are loaded automatically from `src/main/resources/db/hsqldb/`.
-- Swtich to **HSQLDB** by modifying `application.properties`:
-
-    ```properties
-    spring.profiles.active=hsqldb
-    ```
-
 ### **Using MySQL**
 Modify `application.properties`:
 
@@ -162,28 +149,14 @@ Start a MySQL database using Docker:
 docker run -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:8.4
 ```
 
-### **Using PostgreSQL**
-Modify application.properties:
-
-```properties
-spring.profiles.active=postgres
-```
-Start a PostgreSQL database using Docker:
-```bash
-docker run -e POSTGRES_USER=petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 postgres:16.3
-```
-
 Instead of manually running containers, you can also use `docker-compose.yml`:
 
 ```sh
 docker-compose --profile mysql up
-docker-compose --profile postgres up
 ```
 
 ### **Further Documentation**
-- [HSQLDB](http://hsqldb.org/doc/2.0/guide/index.html)
 - [MySQL](https://github.com/spring-projects/spring-petclinic/blob/main/src/main/resources/db/mysql/petclinic_db_setup_mysql.txt)
-- [PostgreSQL](https://github.com/spring-projects/spring-petclinic/blob/main/src/main/resources/db/postgres/petclinic_db_setup_postgres.txt)
 
 ## API First Approach
 
