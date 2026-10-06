@@ -173,17 +173,23 @@ class VisitRestControllerV1Tests {
     }
 
     @Test
-    @WithMockUser(roles="OWNER_ADMIN")
+    @WithMockUser(roles = "OWNER_ADMIN")
     void testCreateVisitError() throws Exception {
-    	Visit newVisit = visits.get(0);
-    	newVisit.setId(null);
-        newVisit.setDescription(null);
-    	ObjectMapper mapper = new ObjectMapper();
-        String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
-    	this.mockMvc.perform(post("/api/visits")
-        		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        		.andExpect(status().isBadRequest());
-     }
+        String newVisitAsJSON = """
+            {
+                "date": "2026-10-06",
+                "description": null,
+                "id": null,
+                "petId": 8
+            }
+            """;
+
+        this.mockMvc.perform(post("/api/visits")
+                .content(newVisitAsJSON)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest());
+    }
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
@@ -207,16 +213,23 @@ class VisitRestControllerV1Tests {
     }
 
     @Test
-    @WithMockUser(roles="OWNER_ADMIN")
+    @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateVisitError() throws Exception {
-    	Visit newVisit = visits.get(0);
-        newVisit.setDescription(null);
-    	ObjectMapper mapper = new ObjectMapper();
-        String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
-    	this.mockMvc.perform(put("/api/visits/2")
-    		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        	.andExpect(status().isBadRequest());
-     }
+        String newVisitAsJSON = """
+            {
+                "date": "2026-10-06",
+                "description": null,
+                "id": 2,
+                "petId": 8
+            }
+            """;
+
+        this.mockMvc.perform(put("/api/visits/2")
+                .content(newVisitAsJSON)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest());
+    }
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")

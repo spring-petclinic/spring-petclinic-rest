@@ -363,7 +363,10 @@
                             <!-- Only enabling model andopenapi-generator-maven-plugin API generation -->
                             <modelNameSuffix>Dto</modelNameSuffix>
                             <apiPackage>org.springframework.samples.petclinic.rest.api</apiPackage>
+                            <!-- PetDto and VisitDto are maintained as Java 21 records in src/main/java. -->
+                            <!--     Continue generating all other OpenAPI models. -->
                             <generateModels>true</generateModels>
+                            <modelsToGenerate>Owner,OwnerFields,OwnerPage,PetFields,PetPage,PetType,PetTypeFields,ProblemDetail,Role,Specialty,User,ValidationMessage,Vet,VetFields,VisitFields</modelsToGenerate>
                             <modelPackage>org.springframework.samples.petclinic.rest.dto</modelPackage>
                             <generateApis>true</generateApis>
                             <importMappings>
