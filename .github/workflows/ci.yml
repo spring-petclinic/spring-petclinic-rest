@@ -29,3 +29,8 @@ jobs:
       - name: Run tests
         run: ./mvnw -B test
 
+      - name: Package application
+        run: ./mvnw -B -DskipTests package
+
+      - name: Build Docker image
+        run: docker build -t petclinic-rest:${{ github.sha }} .
