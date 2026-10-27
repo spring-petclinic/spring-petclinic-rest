@@ -58,4 +58,21 @@ class ValidatorTests {
         assertThat(violation.getMessage()).isEqualTo("must not be null");
     }
 
+    @Test
+    void shouldNotValidateWhenVisitDateNull() {
+
+        LocaleContextHolder.setLocale(Locale.ENGLISH);
+        Visit visit = new Visit();
+        visit.setDate(null);
+        visit.setDescription("rabies shot");
+
+        Validator validator = createValidator();
+        Set<ConstraintViolation<Visit>> constraintViolations = validator.validate(visit);
+
+        assertThat(constraintViolations.size()).isEqualTo(1);
+        ConstraintViolation<Visit> violation = constraintViolations.iterator().next();
+        assertThat(violation.getPropertyPath().toString()).isEqualTo("date");
+        assertThat(violation.getMessage()).isEqualTo("must not be null");
+    }
+
 }

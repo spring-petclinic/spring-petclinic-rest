@@ -17,6 +17,7 @@ package org.springframework.samples.petclinic.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -31,6 +32,7 @@ public class Visit extends BaseEntity {
     /**
      * Holds value of property date.
      */
+    @NotNull
     @Column(name = "visit_date", columnDefinition = "DATE")
     private LocalDate date;
 

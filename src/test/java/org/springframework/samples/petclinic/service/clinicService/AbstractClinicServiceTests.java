@@ -184,6 +184,7 @@ abstract class AbstractClinicServiceTests {
         int found = pet7.getVisits().size();
         Visit visit = new Visit();
         pet7.addVisit(visit);
+        visit.setDate(LocalDate.now());
         visit.setDescription("test");
         this.clinicService.saveVisit(visit);
         this.clinicService.savePet(pet7);
