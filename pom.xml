@@ -371,6 +371,11 @@
                             <importMappings>
                                 <importMapping>Nullable=org.jspecify.annotations.Nullable</importMapping>
                             </importMappings>
+                            <!-- Pet and Visit are hand-written Java 21 records (not generated) -->
+                            <schemaMappings>
+                                <schemaMapping>Pet=org.springframework.samples.petclinic.rest.model.PetDto</schemaMapping>
+                                <schemaMapping>Visit=org.springframework.samples.petclinic.rest.model.VisitDto</schemaMapping>
+                            </schemaMappings>
                             <configOptions>
                                 <!-- RestController implementation is provided by Petclinic developers -->
                                 <interfaceOnly>true</interfaceOnly>
