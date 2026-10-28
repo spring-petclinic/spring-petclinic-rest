@@ -14,7 +14,7 @@ import org.springframework.samples.petclinic.rest.advice.ExceptionControllerAdvi
 import org.springframework.samples.petclinic.rest.controller.v2.OwnerRestControllerV2;
 import org.springframework.samples.petclinic.rest.controller.v2.PetRestControllerV2;
 import org.springframework.samples.petclinic.rest.dto.OwnerDto;
-import org.springframework.samples.petclinic.rest.dto.PetDto;
+import org.springframework.samples.petclinic.rest.model.PetDto;
 import org.springframework.samples.petclinic.rest.dto.PetTypeDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
@@ -80,17 +80,8 @@ public class V2RestControllersTests {
             .name("dog");
 
         pets = new ArrayList<>();
-        PetDto pet = new PetDto();
-        pets.add(pet.id(3)
-            .name("Rosy")
-            .birthDate(LocalDate.now())
-            .type(petType));
-
-        pet = new PetDto();
-        pets.add(pet.id(4)
-            .name("Jewel")
-            .birthDate(LocalDate.now())
-            .type(petType));
+        pets.add(new PetDto("Rosy", LocalDate.now(), petType, 3, null, List.of()));
+        pets.add(new PetDto("Jewel", LocalDate.now(), petType, 4, null, List.of()));
     }
 
     @Test
