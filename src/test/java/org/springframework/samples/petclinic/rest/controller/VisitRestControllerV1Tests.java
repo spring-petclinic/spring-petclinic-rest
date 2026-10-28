@@ -42,6 +42,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -178,7 +180,10 @@ class VisitRestControllerV1Tests {
         String newVisitAsJSON = "{\"date\":\"2013-01-01\",\"description\":null,\"petId\":8}";
     	this.mockMvc.perform(post("/api/visits")
         		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-        		.andExpect(status().isBadRequest());
+        		.andExpect(status().isBadRequest())
+        		.andExpect(jsonPath("$.title").value("HttpMessageNotReadableException"))
+        		.andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
+        		.andExpect(content().string(not(containsString("description must be between"))));
      }
 
     @Test
@@ -187,7 +192,10 @@ class VisitRestControllerV1Tests {
         String newVisitAsJSON = "{\"date\":\"2013-01-01\",\"description\":\"\",\"petId\":8}";
         this.mockMvc.perform(post("/api/visits")
                 .content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("HttpMessageNotReadableException"))
+            .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
+            .andExpect(content().string(not(containsString("description must be between"))));
     }
 
     @Test
@@ -196,7 +204,10 @@ class VisitRestControllerV1Tests {
         String newVisitAsJSON = "{\"date\":\"2013-01-01\",\"description\":\"rabies shot\",\"petId\":-1}";
         this.mockMvc.perform(post("/api/visits")
                 .content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("HttpMessageNotReadableException"))
+            .andExpect(jsonPath("$.detail").value("The request contains invalid or missing parameters"))
+            .andExpect(content().string(not(containsString("petId must not be null"))));
     }
 
     @Test
