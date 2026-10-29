@@ -106,7 +106,7 @@ class PetRestControllerV1Tests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetPetSuccess() throws Exception {
-        given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
+        setupClinicServiceFindPetByIdStubs(3, petMapper.toPet(pets.get(0)));
         this.mockMvc.perform(get("/api/pets/3")
                 .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
@@ -153,7 +153,7 @@ class PetRestControllerV1Tests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdatePetSuccess() throws Exception {
-        given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
+        setupClinicServiceFindPetByIdStubs(3, petMapper.toPet(pets.get(0)));
         PetDto newPet = pets.get(0);
         newPet.setName("Rosy I");
         ObjectMapper mapper =  JsonMapper.builder()
@@ -196,7 +196,7 @@ class PetRestControllerV1Tests {
         PetDto newPet = pets.get(0);
         ObjectMapper mapper = new ObjectMapper();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
-        given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
+        setupClinicServiceFindPetByIdStubs(3, petMapper.toPet(pets.get(0)));
         this.mockMvc.perform(delete("/api/pets/3")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNoContent());
@@ -208,10 +208,14 @@ class PetRestControllerV1Tests {
         PetDto newPet = pets.get(0);
         ObjectMapper mapper = new ObjectMapper();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
-        given(this.clinicService.findPetById(999)).willReturn(null);
+        setupClinicServiceFindPetByIdStubs(999, null);
         this.mockMvc.perform(delete("/api/pets/999")
                 .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNotFound());
+    }
+
+    private void setupClinicServiceFindPetByIdStubs(int findPetByIdArg1, Pet findPetByIdReturnValue) {
+        given(this.clinicService.findPetById(findPetByIdArg1)).willReturn(findPetByIdReturnValue);
     }
 
 }
