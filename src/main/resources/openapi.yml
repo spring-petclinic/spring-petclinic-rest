@@ -2280,6 +2280,7 @@ components:
           maxLength: 255
           example: 'rabies shot'
       required:
+        - date
         - description
     Visit:
       title: Visit
