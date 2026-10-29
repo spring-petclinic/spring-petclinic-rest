@@ -47,8 +47,8 @@ CREATE INDEX owners_last_name ON owners (last_name);
 
 CREATE TABLE pets (
   id         INTEGER IDENTITY PRIMARY KEY,
-  name       VARCHAR(30),
-  birth_date DATE,
+  name       VARCHAR(30) NOT NULL,
+  birth_date DATE NOT NULL,
   type_id    INTEGER NOT NULL,
   owner_id   INTEGER NOT NULL
 );
@@ -60,7 +60,7 @@ CREATE TABLE visits (
   id          INTEGER IDENTITY PRIMARY KEY,
   pet_id      INTEGER NOT NULL,
   visit_date  DATE,
-  description VARCHAR(255)
+  description VARCHAR(255) NOT NULL
 );
 ALTER TABLE visits ADD CONSTRAINT fk_visits_pets FOREIGN KEY (pet_id) REFERENCES pets (id);
 CREATE INDEX visits_pet_id ON visits (pet_id);

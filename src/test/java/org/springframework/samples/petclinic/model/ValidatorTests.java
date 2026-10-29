@@ -42,4 +42,20 @@ class ValidatorTests {
         assertThat(violation.getMessage()).isEqualTo("must not be empty");
     }
 
+    @Test
+    void shouldNotValidateWhenPetBirthDateNull() {
+
+        LocaleContextHolder.setLocale(Locale.ENGLISH);
+        Pet pet = new Pet();
+        pet.setName("Leo");
+
+        Validator validator = createValidator();
+        Set<ConstraintViolation<Pet>> constraintViolations = validator.validate(pet);
+
+        assertThat(constraintViolations.size()).isEqualTo(1);
+        ConstraintViolation<Pet> violation = constraintViolations.iterator().next();
+        assertThat(violation.getPropertyPath().toString()).isEqualTo("birthDate");
+        assertThat(violation.getMessage()).isEqualTo("must not be null");
+    }
+
 }
