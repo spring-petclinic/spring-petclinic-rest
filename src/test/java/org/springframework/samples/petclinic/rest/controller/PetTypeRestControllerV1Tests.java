@@ -97,7 +97,7 @@ class PetTypeRestControllerV1Tests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetPetTypeSuccessAsOwnerAdmin() throws Exception {
-    	given(this.clinicService.findPetTypeById(1)).willReturn(petTypes.get(0));
+    	setupClinicServiceFindPetTypeByIdStubs(1, petTypes.get(0));
         this.mockMvc.perform(get("/api/pettypes/1")
         	.accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
@@ -109,7 +109,7 @@ class PetTypeRestControllerV1Tests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testGetPetTypeSuccessAsVetAdmin() throws Exception {
-        given(this.clinicService.findPetTypeById(1)).willReturn(petTypes.get(0));
+        setupClinicServiceFindPetTypeByIdStubs(1, petTypes.get(0));
         this.mockMvc.perform(get("/api/pettypes/1")
             .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
@@ -121,7 +121,7 @@ class PetTypeRestControllerV1Tests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetPetTypeNotFound() throws Exception {
-    	given(this.clinicService.findPetTypeById(999)).willReturn(null);
+    	setupClinicServiceFindPetTypeByIdStubs(999, null);
         this.mockMvc.perform(get("/api/pettypes/999")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -132,7 +132,7 @@ class PetTypeRestControllerV1Tests {
     void testGetAllPetTypesSuccessAsOwnerAdmin() throws Exception {
     	petTypes.remove(0);
     	petTypes.remove(1);
-    	given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
+    	setupClinicServiceFindAllPetTypesStubs();
         this.mockMvc.perform(get("/api/pettypes")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -148,7 +148,7 @@ class PetTypeRestControllerV1Tests {
     void testGetAllPetTypesSuccessAsVetAdmin() throws Exception {
         petTypes.remove(0);
         petTypes.remove(1);
-        given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
+        setupClinicServiceFindAllPetTypesStubs();
         this.mockMvc.perform(get("/api/pettypes")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -163,7 +163,7 @@ class PetTypeRestControllerV1Tests {
     @WithMockUser(roles="VET_ADMIN")
     void testGetAllPetTypesNotFound() throws Exception {
     	petTypes.clear();
-    	given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
+    	setupClinicServiceFindAllPetTypesStubs();
         this.mockMvc.perform(get("/api/pettypes")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -197,7 +197,7 @@ class PetTypeRestControllerV1Tests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testUpdatePetTypeSuccess() throws Exception {
-    	given(this.clinicService.findPetTypeById(2)).willReturn(petTypes.get(1));
+    	setupClinicServiceFindPetTypeByIdStubs(2, petTypes.get(1));
     	PetType newPetType = petTypes.get(1);
     	newPetType.setName("dog I");
     	ObjectMapper mapper = new ObjectMapper();
@@ -233,7 +233,7 @@ class PetTypeRestControllerV1Tests {
     	PetType newPetType = petTypes.get(0);
     	ObjectMapper mapper = new ObjectMapper();
     	String newPetTypeAsJSON = mapper.writeValueAsString(newPetType);
-    	given(this.clinicService.findPetTypeById(1)).willReturn(petTypes.get(0));
+    	setupClinicServiceFindPetTypeByIdStubs(1, petTypes.get(0));
     	this.mockMvc.perform(delete("/api/pettypes/1")
     		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
@@ -245,10 +245,18 @@ class PetTypeRestControllerV1Tests {
     	PetType newPetType = petTypes.get(0);
     	ObjectMapper mapper = new ObjectMapper();
         String newPetTypeAsJSON = mapper.writeValueAsString(petTypeMapper.toPetTypeDto(newPetType));
-    	given(this.clinicService.findPetTypeById(999)).willReturn(null);
+    	setupClinicServiceFindPetTypeByIdStubs(999, null);
     	this.mockMvc.perform(delete("/api/pettypes/999")
     		.content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNotFound());
+    }
+
+    private void setupClinicServiceFindPetTypeByIdStubs(int findPetTypeByIdArg1, PetType findPetTypeByIdReturnValue) {
+        given(this.clinicService.findPetTypeById(findPetTypeByIdArg1)).willReturn(findPetTypeByIdReturnValue);
+    }
+
+    private void setupClinicServiceFindAllPetTypesStubs() {
+        given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
     }
 
 }
