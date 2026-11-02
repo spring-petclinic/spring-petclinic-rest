@@ -21,9 +21,13 @@ import org.springframework.samples.petclinic.rest.controller.v1.OwnerRestControl
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
 import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.mapper.VisitMapper;
@@ -46,10 +50,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -134,6 +142,58 @@ class OwnerRestControllerV1Tests {
         visit.setDate(LocalDate.now());
         visit.setDescription("neutered");
         visits.add(visit);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"POST,firstName", "POST,lastName", "POST,address", "POST,city", "POST,telephone",
+        "PUT,firstName", "PUT,lastName", "PUT,address", "PUT,city", "PUT,telephone"})
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testBlankOwnerFieldShouldReturnBadRequest(String method, String field) throws Exception {
+        given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        Map<String, String> body = new HashMap<>(Map.of(
+            "firstName", "George", "lastName", "Franklin", "address", "110 W. Liberty St.",
+            "city", "Madison", "telephone", "6085551023"));
+        body.put(field, "   ");
+        String path = method.equals("POST") ? "/api/owners" : "/api/owners/1";
+
+        this.mockMvc.perform(request(HttpMethod.valueOf(method), path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(body)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value(field));
+        verify(this.clinicService, never()).saveOwner(any());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"POST", "PUT"})
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testBlankPetNameShouldReturnBadRequest(String method) throws Exception {
+        given(this.clinicService.findOwnerById(1)).willReturn(ownerMapper.toOwner(owners.get(0)));
+        given(this.clinicService.findPetById(3)).willReturn(petMapper.toPet(pets.get(0)));
+        PetDto pet = pets.get(0);
+        pet.setName("   ");
+        String path = method.equals("POST") ? "/api/owners/1/pets" : "/api/owners/1/pets/3";
+
+        this.mockMvc.perform(request(HttpMethod.valueOf(method), path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(pet)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
+        verify(this.clinicService, never()).savePet(any());
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateVisitWithBlankDescriptionShouldReturnBadRequest() throws Exception {
+        VisitDto visit = visits.get(0);
+        visit.setDescription("   ");
+
+        this.mockMvc.perform(post("/api/owners/1/pets/3/visits")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(visit)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("description"));
+        verify(this.clinicService, never()).saveVisit(any());
     }
 
     private PetDto getTestPetWithIdAndName(final int id, final String name) {
