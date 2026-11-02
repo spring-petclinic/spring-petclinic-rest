@@ -543,6 +543,21 @@ class OwnerRestControllerV1Tests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateVisitWithoutDateShouldReturnBadRequest() throws Exception {
+        VisitDto newVisit = visits.get(0);
+        newVisit.setId(null);
+        newVisit.setDate(null);
+        ObjectMapper mapper = new ObjectMapper();
+        String newVisitAsJSON = mapper.writeValueAsString(newVisit);
+        this.mockMvc.perform(post("/api/owners/1/pets/1/visits")
+                .content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("date"));
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
     void testGetOwnerPetSuccess() throws Exception {
         var owner = ownerMapper.toOwner(owners.get(0));
         given(this.clinicService.findOwnerById(2)).willReturn(owner);

@@ -187,6 +187,21 @@ class VisitRestControllerV1Tests {
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
+    void testCreateVisitWithoutDateShouldReturnBadRequest() throws Exception {
+    	Visit newVisit = visits.get(0);
+    	newVisit.setId(null);
+        newVisit.setDate(null);
+    	ObjectMapper mapper = new ObjectMapper();
+        String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
+    	this.mockMvc.perform(post("/api/visits")
+        		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+        		.andExpect(status().isBadRequest())
+        		.andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+        		.andExpect(jsonPath("$.schemaValidationErrors[0].field").value("date"));
+     }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
     void testUpdateVisitSuccess() throws Exception {
     	given(this.clinicService.findVisitById(2)).willReturn(visits.get(0));
     	Visit newVisit = visits.get(0);
@@ -216,6 +231,20 @@ class VisitRestControllerV1Tests {
     	this.mockMvc.perform(put("/api/visits/2")
     		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isBadRequest());
+     }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testUpdateVisitWithoutDateShouldReturnBadRequest() throws Exception {
+    	Visit newVisit = visits.get(0);
+        newVisit.setDate(null);
+    	ObjectMapper mapper = new ObjectMapper();
+        String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisitDto(newVisit));
+    	this.mockMvc.perform(put("/api/visits/2")
+    		.content(newVisitAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+        	.andExpect(status().isBadRequest())
+        	.andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+        	.andExpect(jsonPath("$.schemaValidationErrors[0].field").value("date"));
      }
 
     @Test
