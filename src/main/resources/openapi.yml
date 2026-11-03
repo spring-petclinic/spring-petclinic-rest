@@ -2284,6 +2284,7 @@ components:
           pattern: '^[\s\p{Z}\x1C-\x1F]*[^\s\p{Z}\x1C-\x1F][\s\S]*$'
           example: 'rabies shot'
       required:
+        - date
         - description
     Visit:
       title: Visit
