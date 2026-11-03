@@ -2285,6 +2285,7 @@ components:
           pattern: '[\s\S]*\S[\s\S]*'
           example: 'rabies shot'
       required:
+        - date
         - description
     Visit:
       title: Visit
