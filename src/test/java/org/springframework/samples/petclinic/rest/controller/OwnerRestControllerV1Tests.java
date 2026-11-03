@@ -30,9 +30,12 @@ import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.rest.advice.ExceptionControllerAdvice;
 import org.springframework.samples.petclinic.rest.dto.OwnerDto;
+import org.springframework.samples.petclinic.rest.dto.OwnerFieldsDto;
 import org.springframework.samples.petclinic.rest.dto.PetDto;
+import org.springframework.samples.petclinic.rest.dto.PetFieldsDto;
 import org.springframework.samples.petclinic.rest.dto.PetTypeDto;
 import org.springframework.samples.petclinic.rest.dto.VisitDto;
+import org.springframework.samples.petclinic.rest.dto.VisitFieldsDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -50,6 +53,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -86,7 +90,44 @@ class OwnerRestControllerV1Tests {
     private List<PetDto> pets;
 
     private List<VisitDto> visits;
+    private void assertCreateOwnerWithWhitespaceIsRejected(OwnerFieldsDto ownerFieldsDto, String field)
+        throws Exception {
 
+        ObjectMapper mapper = new ObjectMapper();
+        String ownerAsJSON = mapper.writeValueAsString(ownerFieldsDto);
+
+        this.mockMvc.perform(post("/api/owners")
+                .content(ownerAsJSON)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value(field));
+
+        verifyNoInteractions(this.clinicService);
+    }
+
+    private void assertUpdateOwnerWithWhitespaceIsRejected(int ownerId, OwnerFieldsDto ownerFieldsDto, String field)
+        throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+        String ownerAsJSON = mapper.writeValueAsString(ownerFieldsDto);
+
+        this.mockMvc.perform(put("/api/owners/" + ownerId)
+                .content(ownerAsJSON)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value(field));
+
+        verifyNoInteractions(this.clinicService);
+    }
+
+    private void assertUpdateOwnerWithWhitespaceIsRejected(OwnerFieldsDto ownerFieldsDto, String field)
+        throws Exception {
+        assertUpdateOwnerWithWhitespaceIsRejected(owners.get(0).getId(), ownerFieldsDto, field);
+    }
     @BeforeEach
     void initOwners() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(ownerRestControllerV1)
@@ -469,7 +510,100 @@ class OwnerRestControllerV1Tests {
             .andExpect(jsonPath("$.schemaValidationErrors[0].rejectedValue").exists())
             .andExpect(jsonPath("$.schemaValidationErrors[0].defaultMessage").exists());
     }
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateOwnerWithWhitespaceOnlyFirstNameShouldReturnBadRequest() throws Exception {
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setFirstName("   ");
 
+        assertCreateOwnerWithWhitespaceIsRejected(owner, "firstName");
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateOwnerWithWhitespaceOnlyLastNameShouldReturnBadRequest() throws Exception {
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setLastName("   ");
+
+        assertCreateOwnerWithWhitespaceIsRejected(owner, "lastName");
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateOwnerWithWhitespaceOnlyAddressShouldReturnBadRequest() throws Exception {
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setAddress("   ");
+
+        assertCreateOwnerWithWhitespaceIsRejected(owner, "address");
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateOwnerWithWhitespaceOnlyCityShouldReturnBadRequest() throws Exception {
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setCity("   ");
+
+        assertCreateOwnerWithWhitespaceIsRejected(owner, "city");
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateOwnerWithWhitespaceOnlyTelephoneShouldReturnBadRequest() throws Exception {
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setTelephone("   ");
+
+        assertCreateOwnerWithWhitespaceIsRejected(owner, "telephone");
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnerWithWhitespaceOnlyFirstNameShouldReturnBadRequest() throws Exception {
+        int ownerId = owners.get(0).getId();
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setFirstName("   ");
+
+        assertUpdateOwnerWithWhitespaceIsRejected(ownerId, owner, "firstName");
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnerWithWhitespaceOnlyLastNameShouldReturnBadRequest() throws Exception {
+        int ownerId = owners.get(0).getId();
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setLastName("   ");
+
+        assertUpdateOwnerWithWhitespaceIsRejected(ownerId, owner, "lastName");
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnerWithWhitespaceOnlyAddressShouldReturnBadRequest() throws Exception {
+        int ownerId = owners.get(0).getId();
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setAddress("   ");
+
+        assertUpdateOwnerWithWhitespaceIsRejected(ownerId, owner, "address");
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnerWithWhitespaceOnlyCityShouldReturnBadRequest() throws Exception {
+        int ownerId = owners.get(0).getId();
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setCity("   ");
+
+        assertUpdateOwnerWithWhitespaceIsRejected(ownerId, owner, "city");
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnerWithWhitespaceOnlyTelephoneShouldReturnBadRequest() throws Exception {
+        int ownerId = owners.get(0).getId();
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setTelephone("   ");
+
+        assertUpdateOwnerWithWhitespaceIsRejected(ownerId, owner, "telephone");
+    }
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testCreatePetWithNullTypeIdShouldReturnBadRequestWithGenericDetail() throws Exception {
@@ -663,4 +797,77 @@ class OwnerRestControllerV1Tests {
             .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("birthDate"));
     }
 
+    private static final String BLANK = "   ";
+
+    private static final String FULL_WIDTH_BLANK = "\u3000\u3000";
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateOwnerWithFullWidthBlankAddressShouldReturnBadRequest() throws Exception {
+        OwnerFieldsDto owner = new ObjectMapper().convertValue(owners.get(0), OwnerFieldsDto.class);
+        owner.setAddress(FULL_WIDTH_BLANK);
+        assertCreateOwnerWithWhitespaceIsRejected(owner, "address");
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithBlankNameShouldReturnBadRequest() throws Exception {
+        PetFieldsDto newPet = new ObjectMapper().convertValue(pets.get(0), PetFieldsDto.class);
+        newPet.setName(BLANK);
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(new ObjectMapper().writeValueAsString(newPet))
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
+        verifyNoInteractions(this.clinicService);
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithFullWidthBlankNameShouldReturnBadRequest() throws Exception {
+        PetFieldsDto newPet = new ObjectMapper().convertValue(pets.get(0), PetFieldsDto.class);
+        newPet.setName(FULL_WIDTH_BLANK);
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(new ObjectMapper().writeValueAsString(newPet))
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
+        verifyNoInteractions(this.clinicService);
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnersPetWithBlankNameShouldReturnBadRequest() throws Exception {
+        PetFieldsDto petDto = new ObjectMapper().convertValue(pets.get(0), PetFieldsDto.class);
+        petDto.setName(BLANK);
+        this.mockMvc.perform(put("/api/owners/" + owners.get(0).getId() + "/pets/" + pets.get(0).getId())
+                .content(new ObjectMapper().writeValueAsString(petDto))
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
+        verifyNoInteractions(this.clinicService);
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreateVisitForOwnersPetWithBlankDescriptionShouldReturnBadRequest() throws Exception {
+        VisitFieldsDto newVisit = new ObjectMapper().convertValue(visits.get(0), VisitFieldsDto.class);
+        newVisit.setDescription(BLANK);
+        this.mockMvc.perform(post("/api/owners/1/pets/1/visits")
+                .content(new ObjectMapper().writeValueAsString(newVisit))
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("description"));
+        verifyNoInteractions(this.clinicService);
+    }
+
 }
+

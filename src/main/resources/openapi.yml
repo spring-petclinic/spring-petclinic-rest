@@ -2015,6 +2015,7 @@ components:
           type: string
           minLength: 1
           maxLength: 255
+          pattern: '^[\s\p{Z}\x1C-\x1F]*[^\s\p{Z}\x1C-\x1F][\s\S]*$'
           example: '110 W. Liberty St.'
         city:
           title: City
@@ -2022,6 +2023,7 @@ components:
           type: string
           minLength: 1
           maxLength: 80
+          pattern: '^[\s\p{Z}\x1C-\x1F]*[^\s\p{Z}\x1C-\x1F][\s\S]*$'
           example: Madison
         telephone:
           title: Telephone number
@@ -2162,6 +2164,7 @@ components:
           type: string
           minLength: 1
           maxLength: 30
+          pattern: '^[\s\p{Z}\x1C-\x1F]*[^\s\p{Z}\x1C-\x1F][\s\S]*$'
           example: Leo
         birthDate:
           title: Birth date
@@ -2278,6 +2281,7 @@ components:
           type: string
           minLength: 1
           maxLength: 255
+          pattern: '^[\s\p{Z}\x1C-\x1F]*[^\s\p{Z}\x1C-\x1F][\s\S]*$'
           example: 'rabies shot'
       required:
         - description

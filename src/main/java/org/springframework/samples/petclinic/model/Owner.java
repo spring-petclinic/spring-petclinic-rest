@@ -15,11 +15,10 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.core.style.ToStringCreator;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 
 import java.util.*;
@@ -36,16 +35,15 @@ import java.util.*;
 @Table(name = "owners")
 public class Owner extends Person {
     @Column(name = "address")
-    @NotEmpty
+    @NotBlank
     private String address;
 
     @Column(name = "city")
-    @NotEmpty
+    @NotBlank
     private String city;
 
     @Column(name = "telephone")
-    @NotEmpty
-    @Digits(fraction = 0, integer = 10)
+    @NotBlank
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
     private String telephone;
 

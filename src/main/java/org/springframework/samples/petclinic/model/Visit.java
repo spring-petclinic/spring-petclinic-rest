@@ -16,7 +16,7 @@
 package org.springframework.samples.petclinic.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 /**
@@ -37,7 +37,7 @@ public class Visit extends BaseEntity {
     /**
      * Holds value of property description.
      */
-    @NotEmpty
+    @NotBlank
     @Column(name = "description")
     private String description;
 
