@@ -9,5 +9,6 @@ class SpringConfigTests {
     @Test
     void contextLoads() {
         // Test the Spring configuration
+        System.out.println("Hello");
     }
 }
