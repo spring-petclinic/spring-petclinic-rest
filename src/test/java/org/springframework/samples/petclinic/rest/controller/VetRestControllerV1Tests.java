@@ -95,7 +95,7 @@ class VetRestControllerV1Tests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testGetVetSuccess() throws Exception {
-    	given(this.clinicService.findVetById(1)).willReturn(vets.get(0));
+    	setupClinicServiceFindVetByIdStubs(1, vets.get(0));
         this.mockMvc.perform(get("/api/vets/1")
         	.accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
@@ -107,7 +107,7 @@ class VetRestControllerV1Tests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testGetVetNotFound() throws Exception {
-    	given(this.clinicService.findVetById(999)).willReturn(null);
+    	setupClinicServiceFindVetByIdStubs(999, null);
         this.mockMvc.perform(get("/api/vets/999")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -116,7 +116,7 @@ class VetRestControllerV1Tests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testGetAllVetsSuccess() throws Exception {
-    	given(this.clinicService.findAllVets()).willReturn(vets);
+    	setupClinicServiceFindAllVetsStubs();
         this.mockMvc.perform(get("/api/vets")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -131,7 +131,7 @@ class VetRestControllerV1Tests {
     @WithMockUser(roles="VET_ADMIN")
     void testGetAllVetsNotFound() throws Exception {
     	vets.clear();
-    	given(this.clinicService.findAllVets()).willReturn(vets);
+    	setupClinicServiceFindAllVetsStubs();
         this.mockMvc.perform(get("/api/vets")
         	.accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
@@ -165,7 +165,7 @@ class VetRestControllerV1Tests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testUpdateVetSuccess() throws Exception {
-    	given(this.clinicService.findVetById(1)).willReturn(vets.get(0));
+    	setupClinicServiceFindVetByIdStubs(1, vets.get(0));
     	Vet newVet = vets.get(0);
     	newVet.setFirstName("James");
     	ObjectMapper mapper = new ObjectMapper();
@@ -202,7 +202,7 @@ class VetRestControllerV1Tests {
     	Vet newVet = vets.get(0);
     	ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
-    	given(this.clinicService.findVetById(1)).willReturn(vets.get(0));
+    	setupClinicServiceFindVetByIdStubs(1, vets.get(0));
     	this.mockMvc.perform(delete("/api/vets/1")
     		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNoContent());
@@ -214,10 +214,18 @@ class VetRestControllerV1Tests {
     	Vet newVet = vets.get(0);
     	ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
-    	given(this.clinicService.findVetById(999)).willReturn(null);
+    	setupClinicServiceFindVetByIdStubs(999, null);
     	this.mockMvc.perform(delete("/api/vets/999")
     		.content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isNotFound());
+    }
+
+    private void setupClinicServiceFindVetByIdStubs(int findVetByIdArg1, Vet findVetByIdReturnValue) {
+        given(this.clinicService.findVetById(findVetByIdArg1)).willReturn(findVetByIdReturnValue);
+    }
+
+    private void setupClinicServiceFindAllVetsStubs() {
+        given(this.clinicService.findAllVets()).willReturn(vets);
     }
 
 }
