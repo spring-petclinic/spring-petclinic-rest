@@ -678,4 +678,50 @@ class OwnerRestControllerV1Tests {
             .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("birthDate"));
     }
 
+    private String ownerJson(String telephone) {
+        return """
+            {
+                "firstName": "John",
+                "lastName": "Doe",
+                "address": "123 Main Street",
+                "city": "Springfield",
+                "telephone": "%s"
+            }
+            """.formatted(telephone);
+    }
+
+    @Test
+    void shouldRejectInvalidTelephoneOnCreate() throws Exception {
+        String[] invalidNumbers = {
+            "123456789",
+            "12345678901",
+            "abcdefghij",
+            "+123456789"
+        };
+
+        for (String telephone : invalidNumbers) {
+            mockMvc.perform(post("/api/owners")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(ownerJson(telephone)))
+                .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Test
+    void shouldRejectInvalidTelephoneOnUpdate() throws Exception {
+        String[] invalidNumbers = {
+            "123456789",
+            "12345678901",
+            "abcdefghij",
+            "+123456789"
+        };
+
+        for (String telephone : invalidNumbers) {
+            mockMvc.perform(put("/api/owners/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(ownerJson(telephone)))
+                .andExpect(status().isBadRequest());
+        }
+    }
+
 }

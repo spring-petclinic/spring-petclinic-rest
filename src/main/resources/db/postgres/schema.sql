@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS owners (
                                       last_name  TEXT,
                                       address    TEXT,
                                       city       TEXT,
-                                      telephone  TEXT
+                                      telephone  VARCHAR(10) NOT NULL
 );
 CREATE INDEX ON owners (last_name);
 
