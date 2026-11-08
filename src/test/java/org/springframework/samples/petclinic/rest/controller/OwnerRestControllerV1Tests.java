@@ -21,6 +21,8 @@ import org.springframework.samples.petclinic.rest.controller.v1.OwnerRestControl
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -690,38 +692,36 @@ class OwnerRestControllerV1Tests {
             """.formatted(telephone);
     }
 
-    @Test
-    void shouldRejectInvalidTelephoneOnCreate() throws Exception {
-        String[] invalidNumbers = {
-            "123456789",
-            "12345678901",
-            "abcdefghij",
-            "+123456789"
-        };
-
-        for (String telephone : invalidNumbers) {
-            mockMvc.perform(post("/api/owners")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(ownerJson(telephone)))
-                .andExpect(status().isBadRequest());
-        }
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "123456789",
+        "12345678901",
+        "abcdefghij",
+        "+123456789"
+    })
+    void shouldRejectInvalidTelephoneOnCreate(String telephone) throws Exception {
+        mockMvc.perform(post("/api/owners")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ownerJson(telephone)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("telephone"));
     }
 
-    @Test
-    void shouldRejectInvalidTelephoneOnUpdate() throws Exception {
-        String[] invalidNumbers = {
-            "123456789",
-            "12345678901",
-            "abcdefghij",
-            "+123456789"
-        };
-
-        for (String telephone : invalidNumbers) {
-            mockMvc.perform(put("/api/owners/1")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(ownerJson(telephone)))
-                .andExpect(status().isBadRequest());
-        }
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "123456789",
+        "12345678901",
+        "abcdefghij",
+        "+123456789"
+    })
+    void shouldRejectInvalidTelephoneOnUpdate(String telephone) throws Exception {
+        mockMvc.perform(put("/api/owners/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ownerJson(telephone)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("telephone"));
     }
 
 }
