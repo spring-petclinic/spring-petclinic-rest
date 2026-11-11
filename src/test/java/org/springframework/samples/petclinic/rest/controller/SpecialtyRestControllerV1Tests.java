@@ -16,7 +16,10 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.samples.petclinic.rest.controller.v1.SpecialtyRestControllerV1;
+import org.springframework.test.web.servlet.ResultActions;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,6 +90,33 @@ class SpecialtyRestControllerV1Tests {
     	specialty.setName("dentistry");
     	specialties.add(specialty);
 
+    }
+
+    private ResultActions postSpecialty(Specialty newSpecialty) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        String newSpecialtyAsJSON = mapper.writeValueAsString(specialtyMapper.toSpecialtyDto(newSpecialty));
+        return this.mockMvc.perform(post("/api/specialties")
+                .content(newSpecialtyAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE));
+    }
+
+    @WithMockUser(roles = "VET_ADMIN")
+    @ParameterizedTest
+    @ValueSource(strings = {"médecine interne", "radiology", "Hals-Nasen-Ohren-Heilkunde"})
+    void testCreateSpecialtyValidNameSuccess(String name) throws Exception {
+        Specialty newSpecialty = new Specialty();
+        newSpecialty.setId(999);
+        newSpecialty.setName(name);
+        postSpecialty(newSpecialty).andExpect(status().isCreated());
+    }
+
+    @WithMockUser(roles = "VET_ADMIN")
+    @ParameterizedTest
+    @ValueSource(strings = {"surgery!!!", "cat<script>", "123-test"})
+    void testCreateSpecialtyInvalidNameError(String name) throws Exception {
+        Specialty newSpecialty = new Specialty();
+        newSpecialty.setId(999);
+        newSpecialty.setName(name);
+        postSpecialty(newSpecialty).andExpect(status().isBadRequest());
     }
 
     @Test
