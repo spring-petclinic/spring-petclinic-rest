@@ -116,7 +116,9 @@ class SpecialtyRestControllerV1Tests {
         Specialty newSpecialty = new Specialty();
         newSpecialty.setId(999);
         newSpecialty.setName(name);
-        postSpecialty(newSpecialty).andExpect(status().isBadRequest());
+        postSpecialty(newSpecialty).andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
     }
 
     @Test

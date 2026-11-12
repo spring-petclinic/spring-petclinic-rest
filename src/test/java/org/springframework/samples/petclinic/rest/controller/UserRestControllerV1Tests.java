@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -78,7 +79,9 @@ class UserRestControllerV1Tests {
         user.setPassword("password");
         user.setEnabled(true);
         user.addRole(name);
-        postUser(user).andExpect(status().isBadRequest());
+        postUser(user).andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("roles[0].name"));
     }
 
     @Test

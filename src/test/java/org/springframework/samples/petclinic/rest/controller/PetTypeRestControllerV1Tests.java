@@ -122,7 +122,9 @@ class PetTypeRestControllerV1Tests {
         PetType petType = new PetType();
         petType.setId(null);
         petType.setName(name);
-        postPetType(petType).andExpect(status().isBadRequest());
+        postPetType(petType).andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
     }
 
     @Test
