@@ -16,7 +16,10 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.samples.petclinic.rest.controller.v1.PetTypeRestControllerV1;
+import org.springframework.test.web.servlet.ResultActions;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -92,6 +95,36 @@ class PetTypeRestControllerV1Tests {
     	petType.setId(4);
     	petType.setName("snake");
     	petTypes.add(petType);
+    }
+
+    private ResultActions postPetType(PetType newPetType) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        String newPetTypeAsJSON = mapper.writeValueAsString(petTypeMapper.toPetTypeFieldsDto(newPetType));
+        return this.mockMvc.perform(post("/api/pettypes")
+            .content(newPetTypeAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE));
+    }
+
+
+    @WithMockUser(roles="VET_ADMIN")
+    @ParameterizedTest
+    @ValueSource(strings = {"guinea pig", "cochon d'Inde", "Landschildkröte"})
+    void testCreatePetTypeValidNameSuccess(String name) throws Exception {
+        PetType petType = new PetType();
+        petType.setId(null);
+        petType.setName(name);
+        postPetType(petType).andExpect(status().isCreated());
+    }
+
+    @WithMockUser(roles="VET_ADMIN")
+    @ParameterizedTest
+    @ValueSource(strings = {"cat3", "dog; DROP TABLE", "123-donkey"})
+    void testCreatePetTypeInvalidNameError(String name) throws Exception {
+        PetType petType = new PetType();
+        petType.setId(null);
+        petType.setName(name);
+        postPetType(petType).andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
     }
 
     @Test

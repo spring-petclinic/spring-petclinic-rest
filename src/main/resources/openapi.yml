@@ -1984,6 +1984,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
+          pattern: "^[\\p{L}][\\p{L}\\s\\-&/]{0,79}$"
           example: radiology
       required:
         - id
@@ -2318,6 +2319,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
+          pattern: "^[\\p{L}][\\p{L}\\s\\-']{0,79}$"
           example: cat
       required:
         - name
@@ -2380,6 +2382,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
-          example: admin
+          pattern: "^ROLE_[A-Z][A-Z0-9_]{1,74}$"
+          example: ROLE_ADMIN
       required:
         - name
