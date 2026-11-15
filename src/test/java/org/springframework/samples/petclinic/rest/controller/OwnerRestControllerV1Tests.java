@@ -385,6 +385,36 @@ class OwnerRestControllerV1Tests {
 
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithBlankNameShouldReturnBadRequest() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        newPet.setName("   ");
+        ObjectMapper mapper = new ObjectMapper();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testCreatePetWithInvalidNameShouldReturnBadRequest() throws Exception {
+        PetDto newPet = pets.get(0);
+        newPet.setId(null);
+        newPet.setName("Leo 123!");
+        ObjectMapper mapper = new ObjectMapper();
+        String newPetAsJSON = mapper.writeValueAsString(newPet);
+        this.mockMvc.perform(post("/api/owners/1/pets")
+                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
     void testCreatePetWithoutBirthDateShouldReturnBadRequest() throws Exception {
         PetDto newPet = pets.get(0);
         newPet.setId(null);
@@ -651,6 +681,23 @@ class OwnerRestControllerV1Tests {
         int petId = pets.get(0).getId();
         PetDto petDto = pets.get(0);
         petDto.setName("");
+        ObjectMapper mapper = new ObjectMapper();
+        String updatedPetAsJSON = mapper.writeValueAsString(petDto);
+        this.mockMvc.perform(put("/api/owners/" + ownerId + "/pets/" + petId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updatedPetAsJSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
+    }
+
+    @Test
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnersPetWithInvalidNameShouldReturnBadRequest() throws Exception {
+        int ownerId = owners.get(0).getId();
+        int petId = pets.get(0).getId();
+        PetDto petDto = pets.get(0);
+        petDto.setName("Rex 123!");
         ObjectMapper mapper = new ObjectMapper();
         String updatedPetAsJSON = mapper.writeValueAsString(petDto);
         this.mockMvc.perform(put("/api/owners/" + ownerId + "/pets/" + petId)
