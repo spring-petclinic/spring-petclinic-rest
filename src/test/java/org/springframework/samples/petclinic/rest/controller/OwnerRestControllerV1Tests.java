@@ -662,7 +662,30 @@ class OwnerRestControllerV1Tests {
             .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
             .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
     }
+    @ParameterizedTest
+    @ValueSource(strings = {
+        " ",
+        "Leo123",
+        "Leo@"
+    })
+    @WithMockUser(roles = "OWNER_ADMIN")
+    void testUpdateOwnersPetWithInvalidNameShouldReturnBadRequest(String name) throws Exception {
+        int ownerId = owners.get(0).getId();
+        int petId = pets.get(0).getId();
 
+        PetDto petDto = pets.get(0);
+        petDto.setName(name);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String updatedPetAsJSON = mapper.writeValueAsString(petDto);
+
+        this.mockMvc.perform(put("/api/owners/" + ownerId + "/pets/" + petId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updatedPetAsJSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
+    }
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateOwnersPetWithoutBirthDateShouldReturnBadRequest() throws Exception {
