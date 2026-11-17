@@ -58,23 +58,25 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
      */
     @SuppressWarnings("unchecked")
     public Collection<Owner> findByLastName(String lastName) {
+        String normalized = lastName == null ? "" : lastName.trim();
         // using 'join fetch' because a single query should load both owners and pets
         // using 'left join fetch' because it might happen that an owner does not have pets yet
         Query query = this.em.createQuery("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName");
-        query.setParameter("lastName", lastName + "%");
+        query.setParameter("lastName", normalized + "%");
         return query.getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Page<Owner> findByLastName(String lastName, Pageable pageable) throws DataAccessException {
+        String normalized = lastName == null ? "" : lastName.trim();
         Query query = this.em.createQuery("SELECT owner FROM Owner owner WHERE owner.lastName LIKE :lastName ORDER BY owner.id");
-        query.setParameter("lastName", lastName + "%");
+        query.setParameter("lastName", normalized + "%");
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
         List<Owner> owners = query.getResultList();
         Query countQuery = this.em.createQuery("SELECT COUNT(owner) FROM Owner owner WHERE owner.lastName LIKE :lastName");
-        countQuery.setParameter("lastName", lastName + "%");
+        countQuery.setParameter("lastName", normalized + "%");
         long total = (long) countQuery.getSingleResult();
         return new PageImpl<>(owners, pageable, total);
     }

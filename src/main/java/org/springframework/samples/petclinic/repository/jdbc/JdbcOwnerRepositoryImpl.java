@@ -80,8 +80,9 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
      */
     @Override
     public Collection<Owner> findByLastName(String lastName) throws DataAccessException {
+        String normalized = lastName == null ? "" : lastName.trim();
         Map<String, Object> params = new HashMap<>();
-        params.put("lastName", lastName + "%");
+        params.put("lastName", normalized + "%");
         List<Owner> owners = this.namedParameterJdbcTemplate.query(
             "SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like :lastName",
             params,
@@ -93,8 +94,9 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
 
     @Override
     public Page<Owner> findByLastName(String lastName, Pageable pageable) throws DataAccessException {
+        String normalized = lastName == null ? "" : lastName.trim();
         Map<String, Object> params = new HashMap<>();
-        params.put("lastName", lastName + "%");
+        params.put("lastName", normalized + "%");
         params.put("size", pageable.getPageSize());
         params.put("offset", pageable.getOffset());
         List<Owner> owners = this.namedParameterJdbcTemplate.query(

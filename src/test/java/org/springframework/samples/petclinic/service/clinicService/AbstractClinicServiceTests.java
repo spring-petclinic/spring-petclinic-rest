@@ -367,6 +367,19 @@ abstract class AbstractClinicServiceTests {
     }
 
     @Test
+    void shouldTreatBlankLastNameAsNoFilter() {
+        Page<Owner> pagedOwners = this.clinicService.findOwners("   ", PageRequest.of(0, 3, Sort.by("id")));
+        assertThat(pagedOwners.getTotalElements()).isEqualTo(10);
+        assertThat(pagedOwners.getContent())
+            .extracting(Owner::getFirstName)
+            .containsExactly("George", "Betty", "Eduardo");
+
+        Collection<Owner> owners = this.clinicService.findOwnerByLastName("   ");
+        assertThat(owners).hasSize(10);
+        assertThat(owners).extracting(Owner::getFirstName).contains("George", "Betty", "Eduardo");
+    }
+
+    @Test
     @Transactional
     void shouldDeleteOwner(){
     	Owner owner = this.clinicService.findOwnerById(1);

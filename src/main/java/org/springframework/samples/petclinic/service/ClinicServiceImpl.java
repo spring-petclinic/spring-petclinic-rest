@@ -131,10 +131,10 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public Page<Owner> findOwners(String lastName, Pageable pageable) throws DataAccessException {
-        if (lastName != null) {
-            return ownerRepository.findByLastName(lastName, pageable);
+        if (lastName == null || lastName.isBlank()) {
+            return ownerRepository.findAll(pageable);
         }
-        return ownerRepository.findAll(pageable);
+        return ownerRepository.findByLastName(lastName.trim(), pageable);
     }
 
     @Override
@@ -239,7 +239,10 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public Collection<Owner> findOwnerByLastName(String lastName) throws DataAccessException {
-        return ownerRepository.findByLastName(lastName);
+        if (lastName == null || lastName.isBlank()) {
+            return ownerRepository.findAll();
+        }
+        return ownerRepository.findByLastName(lastName.trim());
     }
 
     @Override
