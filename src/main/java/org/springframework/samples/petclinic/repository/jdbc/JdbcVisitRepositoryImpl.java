@@ -40,6 +40,7 @@ import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.stereotype.Repository;
+import java.time.LocalDate;
 
 /**
  * A simple JDBC-based implementation of the {@link VisitRepository} interface.
@@ -176,4 +177,15 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
         }
     }
 
+    @Override
+    public List<Visit> findByDateRange(LocalDate from, LocalDate to) {
+        StringBuilder sql = new StringBuilder(
+            "SELECT visits.id as visit_id, pets.id as pets_id, visit_date, description " +
+            "FROM visits LEFT JOIN pets ON visits.pet_id = pets.id WHERE 1=1");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        if (from != null) { sql.append(" AND visit_date >= :from"); params.addValue("from", from); }
+        if (to != null)   { sql.append(" AND visit_date <= :to");   params.addValue("to", to); }
+        sql.append(" ORDER BY visit_date, visits.id");
+        return this.namedParameterJdbcTemplate.query(sql.toString(), params, new JdbcVisitRowMapperExt());
+    }
 }

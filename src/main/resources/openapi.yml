@@ -1096,7 +1096,22 @@ paths:
         - visits
       operationId: listVisits
       summary: Lists visits
-      description: Returns an array of visit .
+      description: Returns an array of visits. Optionally filtered by an inclusive date range.
+      parameters:
+        - name: fromDate
+          in: query
+          description: Inclusive lower bound of the visit date (yyyy-MM-dd).
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: toDate
+          in: query
+          description: Inclusive upper bound of the visit date (yyyy-MM-dd).
+          required: false
+          schema:
+            type: string
+            format: date
       responses:
         200:
           description: visits found and returned.
@@ -1118,6 +1133,12 @@ paths:
               description: An ID for this version of the response.
               schema:
                 type: string
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         500:
           description: Server error.
           content:

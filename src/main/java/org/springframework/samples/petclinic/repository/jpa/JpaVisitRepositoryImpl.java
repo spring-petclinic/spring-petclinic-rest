@@ -27,6 +27,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.stereotype.Repository;
+import java.time.LocalDate;
 
 /**
  * JPA implementation of the ClinicService interface using EntityManager.
@@ -80,5 +81,18 @@ public class JpaVisitRepositoryImpl implements VisitRepository {
 	public void delete(Visit visit) throws DataAccessException {
         this.em.remove(this.em.contains(visit) ? visit : this.em.merge(visit));
 	}
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Visit> findByDateRange(LocalDate from, LocalDate to) {
+        StringBuilder jpql = new StringBuilder("SELECT v FROM Visit v WHERE 1=1");
+        if (from != null) jpql.append(" AND v.date >= :from");
+        if (to != null)   jpql.append(" AND v.date <= :to");
+        jpql.append(" ORDER BY v.date, v.id");
+        Query query = this.em.createQuery(jpql.toString());
+        if (from != null) query.setParameter("from", from);
+        if (to != null)   query.setParameter("to", to);
+        return query.getResultList();
+    }
 
 }

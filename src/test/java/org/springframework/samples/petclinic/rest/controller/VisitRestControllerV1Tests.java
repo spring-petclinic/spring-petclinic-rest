@@ -42,7 +42,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -156,6 +160,99 @@ class VisitRestControllerV1Tests {
     	given(this.clinicService.findAllVisits()).willReturn(visits);
         this.mockMvc.perform(get("/api/visits")
         	.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsByDateRangeBothDates() throws Exception {
+        LocalDate from = LocalDate.of(2013, 1, 2);
+        LocalDate to = LocalDate.of(2013, 1, 3);
+        given(this.clinicService.findVisitsByDateRange(from, to)).willReturn(visits);
+        this.mockMvc.perform(get("/api/visits")
+            .param("fromDate", "2013-01-02").param("toDate", "2013-01-03")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.[0].id").value(2))
+            .andExpect(jsonPath("$.[1].id").value(3));
+        verify(this.clinicService).findVisitsByDateRange(from, to);
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsByDateRangeOnlyFromDate() throws Exception {
+        LocalDate from = LocalDate.of(2013, 1, 2);
+        given(this.clinicService.findVisitsByDateRange(from, null)).willReturn(visits);
+        this.mockMvc.perform(get("/api/visits")
+            .param("fromDate", "2013-01-02")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+        verify(this.clinicService).findVisitsByDateRange(from, null);
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsByDateRangeOnlyToDate() throws Exception {
+        LocalDate to = LocalDate.of(2013, 1, 3);
+        given(this.clinicService.findVisitsByDateRange(null, to)).willReturn(visits);
+        this.mockMvc.perform(get("/api/visits")
+            .param("toDate", "2013-01-03")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+        verify(this.clinicService).findVisitsByDateRange(null, to);
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsByDateRangeSameDay() throws Exception {
+        LocalDate day = LocalDate.of(2013, 1, 2);
+        given(this.clinicService.findVisitsByDateRange(day, day)).willReturn(visits);
+        this.mockMvc.perform(get("/api/visits")
+            .param("fromDate", "2013-01-02").param("toDate", "2013-01-02")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+        verify(this.clinicService).findVisitsByDateRange(day, day);
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsByDateRangeFromAfterToReturnsBadRequest() throws Exception {
+        this.mockMvc.perform(get("/api/visits")
+            .param("fromDate", "2013-01-04").param("toDate", "2013-01-01")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.detail").value(containsString("fromDate must not be later than toDate")));
+        verify(this.clinicService, never()).findVisitsByDateRange(any(), any());
+        verify(this.clinicService, never()).findAllVisits();
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsMalformedFromDateReturnsBadRequest() throws Exception {
+        this.mockMvc.perform(get("/api/visits")
+            .param("fromDate", "abc")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+        verify(this.clinicService, never()).findVisitsByDateRange(any(), any());
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsMalformedToDateReturnsBadRequest() throws Exception {
+        this.mockMvc.perform(get("/api/visits")
+            .param("toDate", "abc")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+        verify(this.clinicService, never()).findVisitsByDateRange(any(), any());
+    }
+
+    @Test
+    @WithMockUser(roles="OWNER_ADMIN")
+    void testGetVisitsByDateRangeNotFound() throws Exception {
+        given(this.clinicService.findVisitsByDateRange(any(), any())).willReturn(new ArrayList<>());
+        this.mockMvc.perform(get("/api/visits")
+            .param("fromDate", "2020-01-01").param("toDate", "2020-12-31")
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
 

@@ -21,6 +21,7 @@ import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Visit;
+import java.time.LocalDate;
 
 /**
  * Repository class for <code>Visit</code> domain objects All method names are compliant with Spring Data naming
@@ -49,5 +50,7 @@ public interface VisitRepository {
 	Collection<Visit> findAll() throws DataAccessException;
 
 	void delete(Visit visit) throws DataAccessException;
+
+    List<Visit> findByDateRange(LocalDate from, LocalDate to) throws DataAccessException;
 
 }
