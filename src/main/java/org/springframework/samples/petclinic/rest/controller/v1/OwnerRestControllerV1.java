@@ -161,7 +161,8 @@ public class OwnerRestControllerV1 implements OwnersApi {
         Owner currentOwner = this.clinicService.findOwnerById(ownerId);
         if (currentOwner != null) {
             Pet currentPet = this.clinicService.findPetById(petId);
-            if (currentPet != null) {
+            if (currentPet != null && currentPet.getOwner() != null
+                && ownerId.equals(currentPet.getOwner().getId())) {
                 currentPet.setBirthDate(petFieldsDto.getBirthDate());
                 currentPet.setName(petFieldsDto.getName());
                 currentPet.setType(petMapper.toPetType(petFieldsDto.getType()));
