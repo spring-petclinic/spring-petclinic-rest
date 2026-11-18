@@ -23,6 +23,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Visit;
 
+import java.time.LocalDate;
+import java.util.List;
 /**
  * @author Vitaliy Fedoriv
  *
@@ -43,5 +45,17 @@ public class SpringDataVisitRepositoryImpl implements VisitRepositoryOverride {
         }
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Visit> findByDateRange(LocalDate from, LocalDate to) {
+		StringBuilder jpql = new StringBuilder("SELECT v FROM Visit v WHERE 1=1");
+		if (from != null) jpql.append(" AND v.date >= :from");
+		if (to != null)   jpql.append(" AND v.date <= :to");
+		jpql.append(" ORDER BY v.date, v.id");
+		jakarta.persistence.Query query = this.em.createQuery(jpql.toString());
+		if (from != null) query.setParameter("from", from);
+		if (to != null)   query.setParameter("to", to);
+		return query.getResultList();
+	}
 
 }

@@ -32,6 +32,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
+import java.util.Collection;
 
 /**
  * @author Vitaliy Fedoriv
@@ -54,8 +56,14 @@ public class VisitRestControllerV1 implements VisitsApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<List<VisitDto>> listVisits() {
-        List<Visit> visits = new ArrayList<>(this.clinicService.findAllVisits());
+    public ResponseEntity<List<VisitDto>> listVisits(LocalDate fromDate, LocalDate toDate) {
+        if (fromDate != null && toDate != null && fromDate.isAfter(toDate)) {
+            throw new IllegalArgumentException("fromDate must not be later than toDate");
+        }
+        Collection<Visit> found = (fromDate == null && toDate == null)
+            ? this.clinicService.findAllVisits()
+            : this.clinicService.findVisitsByDateRange(fromDate, toDate);
+        List<Visit> visits = new ArrayList<>(found);
         if (visits.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

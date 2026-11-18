@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.time.LocalDate;
 
 /**
  * Mostly used as a facade for all Petclinic controllers
@@ -261,6 +262,12 @@ public class ClinicServiceImpl implements ClinicService {
             // Just ignore not found exceptions for Jdbc/Jpa realization
             return null;
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<Visit> findVisitsByDateRange(LocalDate from, LocalDate to) throws DataAccessException {
+        return visitRepository.findByDateRange(from, to);
     }
 
 }

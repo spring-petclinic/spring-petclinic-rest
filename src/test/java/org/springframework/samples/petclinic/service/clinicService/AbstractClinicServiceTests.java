@@ -242,6 +242,53 @@ abstract class AbstractClinicServiceTests {
         assertThat(visit3.getPet().getName()).isEqualTo("Max");
     }
 
+    private List<Integer> visitIdsInRange(LocalDate from, LocalDate to) {
+        return this.clinicService.findVisitsByDateRange(from, to).stream()
+            .map(Visit::getId).collect(Collectors.toList());
+    }
+
+    @Test
+    void shouldFindVisitsByDateRangeInclusive() {
+        assertThat(visitIdsInRange(LocalDate.of(2013, 1, 2), LocalDate.of(2013, 1, 3))).containsExactly(2, 3);
+    }
+
+    @Test
+    void shouldFindVisitsBySingleDay() {
+        assertThat(visitIdsInRange(LocalDate.of(2013, 1, 3), LocalDate.of(2013, 1, 3))).containsExactly(3);
+    }
+
+    @Test
+    void shouldFindVisitsWithOnlyFromDate() {
+        assertThat(visitIdsInRange(LocalDate.of(2013, 1, 3), null)).containsExactly(3, 4);
+    }
+
+    @Test
+    void shouldFindVisitsWithOnlyToDate() {
+        assertThat(visitIdsInRange(null, LocalDate.of(2013, 1, 2))).containsExactly(1, 2);
+    }
+
+    @Test
+    void shouldFindAllVisitsWhenBothBoundsNull() {
+        assertThat(visitIdsInRange(null, null)).containsExactly(1, 2, 3, 4);
+    }
+
+    @Test
+    void shouldFindNoVisitsOutsideRange() {
+        assertThat(visitIdsInRange(LocalDate.of(2020, 1, 1), LocalDate.of(2020, 12, 31))).isEmpty();
+    }
+
+    @Test
+    void shouldIncludeBoundaryVisits() {
+        assertThat(visitIdsInRange(LocalDate.of(2013, 1, 1), LocalDate.of(2013, 1, 1))).containsExactly(1);
+        assertThat(visitIdsInRange(LocalDate.of(2013, 1, 3), LocalDate.of(2013, 1, 4))).containsExactly(3, 4);
+    }
+
+    @Test
+    void shouldPopulatePetForVisitsByDateRange() {
+        Collection<Visit> found = this.clinicService.findVisitsByDateRange(null, null);
+        assertThat(found).isNotEmpty().allSatisfy(v -> assertThat(v.getPet().getName()).isNotNull());
+    }
+
     @Test
     @Transactional
     void shouldInsertVisit() {
