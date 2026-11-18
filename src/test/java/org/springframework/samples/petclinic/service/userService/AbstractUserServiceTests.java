@@ -6,6 +6,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -15,6 +16,9 @@ public abstract class AbstractUserServiceTests {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @BeforeEach
     public void init() {
         MockitoAnnotations.openMocks(this);
@@ -22,14 +26,16 @@ public abstract class AbstractUserServiceTests {
 
     @Test
     public void shouldAddUser() throws Exception {
+        String rawPassword = "password";
         User user = new User();
         user.setUsername("username");
-        user.setPassword("password");
+        user.setPassword(rawPassword);
         user.setEnabled(true);
         user.addRole("OWNER_ADMIN");
 
         userService.saveUser(user);
         assertThat(user.getRoles().parallelStream().allMatch(role -> role.getName().startsWith("ROLE_")), is(true));
         assertThat(user.getRoles().parallelStream().allMatch(role -> role.getUser() != null), is(true));
+        assert(passwordEncoder.matches(rawPassword, user.getPassword()));
     }
 }
