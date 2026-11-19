@@ -1984,7 +1984,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
-          pattern: '[\s\S]*\S[\s\S]*'
+          pattern: "^[\\p{L}][\\p{L}\\s\\-&/]{0,79}$"
           example: radiology
       required:
         - id
@@ -2028,11 +2028,11 @@ components:
           example: Madison
         telephone:
           title: Telephone number
-          description: The telephone number of the pet owner.
+          description: The telephone number of the pet owner. For simplicity, this demo application accepts exactly 10 digits, without separators or an international prefix.
           type: string
-          minLength: 1
-          maxLength: 20
-          pattern: '^[0-9]*$'
+          minLength: 10
+          maxLength: 10
+          pattern: '^[0-9]{10}$'
           example: '6085551023'
       required:
         - firstName
@@ -2323,7 +2323,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
-          pattern: '[\s\S]*\S[\s\S]*'
+          pattern: "^[\\p{L}][\\p{L}\\s\\-']{0,79}$"
           example: cat
       required:
         - name
@@ -2386,6 +2386,7 @@ components:
           type: string
           maxLength: 80
           minLength: 1
-          example: admin
+          pattern: "^ROLE_[A-Z][A-Z0-9_]{1,74}$"
+          example: ROLE_ADMIN
       required:
         - name

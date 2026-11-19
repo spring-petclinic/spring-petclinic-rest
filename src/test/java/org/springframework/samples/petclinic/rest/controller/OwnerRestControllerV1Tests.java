@@ -738,4 +738,48 @@ class OwnerRestControllerV1Tests {
             .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("birthDate"));
     }
 
+    private String ownerJson(String telephone) {
+        return """
+            {
+                "firstName": "John",
+                "lastName": "Doe",
+                "address": "123 Main Street",
+                "city": "Springfield",
+                "telephone": "%s"
+            }
+            """.formatted(telephone);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "123456789",
+        "12345678901",
+        "abcdefghij",
+        "+123456789"
+    })
+    void shouldRejectInvalidTelephoneOnCreate(String telephone) throws Exception {
+        mockMvc.perform(post("/api/owners")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ownerJson(telephone)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("telephone"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "123456789",
+        "12345678901",
+        "abcdefghij",
+        "+123456789"
+    })
+    void shouldRejectInvalidTelephoneOnUpdate(String telephone) throws Exception {
+        mockMvc.perform(put("/api/owners/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ownerJson(telephone)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("telephone"));
+    }
+
 }

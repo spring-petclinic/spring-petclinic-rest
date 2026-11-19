@@ -1,6 +1,9 @@
 package org.springframework.samples.petclinic.rest.controller;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.samples.petclinic.rest.controller.v1.UserRestControllerV1;
+import org.springframework.test.web.servlet.ResultActions;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -47,6 +51,39 @@ class UserRestControllerV1Tests {
             .setControllerAdvice(new ExceptionControllerAdvice()).build();
     }
 
+    private ResultActions postUser(User user) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        String newUserAsJSON = mapper.writeValueAsString(userMapper.toUserDto(user));
+        return this.mockMvc.perform(post("/api/users")
+                .content(newUserAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE));
+    }
+
+    @ParameterizedTest
+    @WithMockUser(roles = "ADMIN")
+    @ValueSource(strings = {"ROLE_ADMIN", "ROLE_VET_ADMIN", "ROLE_OWNER_ADMIN"})
+    void testCreateUserValidRoleSuccess(String name) throws Exception {
+        User user = new User();
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setEnabled(true);
+        user.addRole(name);
+        postUser(user).andExpect(status().isCreated());
+    }
+
+    @ParameterizedTest
+    @WithMockUser(roles = "ADMIN")
+    @ValueSource(strings = {"admin", "0ROLE_ADMIN", "ROLE_admin"})
+    void testCreateUserInvalidRoleError(String name) throws Exception {
+        User user = new User();
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setEnabled(true);
+        user.addRole(name);
+        postUser(user).andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
+            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("roles[0].name"));
+    }
+
     @Test
     @WithMockUser(roles = "ADMIN")
     void testCreateUserSuccess() throws Exception {
@@ -54,7 +91,7 @@ class UserRestControllerV1Tests {
         user.setUsername("username");
         user.setPassword("password");
         user.setEnabled(true);
-        user.addRole("OWNER_ADMIN");
+        user.addRole("ROLE_OWNER_ADMIN");
         ObjectMapper mapper = new ObjectMapper();
         String newVetAsJSON = mapper.writeValueAsString(userMapper.toUserDto(user));
         this.mockMvc.perform(post("/api/users")
