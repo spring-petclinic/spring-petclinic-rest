@@ -113,6 +113,12 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-docker-compose</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jdbc-core</artifactId>
             <version>${spring-data-jdbc.version}</version>
@@ -341,6 +347,12 @@
                             <tag>latest</tag>
                         </tags>
                     </to>
+                    <container>
+                        <environment>
+                            <!-- The image cannot run Docker Compose itself -->
+                            <SPRING_DOCKER_COMPOSE_ENABLED>false</SPRING_DOCKER_COMPOSE_ENABLED>
+                        </environment>
+                    </container>
                 </configuration>
             </plugin>
 
