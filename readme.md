@@ -157,10 +157,7 @@ Modify `application.properties`:
 ```properties
 spring.profiles.active=mysql,spring-data-jpa
 ```
-Start a MySQL database using Docker:
-```bash
-docker run -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:8.4
-```
+When the application starts, [Spring Boot Docker Compose support](https://docs.spring.io/spring-boot/reference/features/dev-services.html#features.dev-services.docker-compose) automatically starts the `mysql` service defined in `docker-compose.yml` and connects to it (Docker must be running).
 
 ### **Using PostgreSQL**
 Modify application.properties:
@@ -168,16 +165,23 @@ Modify application.properties:
 ```properties
 spring.profiles.active=postgres,spring-data-jpa
 ```
-Start a PostgreSQL database using Docker:
+When the application starts, [Spring Boot Docker Compose support](https://docs.spring.io/spring-boot/reference/features/dev-services.html#features.dev-services.docker-compose) automatically starts the `postgres` service defined in `docker-compose.yml` and connects to it (Docker must be running).
+
+### **Using an external MySQL or PostgreSQL database**
+To use a database that is not managed by Docker Compose, disable the Docker Compose support and provide the connection settings:
+
 ```bash
-docker run -e POSTGRES_USER=petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 postgres:16.3
+export SPRING_DOCKER_COMPOSE_ENABLED=false
+export MYSQL_URL=jdbc:mysql://localhost/petclinic MYSQL_USER=petclinic MYSQL_PASS=petclinic
+# or
+export POSTGRES_URL=jdbc:postgresql://localhost/petclinic POSTGRES_USER=petclinic POSTGRES_PASS=petclinic
 ```
 
-Instead of manually running containers, you can also use `docker-compose.yml`:
+You can still start the containers yourself, for example with `docker-compose.yml`:
 
 ```sh
-docker-compose --profile mysql up
-docker-compose --profile postgres up
+docker compose --profile mysql up
+docker compose --profile postgres up
 ```
 
 ### **Further Documentation**
