@@ -23,9 +23,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
 import org.springframework.samples.petclinic.mapper.PetTypeMapper;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.rest.advice.ExceptionControllerAdvice;
@@ -42,6 +45,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -97,6 +103,25 @@ class PetTypeRestControllerV1Tests {
     	petTypes.add(petType);
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"POST", "PUT"})
+    @WithMockUser(roles = "VET_ADMIN")
+    void testBlankPetTypeNameShouldReturnBadRequest(String method) throws Exception {
+        given(this.clinicService.findPetTypeById(1)).willReturn(petTypes.get(0));
+        PetType petType = petTypes.get(0);
+        petType.setName("   ");
+        String path = method.equals("POST") ? "/api/pettypes" : "/api/pettypes/1";
+
+        this.mockMvc.perform(request(HttpMethod.valueOf(method), path)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(new ObjectMapper().writeValueAsString(
+                method.equals("POST")
+                    ? petTypeMapper.toPetTypeFieldsDto(petType)
+                    : petTypeMapper.toPetTypeDto(petType))))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
+        verify(this.clinicService, never()).savePetType(any());
+    }
     private ResultActions postPetType(PetType newPetType) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         String newPetTypeAsJSON = mapper.writeValueAsString(petTypeMapper.toPetTypeFieldsDto(newPetType));
