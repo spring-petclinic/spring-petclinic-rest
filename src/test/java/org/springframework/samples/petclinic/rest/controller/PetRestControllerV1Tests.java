@@ -186,23 +186,10 @@ class PetRestControllerV1Tests {
             .andExpect(status().isBadRequest());
     }
 
-    @Test
-    @WithMockUser(roles = "OWNER_ADMIN")
-    void testUpdatePetWithEmptyNameShouldReturnBadRequest() throws Exception {
-        PetDto newPet = pets.get(0);
-        newPet.setName("");
-        ObjectMapper mapper = new ObjectMapper();
-        String newPetAsJSON = mapper.writeValueAsString(newPet);
-
-        this.mockMvc.perform(put("/api/pets/3")
-                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
-            .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));
-    }
 
     @ParameterizedTest
     @ValueSource(strings = {
+        "",
         " ",
         "Leo123",
         "Leo@"
