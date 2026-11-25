@@ -20,6 +20,8 @@ import org.springframework.samples.petclinic.rest.controller.v1.PetRestControlle
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -187,16 +189,26 @@ class PetRestControllerV1Tests {
             .andExpect(status().isBadRequest());
     }
 
-    @Test
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "",
+        " ",
+        "Leo123",
+        "Leo@"
+    })
     @WithMockUser(roles = "OWNER_ADMIN")
-    void testUpdatePetWithEmptyNameShouldReturnBadRequest() throws Exception {
+    void testUpdatePetWithInvalidNameShouldReturnBadRequest(String name) throws Exception {
         PetDto newPet = pets.get(0);
-        newPet.setName("");
+        newPet.setName(name);
+
         ObjectMapper mapper = new ObjectMapper();
         String newPetAsJSON = mapper.writeValueAsString(newPet);
 
         this.mockMvc.perform(put("/api/pets/3")
-                .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .content(newPetAsJSON)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.title").value("MethodArgumentNotValidException"))
             .andExpect(jsonPath("$.schemaValidationErrors[0].field").value("name"));

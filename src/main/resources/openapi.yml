@@ -2165,7 +2165,7 @@ components:
           type: string
           minLength: 1
           maxLength: 30
-          pattern: '[\s\S]*\S[\s\S]*'
+          pattern: "^[\\p{L}]+([ '-][\\p{L}]+){0,2}$"
           example: Leo
         birthDate:
           title: Birth date
